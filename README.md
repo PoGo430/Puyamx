@@ -182,7 +182,7 @@ python packaging/build.py           # one-file executable in dist/
 
 Command line without a window: `puya-studio new myproj -c py32f003 -e blink`, `build`, `check`, `gen`, `examples`, `tools`, `selftest`.
 
-**Automatic release:** every push to `main` rebuilds, tests and refreshes the pre-release **`latest`** with both programs.
+**Automatic release:** every push to the default branch (`main`) rebuilds, tests and refreshes the pre-release **`latest`** with both programs.
 
 **Versioned releases:** run the *build* workflow by hand (Actions > build > Run workflow) and type a version such as `v0.1.0`; it builds and
 tests on Linux and Windows and creates the release with both files (the tag is created by the workflow, no tag push needed).

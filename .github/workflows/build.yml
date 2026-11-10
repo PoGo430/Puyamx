@@ -12,7 +12,7 @@ on:
         required: false
         default: ""
       rolling:
-        description: "Also refresh the rolling 'latest' pre-release from this branch (pushes to main do this by themselves)"
+        description: "Also refresh the rolling 'latest' pre-release from this branch (pushes to the default branch do this by themselves)"
         type: boolean
         default: false
 
@@ -102,9 +102,9 @@ jobs:
             puya-studio-linux/puya-studio
             puya-studio-windows/puya-studio.exe
 
-  # Automatic release: every push to main/master refreshes the pre-release "latest" with the newest two programs.
+  # Automatic release: every push to the default branch (main) refreshes the pre-release "latest" with the newest two programs.
   rolling:
-    if: (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) || inputs.rolling
+    if: (github.event_name == 'push' && github.ref_name == github.event.repository.default_branch) || inputs.rolling
     needs: [linux, windows]
     runs-on: ubuntu-latest
     concurrency: rolling-release
