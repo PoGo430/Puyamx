@@ -11,6 +11,10 @@ on:
         description: "Version for a release, e.g. v0.1.0 (leave empty to only build and test)"
         required: false
         default: ""
+      rolling:
+        description: "Also refresh the rolling 'latest' pre-release from this branch (pushes to main do this by themselves)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -94,6 +98,38 @@ jobs:
           name: Puya Studio ${{ inputs.version || github.ref_name }}
           prerelease: true                                        # not tested on real chips yet
           generate_release_notes: true
+          files: |
+            puya-studio-linux/puya-studio
+            puya-studio-windows/puya-studio.exe
+
+  # Automatic release: every push to main/master refreshes the pre-release "latest" with the newest two programs.
+  rolling:
+    if: (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) || inputs.rolling
+    needs: [linux, windows]
+    runs-on: ubuntu-latest
+    concurrency: rolling-release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+      - name: Make the Linux file executable
+        run: chmod +x puya-studio-linux/puya-studio
+      - name: Move the "latest" tag to this commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@users.noreply.github.com"
+          git tag -f latest "$GITHUB_SHA"
+          git push -f origin latest
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest build (${{ github.sha }})
+          body: |
+            Automatic build of commit ${{ github.sha }} (branch ${{ github.ref_name }}).
+            Tested on a PC and in a simulator, **not yet on real chips**: see the hardware checklist in the README.
+            Stable versions are the other releases.
+          prerelease: true
+          make_latest: false
+          overwrite_files: true
           files: |
             puya-studio-linux/puya-studio
             puya-studio-windows/puya-studio.exe
