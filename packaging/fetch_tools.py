@@ -88,14 +88,14 @@ def trim(root, out, win):
                 copy(p, os.path.join(arm, "bin", cand), win)
                 break
     for f in os.listdir(os.path.join(root, "bin")):
-        if f.lower().endswith((".dll", ".so", ".so.0")) or ".so." in f:
+        if (f.lower().endswith((".dll", ".so", ".so.0")) or ".so." in f) and not f.lower().startswith(("python", "libpython")):
             copy(os.path.join(root, "bin", f), os.path.join(arm, "bin", f), win)
     # libexec: cc1, collect2, lto plugin/wrapper
     src = os.path.join(root, "libexec", "gcc", "arm-none-eabi", GCC_VER)
     dst = os.path.join(arm, "libexec", "gcc", "arm-none-eabi", GCC_VER)
     for f in os.listdir(src):
-        if f.split(".")[0] in ("cc1", "collect2", "liblto_plugin", "lto-wrapper"):
-            copy(os.path.join(src, f), os.path.join(dst, f), win)
+        if f.split(".")[0] in ("cc1", "collect2", "liblto_plugin", "lto-wrapper") or f.lower().endswith(".dll"):
+            copy(os.path.join(src, f), os.path.join(dst, f), win)       # the DLLs next to cc1.exe are needed (Windows looks there first)
     # runtime libraries next to them (found through RPATH $ORIGIN/../libexec; DLLs on Windows)
     lx = os.path.join(root, "libexec")
     for f in os.listdir(lx):
