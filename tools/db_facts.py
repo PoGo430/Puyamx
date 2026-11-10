@@ -251,6 +251,11 @@ FLASH_TIMING = {
 }
 HSI_WORD = {"fs_shift_in_word": 16, "fs_bits": 3, "trim_bits": 13, "note": "factory word: HSI_FS[2:0] at bit 16, HSI_TRIM[12:0] at bit 0 (RM 4.5.1)"}
 
+# Fields the reference manual documents but the Puya SVD lacks: {chip: {(peripheral, register): {field: [lsb, width]}}}
+SVD_PATCHES = {
+    "py32f002b": {("RCC", "CR"): {"HSEEN": [18, 1]}},       # RM v0.4 8.6.1: bit 18 HSEEN "external clock enable"
+}
+
 CHIPS = {
     "py32f030": {
         "svd": "py32f030xx.svd", "rmtxt": "f030_rm_cn12.txt",
@@ -296,7 +301,7 @@ for _c, _i in CHIPS.items():
     _i["bootloader"] = BOOTLOADER[_c]
     _i["adc"] = ADC_EXTRA[_c]
     _i["signal_alias"] = SIGNAL_ALIAS[_c]
-    _i["notes"] = NOTES[_c]
+    _i["notes"] = NOTES[_c] + ([f"The SVD lacks {r[0]}_{r[1]}.{', '.join(v)}; added from the RM." for r, v in SVD_PATCHES.get(_c, {}).items()])
     _i["exti"] = EXTI[_c]
     _i["flash_timing"] = FLASH_TIMING[_c]
     _i["clock"] = dict(_i["clock"], hsi_word=HSI_WORD)

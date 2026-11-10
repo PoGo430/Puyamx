@@ -164,3 +164,39 @@ def test_adc_read_helper():
     sim.regs[sim.addr("ADC", "DR")] = 1234
     assert sim.call("adc_read", 3) == 1234
     assert sim.get("ADC", "CHSELR") == 1 << 3
+
+
+@pytest.mark.parametrize("chip_id,src,kw", [
+    ("py32f003", "HSE", {"hse_hz": 16_000_000}),
+    ("py32f003", "HSE", {"hse_hz": 8_000_000, "hse_bypass": True}),
+    ("py32f030", "HSE", {"hse_hz": 32_000_000}),
+    ("py32f030", "PLL", {"pll_src": "HSE", "hse_hz": 24_000_000}),
+    ("py32f030", "LSI", {}),
+    ("py32f002b", "LSI", {}),
+    ("py32f002b", "HSE", {"hse_hz": 24_000_000, "hse_bypass": True}),
+])
+def test_other_clock_sources(chip_id, src, kw):
+    p = build_full(chip_id)
+    p.clock.update({"source": src, "hsi_hz": 8_000_000 if chip_id != "py32f002b" else 24_000_000, "systick_hz": 1000})
+    p.clock.update(kw)
+    if src == "LSI":                          # a 32 kHz clock cannot run I2C or fast UART: take them out
+        for port in [q for q, d in p.pins.items() if d["func"] == "af" and d["signal"].startswith("I2C")]:
+            p.clear(port)
+        p.periph.pop("I2C1", None)
+        if p.periph.get("USART1"):
+            p.periph["USART1"]["baud"] = 1200
+    r = timing.clock_tree(p.chip, p.clock)
+    assert r.ok, r.problems
+    sim = make(p)
+    sim.call("Init_All")
+    assert sim.field("RCC", "CFGR", "SW") == timing.SW_CODES[src]
+    if src == "HSE" or kw.get("pll_src") == "HSE":
+        hz = kw["hse_hz"]
+        want = 1 if hz <= 8_000_000 else 2 if hz <= 16_000_000 else 3
+        if "HSE_FREQ" in p.chip.reg("RCC", "ECSCR")["fields"]:
+            assert sim.field("RCC", "ECSCR", "HSE_FREQ") == want             # never 0 = HSE off
+        assert sim.get("RCC", "CR") & sim.mask("RCC", "CR", "HSEON" if "HSEON" in p.chip.reg("RCC", "CR")["fields"] else "HSEEN")
+        if kw.get("hse_bypass"):
+            assert sim.get("RCC", "CR") & sim.mask("RCC", "CR", "HSEBYP") if "HSEBYP" in p.chip.reg("RCC", "CR")["fields"] else True
+    if src == "LSI":
+        assert sim.get("RCC", "CSR") & 1

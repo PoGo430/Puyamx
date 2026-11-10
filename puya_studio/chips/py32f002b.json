@@ -232,7 +232,8 @@
   "DS V0.8 is an early revision. MSOP10 (PY32F010MA15N) appears only in the EN V0.3 datasheet and is not included.",
   "ADC_IN1 is on PA3 per RM v0.4 (DS pin table layout is ambiguous).",
   "Table 3-6: PC0 lists SWD on AF0 (as printed).",
-  "SWD pins are PB6 (SWDIO) and PA2 (SWCLK); option bytes can move SWD (see option_bytes)."
+  "SWD pins are PB6 (SWDIO) and PA2 (SWCLK); option bytes can move SWD (see option_bytes).",
+  "The SVD lacks RCC_CR.HSEEN; added from the RM."
  ],
  "nrst": "PC0",
  "option_bytes": {
@@ -4636,6 +4637,10 @@
     },
     "CR": {
      "fields": {
+      "HSEEN": [
+       18,
+       1
+      ],
       "HSIDIV": [
        11,
        3

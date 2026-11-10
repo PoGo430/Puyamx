@@ -178,6 +178,8 @@ def main():
         db["packages"] = build_packages(chip)
         db["ports"] = F.finish_ports(chip, build_ports(chip), raw)
         db["peripherals"] = svd_peripherals(os.path.join(dfp, "CMSIS", "SVD", info["svd"]))
+        for (per, reg), fields in F.SVD_PATCHES.get(chip, {}).items():
+            db["peripherals"][per]["regs"][reg]["fields"].update(fields)
         db["reset_values_from_rm"] = rm_reset_overrides(os.path.join(rmtxt, info["rmtxt"]), db["peripherals"])
         db["interrupts"] = rm_interrupts(os.path.join(rmtxt, info["rmtxt"]))
         for key in ("memory", "features", "clock", "option_bytes", "parts", "signal_alias", "notes", "adc",

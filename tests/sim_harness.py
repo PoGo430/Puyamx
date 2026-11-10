@@ -7,7 +7,7 @@ peripheral registers.  There is no real peripheral behaviour: the stub only make
 import subprocess
 
 from unicorn import UC_ARCH_ARM, UC_MODE_MCLASS, UC_MODE_THUMB, Uc
-from unicorn.arm_const import UC_ARM_REG_LR, UC_ARM_REG_R0, UC_ARM_REG_SP
+from unicorn.arm_const import UC_ARM_REG_LR, UC_ARM_REG_PC, UC_ARM_REG_R0, UC_ARM_REG_SP
 
 from puya_studio import toolchain
 
@@ -93,6 +93,8 @@ class Sim:
                 if on in f and rdy in f:
                     onm, rm = self.mask("RCC", "CR", on), self.mask("RCC", "CR", rdy)
                     v = (v | rm) if v & onm else (v & ~rm)
+        elif base == c.reg_addr("RCC", "CSR") or base == c.reg_addr("RCC", "BDCR"):   # LSION -> LSIRDY, LSEON -> LSERDY (bit 0 -> bit 1)
+            v = (v | 2) if v & 1 else (v & ~2)
         elif base == rcc + 0x08:                                  # RCC_CFGR: SWS follows SW
             v = (v & ~0x38) | ((v & 7) << 3)
         elif base == self.addr("ADC", "ISR"):
@@ -135,6 +137,9 @@ class Sim:
         for i, a in enumerate(args):
             uc.reg_write(UC_ARM_REG_R0 + i, a)
         uc.emu_start(self.symbols[name] | 1, MAGIC, count=max_insns)
+        pc = uc.reg_read(UC_ARM_REG_PC)
+        if pc != MAGIC:
+            raise AssertionError(f"{name}() did not return after {max_insns} instructions (stuck in a wait loop at 0x{pc:08X}?)")
         return uc.reg_read(UC_ARM_REG_R0)
 
     def ram_u32(self, symbol):

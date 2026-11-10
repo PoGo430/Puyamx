@@ -246,8 +246,8 @@ class Gen:
         sw = timing.SW_CODES[src]
         if src in ("HSE", "PLL") and (src == "HSE" or cfg.get("pll_src") == "HSE"):
             hz = cfg["hse_hz"]
-            fcode = 0 if cfg.get("hse_bypass") else (1 if hz <= 8_000_000 else 2 if hz <= 16_000_000 else 3)
-            if "ECSCR" in c.peripherals["RCC"]["regs"]:
+            fcode = 1 if hz <= 8_000_000 else 2 if hz <= 16_000_000 else 3     # RM: 00 would switch the HSE off, also in bypass
+            if "HSE_FREQ" in c.peripherals["RCC"]["regs"].get("ECSCR", {}).get("fields", {}):
                 o.append(f"    RCC->ECSCR = (RCC->ECSCR & ~RCC_ECSCR_HSE_FREQ_Msk) | ({fcode}UL << RCC_ECSCR_HSE_FREQ_Pos);")
             if cfg.get("hse_bypass") and "HSEBYP" in c.peripherals["RCC"]["regs"]["CR"]["fields"]:
                 o.append("    RCC->CR |= RCC_CR_HSEBYP;")
@@ -255,6 +255,15 @@ class Gen:
             o.append(f"    RCC->CR |= RCC_CR_{en};")
             if "HSERDY" in c.peripherals["RCC"]["regs"]["CR"]["fields"]:
                 o.append("    while (!(RCC->CR & RCC_CR_HSERDY)) { }")
+        if src == "LSI":
+            o.append("    RCC->CSR |= RCC_CSR_LSION;   /* 32.768 kHz internal oscillator */")
+            o.append("    while (!(RCC->CSR & RCC_CSR_LSIRDY)) { }")
+        if src == "LSE":
+            if "DBP" in c.peripherals["PWR"]["regs"]["CR1"]["fields"]:
+                o.append("    " + self.enable_clock("PWR"))
+                o.append("    PWR->CR1 |= PWR_CR1_DBP;   /* the backup domain (LSE) is write protected until DBP is set */")
+            o.append("    RCC->BDCR |= RCC_BDCR_LSEON;   /* external 32.768 kHz crystal on the OSC32 pins */")
+            o.append("    while (!(RCC->BDCR & RCC_BDCR_LSERDY)) { }")
         if src == "PLL":
             o.append(f"    RCC->PLLCFGR = {1 if cfg.get('pll_src') == 'HSE' else 0}UL;   /* PLL source: {cfg.get('pll_src', 'HSI')}; PLL multiplies by 2 */")
             o.append("    RCC->CR |= RCC_CR_PLLON;")
