@@ -21,6 +21,8 @@ def cli(argv):
         s.add_argument("folder")
     sub.add_parser("examples", help="list the examples")
     sub.add_parser("tools", help="show which compiler is used")
+    st = sub.add_parser("selftest", help="check compiler, flash algorithms and window (used by the CI on the finished program)")
+    st.add_argument("--screenshot", help="write a PNG of the window")
     a = ap.parse_args(argv)
     if a.cmd == "examples":
         for e in examples.EXAMPLES:
@@ -30,6 +32,8 @@ def cli(argv):
         print("compiler:", toolchain.gcc_version() or "NOT FOUND")
         print("folder  :", toolchain.find_gcc_bin())
         return 0 if toolchain.find_gcc_bin() else 1
+    if a.cmd == "selftest":
+        return selftest(a.screenshot)
     if a.cmd == "new":
         if a.example == "empty":
             p, sec = Project(a.chip), None
@@ -61,10 +65,60 @@ def cli(argv):
     return None
 
 
+def selftest(screenshot=None):
+    import tempfile
+    from . import chips, codegen, examples, flasher, toolchain
+    print("version  :", __import__("puya_studio").__version__)
+    print("compiler :", toolchain.gcc_version() or "NOT FOUND")
+    if not toolchain.find_gcc_bin():
+        return 1
+    for cid in chips.CHIP_NAMES:
+        p, sec, _ = examples.build("uart_hello", cid)
+        folder = tempfile.mkdtemp()
+        codegen.generate(p, folder, sec)
+        r = toolchain.build(folder, "selftest")
+        print(f"build    : {cid:10} {'ok' if r.ok and not r.warnings else 'FAILED'}  ROM {r.rom} RAM {r.ram}")
+        if not r.ok or r.warnings:
+            print(r.log)
+            return 1
+    from pyocd.target import TARGET
+    from pyocd.target.pack import pack_target
+    pack_target.PackTargets.populate_targets_from_pack(flasher.pack_path())
+    names = [flasher.target_name(c, 16) for c in chips.all_chips()]
+    missing = [n for n in names if n not in TARGET]
+    print("pyocd    :", "flash algorithms for", ", ".join(names), "- ok" if not missing else f"MISSING {missing}")
+    if missing:
+        return 1
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    from PySide6.QtWidgets import QApplication
+    from .ui.main_window import MainWindow
+    app = QApplication.instance() or QApplication([])
+    w = MainWindow()
+    p, sec, _ = examples.build("uart_hello", "py32f030", package="LQFP32-K1")
+    w.set_project(p, None)
+    w.resize(1500, 900)
+    w.show()
+    app.processEvents()
+    w.chipview.select_port("PA10")
+    w.panel.show_port(p, "PA10")
+    app.processEvents()
+    if screenshot:
+        w.grab().save(screenshot)
+    print("window   : ok")
+    print("SELFTEST OK")
+    return 0
+
+
 def main():
     argv = sys.argv[1:]
-    if argv and argv[0] in ("new", "build", "check", "gen", "examples", "tools", "--version", "-h", "--help"):
+    if argv and argv[0] in ("new", "build", "check", "gen", "examples", "tools", "selftest", "--version", "-h", "--help"):
         sys.exit(cli(argv))
+    if sys.platform.startswith("win") and getattr(sys, "frozen", False):
+        try:                                     # the window is the program: close the console that Windows opened for it
+            import ctypes
+            ctypes.windll.kernel32.FreeConsole()
+        except Exception:
+            pass
     from PySide6.QtWidgets import QApplication
     from .ui.main_window import MainWindow
     app = QApplication(sys.argv)

@@ -1,0 +1,4 @@
+PySide6>=6.6
+pyocd>=0.36
+pyserial>=3.5
+hidapi>=0.14

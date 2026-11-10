@@ -30,10 +30,24 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - name: Compiler (download, trim, self-test with a real compile)
         run: python packaging/fetch_tools.py
-      - name: Tests
+      - name: Tests (data, generator, simulator, window, programming)
         run: python -m pytest -q tests
         env:
           QT_QPA_PLATFORM: offscreen
+      - name: One-file program
+        run: python packaging/build.py
+      - name: Try the finished program (bundled compiler, flash algorithms, window)
+        run: |
+          mkdir /tmp/try && cd /tmp/try
+          env -u PUYA_GCC $GITHUB_WORKSPACE/dist/puya-studio selftest --screenshot /tmp/try/window.png
+          $GITHUB_WORKSPACE/dist/puya-studio new /tmp/try/p -c py32f003 -e uart_hello
+          $GITHUB_WORKSPACE/dist/puya-studio build /tmp/try/p
+        env:
+          QT_QPA_PLATFORM: offscreen
+      - uses: actions/upload-artifact@v4
+        with:
+          name: puya-studio-linux
+          path: dist/puya-studio
 
   windows:
     runs-on: windows-latest
@@ -45,7 +59,41 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - name: Compiler (download, trim, self-test with a real compile)
         run: python packaging/fetch_tools.py
-      - name: Tests
+      - name: Tests (data, generator, simulator, window, programming)
         run: python -m pytest -q tests
         env:
           QT_QPA_PLATFORM: offscreen
+      - name: One-file program
+        run: python packaging/build.py
+      - name: Try the finished program (bundled compiler, flash algorithms, window)
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/try" && cd "$RUNNER_TEMP/try"
+          "$GITHUB_WORKSPACE/dist/puya-studio.exe" selftest --screenshot window.png
+          "$GITHUB_WORKSPACE/dist/puya-studio.exe" new p -c py32f030 -e i2c_scan
+          "$GITHUB_WORKSPACE/dist/puya-studio.exe" build p
+        env:
+          QT_QPA_PLATFORM: offscreen
+      - uses: actions/upload-artifact@v4
+        with:
+          name: puya-studio-windows
+          path: dist/puya-studio.exe
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.version != ''
+    needs: [linux, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: Make the Linux file executable
+        run: chmod +x puya-studio-linux/puya-studio
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.version || github.ref_name }}      # the tag is created by this step: no tag push from outside is needed
+          target_commitish: ${{ github.sha }}
+          name: Puya Studio ${{ inputs.version || github.ref_name }}
+          prerelease: true                                        # not tested on real chips yet
+          generate_release_notes: true
+          files: |
+            puya-studio-linux/puya-studio
+            puya-studio-windows/puya-studio.exe

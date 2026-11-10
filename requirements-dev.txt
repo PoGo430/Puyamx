@@ -1,2 +1,4 @@
+-r requirements.txt
 unicorn>=2.0.1
 pytest>=7
+pyinstaller>=6.3
