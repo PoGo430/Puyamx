@@ -152,7 +152,13 @@ def selftest(arm, win):
            "-T", "l.ld", "--specs=nano.specs", "--specs=nosys.specs", "-o", "t.elf"]
     r = subprocess.run(cmd, cwd=work, capture_output=True, text=True)
     if r.returncode != 0 or r.stderr.strip():
-        raise SystemExit("self test failed:\n" + r.stdout + r.stderr)
+        info = [f"self test failed, exit code {r.returncode} (0x{r.returncode & 0xFFFFFFFF:08X})", "stdout:", r.stdout, "stderr:", r.stderr]
+        v = subprocess.run([gcc, "-v", "-mcpu=cortex-m0plus", "-mthumb", "-c", "t.c", "-o", "t.o"], cwd=work, capture_output=True, text=True)
+        info += ["---- gcc -v (exit %s):" % v.returncode, v.stdout[-3000:], v.stderr[-3000:]]
+        for sub in ("bin", os.path.join("libexec", "gcc", "arm-none-eabi", GCC_VER), "libexec"):
+            d = os.path.join(arm, sub)
+            info.append(f"---- {sub}: " + ", ".join(sorted(os.listdir(d))) if os.path.isdir(d) else f"---- {sub}: missing")
+        raise SystemExit("\n".join(info))
     size = subprocess.run([os.path.join(arm, "bin", "arm-none-eabi-size" + exe), "t.elf"], cwd=work, capture_output=True, text=True)
     print("self test ok:", size.stdout.strip().splitlines()[-1])
     shutil.rmtree(work)
