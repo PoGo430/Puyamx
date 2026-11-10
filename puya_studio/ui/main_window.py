@@ -158,12 +158,18 @@ class MainWindow(QMainWindow):
         self.output = QPlainTextEdit()
         self.output.setReadOnly(True)
         self.output.setFont(QFont("monospace"))
-        self.programmer = ProgrammerPanel(self)
+        self.programmer_panel = ProgrammerPanel(self)
+        self.programmer = self.programmer_panel
         self.monitor = MonitorPanel(self)
         self.bottom.addTab(self.problems, "Problems")
         self.bottom.addTab(self.diag, "Build errors")
         self.bottom.addTab(self.output, "Output")
-        self.bottom.addTab(self.programmer, "Programmer")
+        from PySide6.QtWidgets import QScrollArea
+        prog_scroll = QScrollArea()
+        prog_scroll.setWidgetResizable(True)
+        prog_scroll.setWidget(self.programmer_panel)
+        self.prog_scroll = prog_scroll
+        self.bottom.addTab(prog_scroll, "Programmer")
         self.bottom.addTab(self.monitor, "Monitor")
         dock = QDockWidget("", self)
         dock.setWidget(self.bottom)
@@ -171,7 +177,9 @@ class MainWindow(QMainWindow):
         dock.setFeatures(QDockWidget.NoDockWidgetFeatures)
         self.addDockWidget(Qt.BottomDockWidgetArea, dock)
         self.dock = dock
-        self.resizeDocks([dock], [190], Qt.Vertical)
+        self.bottom.setMaximumHeight(260)
+        self.bottom.setMinimumHeight(150)
+        self.resizeDocks([dock], [210], Qt.Vertical)
         self.status = self.statusBar()
         self.usage = QLabel("")
         self.status.addPermanentWidget(self.usage)
@@ -426,7 +434,7 @@ class MainWindow(QMainWindow):
         r = self.build()
         if not r or not r.ok:
             return None
-        self.bottom.setCurrentWidget(self.programmer)
+        self.bottom.setCurrentWidget(self.prog_scroll)
         return self.programmer.flash(r)
 
     def start_monitor(self):

@@ -9,10 +9,10 @@ F002B DS V0.8 (CN) / V0.3 EN, RM v0.4 / v0.2 EN.
       `python tools/build_db.py DFP_DIR RMTXT_DIR` rebuilds `puya_studio/chips/*.json`; `tools/verify_regs.py` re-checks the RM.
       **Phase 2 (not done yet):** the separate single-package datasheets (F003 SOP8/SOP8L2/SOP16/MSOP10/DFN8, F030 DFN8/QFN20F3)
       describe sub-families with their own function sets; the DB can hold them but they are not added.
-- [ ] M2 codegen / examples / simulator
-- [ ] M3 GUI
-- [ ] M4 programming
-- [ ] M5 packaging / CI / README
+- [x] M2 codegen / examples / simulator
+- [x] M3 GUI
+- [x] M4 programming (untested on real chips: see README checklist)
+- [~] M5 packaging / CI / README: README, one-file build, CI written; verify CI runs green, then run the release workflow with a version
 
 Notes for a resumed session: reference clones live in the session scratchpad and may be gone;
 re-clone `decaday/PY32_Docs`, `IOsetting/py32f0-template`, `OpenPuya/PY32F0xx_Firmware` (git clone works

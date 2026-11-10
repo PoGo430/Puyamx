@@ -30,7 +30,7 @@ class ChipView(QWidget):
         self.rects = {}             # pin number -> QRectF
         self.setMouseTracking(True)
         self.setFocusPolicy(Qt.StrongFocus)
-        self.setMinimumSize(520, 500)
+        self.setMinimumSize(480, 380)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
     # ------------------------------------------------------------------ data
@@ -88,12 +88,12 @@ class ChipView(QWidget):
                 rects[n - i] = QRectF(x0 + body_w, y, pw, ph)
         else:
             per = n // 4
-            pitch = min(38.0, (min(w - 2 * 270, h - 2 * 210) - 20) / max(per, 1))
+            pitch = min(36.0, (min(w - 2 * (60 + 190), h - 2 * (60 + 110)) - 20) / max(per, 1))
             side = pitch * per + 20
             cx, cy = w / 2, h / 2
             x0, y0 = cx - side / 2, cy - side / 2
             self.body = QRectF(x0, y0, side, side)
-            pl, pt = 74.0, pitch - 6
+            pl, pt = 60.0, max(pitch - 6, 8.0)
             for i in range(per):                          # left, top -> bottom
                 rects[1 + i] = QRectF(x0 - pl, y0 + 10 + i * pitch + 3, pl, pt)
             for i in range(per):                          # bottom, left -> right
@@ -210,17 +210,17 @@ class ChipView(QWidget):
         else:
             c = self.body.center()
             if rc.right() <= self.body.left() + 1:
-                box = QRectF(rc.left() - 180, rc.top(), 176, rc.height()); al = Qt.AlignRight | Qt.AlignVCenter
-                g.drawText(box, al, txt)
+                box = QRectF(rc.left() - 190, rc.top(), 186, rc.height()); al = Qt.AlignRight | Qt.AlignVCenter
+                g.drawText(box, al, g.fontMetrics().elidedText(txt, Qt.ElideRight, 184))
             elif rc.left() >= self.body.right() - 1:
-                box = QRectF(rc.right() + 4, rc.top(), 176, rc.height()); al = Qt.AlignLeft | Qt.AlignVCenter
-                g.drawText(box, al, txt)
+                box = QRectF(rc.right() + 4, rc.top(), 186, rc.height()); al = Qt.AlignLeft | Qt.AlignVCenter
+                g.drawText(box, al, g.fontMetrics().elidedText(txt, Qt.ElideRight, 184))
             elif rc.top() >= self.body.bottom() - 1:
                 g.save(); g.translate(rc.center().x(), rc.bottom() + 6); g.rotate(90)
-                g.drawText(QRectF(0, -rc.width() / 2, 140, rc.width()), Qt.AlignLeft | Qt.AlignVCenter, txt); g.restore()
+                g.drawText(QRectF(0, -rc.width() / 2, 108, rc.width()), Qt.AlignLeft | Qt.AlignVCenter, g.fontMetrics().elidedText(txt, Qt.ElideRight, 108)); g.restore()
             else:
                 g.save(); g.translate(rc.center().x(), rc.top() - 6); g.rotate(-90)
-                g.drawText(QRectF(0, -rc.width() / 2, 140, rc.width()), Qt.AlignLeft | Qt.AlignVCenter, txt); g.restore()
+                g.drawText(QRectF(0, -rc.width() / 2, 108, rc.width()), Qt.AlignLeft | Qt.AlignVCenter, g.fontMetrics().elidedText(txt, Qt.ElideRight, 108)); g.restore()
 
     # ------------------------------------------------------------------ mouse / keyboard
     def pin_at(self, pos):
