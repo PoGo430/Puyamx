@@ -1,0 +1,51 @@
+name: build
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version for a release, e.g. v0.1.0 (leave empty to only build and test)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  linux:
+    runs-on: ubuntu-22.04          # older glibc: the executable runs on more distributions
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: System libraries for the offscreen window
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libgl1 libxkbcommon0 libxkbcommon-x11-0 libfontconfig1 libdbus-1-3 libusb-1.0-0 libxcb-cursor0
+      - run: pip install -r requirements-dev.txt
+      - name: Compiler (download, trim, self-test with a real compile)
+        run: python packaging/fetch_tools.py
+      - name: Tests
+        run: python -m pytest -q tests
+        env:
+          QT_QPA_PLATFORM: offscreen
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - name: Compiler (download, trim, self-test with a real compile)
+        run: python packaging/fetch_tools.py
+      - name: Tests
+        run: python -m pytest -q tests
+        env:
+          QT_QPA_PLATFORM: offscreen
