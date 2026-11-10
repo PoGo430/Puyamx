@@ -78,6 +78,12 @@
     "4": 536809232
    }
   },
+  "hsi_word": {
+   "fs_bits": 3,
+   "fs_shift_in_word": 16,
+   "note": "factory word: HSI_FS[2:0] at bit 16, HSI_TRIM[12:0] at bit 0 (RM 4.5.1)",
+   "trim_bits": 13
+  },
   "lse_hz": 32768,
   "lsi_hz": 32768,
   "mco": {
@@ -95,25 +101,83 @@
     "1": "SYSCLK",
     "3": "HSI",
     "4": "HSE",
-    "5": "PLL",
     "6": "LSI",
     "7": "LSE"
    }
   },
-  "pll": {
-   "multiplier": 2,
-   "output_max_hz": 32000000,
-   "select_reg": "RCC_PLLCFGR.PLLSRC",
-   "sources": [
-    "HSI",
-    "HSE"
-   ]
-  },
+  "pll": null,
   "source": "DS Rev1.2 EN: 32 MHz max; RM v1.2 RCC/FLASH chapters (same layout as PY32F030)",
   "sysclk_max_hz": 32000000,
   "trim_addr_source": "inferred: same addresses as PY32F030 RM; verify on hardware"
  },
  "core": "Cortex-M0+",
+ "exti": {
+  "lines": {
+   "0": [
+    "A",
+    "B",
+    "F"
+   ],
+   "1": [
+    "A",
+    "B",
+    "F"
+   ],
+   "10": [
+    "A"
+   ],
+   "11": [
+    "A"
+   ],
+   "12": [
+    "A"
+   ],
+   "13": [
+    "A"
+   ],
+   "14": [
+    "A"
+   ],
+   "15": [
+    "A"
+   ],
+   "2": [
+    "A",
+    "B",
+    "F"
+   ],
+   "3": [
+    "A",
+    "B",
+    "F"
+   ],
+   "4": [
+    "A",
+    "B",
+    "F"
+   ],
+   "5": [
+    "A",
+    "B"
+   ],
+   "6": [
+    "A",
+    "B"
+   ],
+   "7": [
+    "A",
+    "B"
+   ],
+   "8": [
+    "A",
+    "B"
+   ],
+   "9": [
+    "A"
+   ]
+  },
+  "source": "RM v1.2 EXTI_EXTICR1-3"
+ },
  "features": {
   "adc": {
    "bits": 12,
@@ -184,6 +248,72 @@
    "WWDG"
   ]
  },
+ "flash_timing": {
+  "epara_base": {
+   "0": 536809244,
+   "1": 536809264,
+   "2": 536809284,
+   "3": 536809304,
+   "4": 536809324
+  },
+  "layout": {
+   "PERTPE": [
+    2,
+    17,
+    0,
+    0
+   ],
+   "PRETPE": [
+    4,
+    13,
+    16,
+    0
+   ],
+   "PRGTPE": [
+    4,
+    16,
+    0,
+    0
+   ],
+   "SMERTPE": [
+    3,
+    17,
+    0,
+    0
+   ],
+   "TPS3": [
+    1,
+    11,
+    16,
+    0
+   ],
+   "TS0": [
+    0,
+    8,
+    0,
+    0
+   ],
+   "TS1": [
+    0,
+    9,
+    16,
+    0
+   ],
+   "TS2P": [
+    1,
+    8,
+    0,
+    0
+   ],
+   "TS3": [
+    0,
+    8,
+    8,
+    0
+   ]
+  },
+  "source": "RM v1.2 4.5.3-4.5.8 (table 4-6)"
+ },
  "interrupts": {
   "0": "WWDG",
   "1": "PVD",
@@ -238,7 +368,8 @@
  "notes": [
   "DS Rev1.9 has no real Port B alternate-function table (the section repeats Port A). PB5-PB7 follow DS Rev1.2 EN; PB0-PB4 and PB8 use the numbering of the PY32F030 DS Rev2.2 table (marked source=inferred); their function set matches the F003 pin table.",
   "DS Rev1.9 alternate-function table lists SPI2_* and LED_* (copied from PY32F030); the chip has only SPI1 and no LED controller (DS Rev1.2 EN, RM, SVD), those entries are dropped.",
-  "TSSOP20 F4 (Pinout4) has the dual-bonded pad PA2/PF2-NRST on pin 2."
+  "TSSOP20 F4 (Pinout4) has the dual-bonded pad PA2/PF2-NRST on pin 2.",
+  "PY32F003 has no PLL (the RM has no PLL register and the DS clock list has none): 32 MHz needs an external clock/crystal on HSE."
  ],
  "nrst": "PF2",
  "option_bytes": {

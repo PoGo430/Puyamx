@@ -241,7 +241,8 @@ def test_limits():
     assert chips.load("py32f030").max_hz == 48_000_000
     assert chips.load("py32f003").max_hz == 32_000_000
     assert chips.load("py32f002b").max_hz == 24_000_000
-    assert chips.load("py32f002b").clock["pll"] is None
+    assert chips.load("py32f002b").clock["pll"] is None and chips.load("py32f003").clock["pll"] is None
+    assert chips.load("py32f030").clock["pll"]["multiplier"] == 2
     assert chips.load("py32f030").clock["flash_latency"] == [{"max_hz": 24_000_000, "latency": 0},
                                                               {"max_hz": 48_000_000, "latency": 1}]
 

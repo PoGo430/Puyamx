@@ -44,6 +44,10 @@ class Chip:
         self.option_bytes = data["option_bytes"]
         self.max_hz = data["max_hz"]
         self.parts = data["parts"]
+        self.exti = data["exti"]["lines"]
+        self.adc = data["adc"]
+        self.bootloader = data.get("bootloader")
+        self.flash_timing = data.get("flash_timing")
         self.notes = data.get("notes", [])
         self._alias = data["signal_alias"]
 

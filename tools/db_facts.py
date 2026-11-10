@@ -104,10 +104,10 @@ CLOCKS = {
                 "default_after_reset_hz": 8 * HZ, "trim_addr": {"0": 0x1FFF0F00, "1": 0x1FFF0F04, "2": 0x1FFF0F08, "3": 0x1FFF0F0C, "4": 0x1FFF0F10},
                 "div": [1, 2, 4, 8, 16, 32, 64, 128]},
         "hse": {"crystal_hz": [4 * HZ, 32 * HZ], "bypass": True, "freq_field": "RCC_ECSCR.HSE_FREQ"},
-        "pll": {"multiplier": 2, "sources": ["HSI", "HSE"], "select_reg": "RCC_PLLCFGR.PLLSRC", "output_max_hz": 32 * HZ},
+        "pll": None,     # RM v1.2 has no PLL (no PLLCFGR, no PLLON); the DS clock list has none either
         "lsi_hz": 32768, "lse_hz": 32768, "ahb_div": [1, 2, 4, 8, 16, 64, 128, 256, 512], "apb_div": [1, 2, 4, 8, 16],
         "flash_latency": [{"max_hz": 24 * HZ, "latency": 0}, {"max_hz": 32 * HZ, "latency": 1}],
-        "mco": {"sel": {"1": "SYSCLK", "3": "HSI", "4": "HSE", "5": "PLL", "6": "LSI", "7": "LSE"}, "div": [1, 2, 4, 8, 16, 32, 64, 128]},
+        "mco": {"sel": {"1": "SYSCLK", "3": "HSI", "4": "HSE", "6": "LSI", "7": "LSE"}, "div": [1, 2, 4, 8, 16, 32, 64, 128]},
         "source": "DS Rev1.2 EN: 32 MHz max; RM v1.2 RCC/FLASH chapters (same layout as PY32F030)",
         "trim_addr_source": "inferred: same addresses as PY32F030 RM; verify on hardware",
     },
@@ -208,6 +208,7 @@ NOTES = {
         "PB0-PB4 and PB8 use the numbering of the PY32F030 DS Rev2.2 table (marked source=inferred); their function set matches the F003 pin table.",
         "DS Rev1.9 alternate-function table lists SPI2_* and LED_* (copied from PY32F030); the chip has only SPI1 and no LED controller (DS Rev1.2 EN, RM, SVD), those entries are dropped.",
         "TSSOP20 F4 (Pinout4) has the dual-bonded pad PA2/PF2-NRST on pin 2.",
+        "PY32F003 has no PLL (the RM has no PLL register and the DS clock list has none): 32 MHz needs an external clock/crystal on HSE.",
     ],
     "py32f002b": [
         "DS V0.8 is an early revision. MSOP10 (PY32F010MA15N) appears only in the EN V0.3 datasheet and is not included.",
@@ -216,6 +217,39 @@ NOTES = {
         "SWD pins are PB6 (SWDIO) and PA2 (SWCLK); option bytes can move SWD (see option_bytes).",
     ],
 }
+
+def _exti(ports3, five_eight, hi, last):
+    """EXTI line -> ports that can be selected (code = index in the list), RM EXTI_EXTICR1..3."""
+    t = {}
+    for n in range(0, 5):
+        t[str(n)] = list(ports3)
+    for n in range(5, 9):
+        t[str(n)] = list(five_eight)
+    for n in range(9, 16):
+        t[str(n)] = list(hi)
+    return {k: v for k, v in t.items() if int(k) <= last}
+
+
+EXTI = {
+    "py32f030": {"lines": _exti("ABF", "AB", "A", 15), "source": "RM v1.2 EXTI_EXTICR1-3 (12.3.5-12.3.7); lines 9-15 have no selector (port A)"},
+    "py32f003": {"lines": _exti("ABF", "AB", "A", 15), "source": "RM v1.2 EXTI_EXTICR1-3"},
+    "py32f002b": {"lines": _exti("ABC", "AB", "", 7), "source": "RM v0.4 EXTI_EXTICR1-2; the code for port C (2) is not printed in the RM, inferred (verify on hardware)"},
+}
+
+# Factory flash timing words copied into FLASH_TS0.. after changing the HSI frequency (RM table 4-6, PY32F030/F003).
+# Per HSI_FS index: address of EPPARA0; the five words follow (TS0/TS3/TS1, TS2P/TPS3, PERTPE, SMERTPE, PRGTPE/PRETPE)
+FLASH_TIMING = {
+    "py32f030": {"epara_base": {"0": 0x1FFF0F1C, "1": 0x1FFF0F30, "2": 0x1FFF0F44, "3": 0x1FFF0F58, "4": 0x1FFF0F6C},
+                 "layout": {"TS0": [0, 8, 0, 0], "TS3": [0, 8, 8, 0], "TS1": [0, 9, 16, 0], "TS2P": [1, 8, 0, 0], "TPS3": [1, 11, 16, 0],
+                            "PERTPE": [2, 17, 0, 0], "SMERTPE": [3, 17, 0, 0], "PRGTPE": [4, 16, 0, 0], "PRETPE": [4, 13, 16, 0]},
+                 "source": "RM v1.2 4.5.3-4.5.8"},
+    "py32f003": {"epara_base": {"0": 0x1FFF0F1C, "1": 0x1FFF0F30, "2": 0x1FFF0F44, "3": 0x1FFF0F58, "4": 0x1FFF0F6C},
+                 "layout": {"TS0": [0, 8, 0, 0], "TS3": [0, 8, 8, 0], "TS1": [0, 9, 16, 0], "TS2P": [1, 8, 0, 0], "TPS3": [1, 11, 16, 0],
+                            "PERTPE": [2, 17, 0, 0], "SMERTPE": [3, 17, 0, 0], "PRGTPE": [4, 16, 0, 0], "PRETPE": [4, 13, 16, 0]},
+                 "source": "RM v1.2 4.5.3-4.5.8 (table 4-6)"},
+    "py32f002b": None,
+}
+HSI_WORD = {"fs_shift_in_word": 16, "fs_bits": 3, "trim_bits": 13, "note": "factory word: HSI_FS[2:0] at bit 16, HSI_TRIM[12:0] at bit 0 (RM 4.5.1)"}
 
 CHIPS = {
     "py32f030": {
@@ -263,6 +297,9 @@ for _c, _i in CHIPS.items():
     _i["adc"] = ADC_EXTRA[_c]
     _i["signal_alias"] = SIGNAL_ALIAS[_c]
     _i["notes"] = NOTES[_c]
+    _i["exti"] = EXTI[_c]
+    _i["flash_timing"] = FLASH_TIMING[_c]
+    _i["clock"] = dict(_i["clock"], hsi_word=HSI_WORD)
 
 
 def finish_ports(chip, ports, raw):

@@ -1,0 +1,816 @@
+"""C code generator: project dict -> small project folder.
+
+Files written (all of them are small; there is no vendor HAL):
+    <chip>.h       registers and bits of the chip (from the chip database, see gen_header.py)
+    init.h/init.c  clock, pins, peripherals, helpers (delay_ms, uart, adc, pwm ...)  [generated]
+    interrupts.c   one handler per enabled interrupt with USER CODE sections
+    main.c         your code (only USER CODE sections are yours)
+    startup.c, link.ld, Makefile
+Code between USER CODE BEGIN/END survives regeneration (usercode.py).
+"""
+import os
+
+from . import gen_header, timing, usercode
+from .project import SPEEDS, identifier
+from .usercode import section
+
+SPEED_CODE = {s: i for i, s in enumerate(SPEEDS)}
+PULL_CODE = {"none": 0, "up": 1, "down": 2}
+MODE_CODE = {"input": 0, "output": 1, "af": 2, "analog": 3}
+ENABLE_REGS = ("IOPENR", "AHBENR", "APBENR1", "APBENR2")
+
+
+class GenError(Exception):
+    pass
+
+
+def hexv(v, width=0):
+    return f"0x{v:0{width}X}UL" if v > 9 else f"{v}UL"
+
+
+class Gen:
+    def __init__(self, project):
+        self.p = project
+        self.c = project.chip
+        self.clk = timing.clock_tree(self.c, project.clock)
+        self.sig = project.signals_in_use()
+        self.names = {}
+        self.warnings = []
+        self._mp = gen_header.macro_prefixes(self.c)
+
+    def mp(self, inst):
+        return self._mp[inst]
+
+    # ------------------------------------------------------------------ helpers
+    def enable_clock(self, inst, comment=True):
+        """C statement enabling the bus clock of a peripheral (found in the RCC enable registers)."""
+        key = inst + "EN"
+        for rn in ENABLE_REGS:
+            r = self.c.peripherals["RCC"]["regs"].get(rn)
+            if r and key in r["fields"]:
+                return f"RCC->{rn} |= RCC_{rn}_{key};"
+        raise GenError(f"no clock enable bit for {inst} on {self.c.name}")
+
+    def reset_clock_name(self, inst):
+        for rn in ENABLE_REGS:
+            r = self.c.peripherals["RCC"]["regs"].get(rn)
+            if r and inst + "EN" in r["fields"]:
+                return rn
+        raise GenError(inst)
+
+    def inst(self, name):
+        return self.c.peripherals.get(name) is not None or name in ("I2C1", "LPTIM1")
+
+    def irq(self, name):
+        for n, v in self.c.interrupts.items():
+            if v == name:
+                return v
+        raise GenError(f"{self.c.name} has no interrupt {name}")
+
+    def periph_cfg(self, name):
+        s = self.p.periph.get(name)
+        return s if s and s.get("enabled") else None
+
+    def timers(self):
+        return [t for t in self.c.features["timers"] if self.periph_cfg(t)]
+
+    def usarts(self):
+        return [u for u in self.c.features["usart"] if self.periph_cfg(u)]
+
+    def spis(self):
+        return [u for u in self.c.features["spi"] if self.periph_cfg(u)]
+
+    def i2cs(self):
+        return [u for u in self.c.features["i2c"] if self.periph_cfg(u)]
+
+    def pin_macro_names(self):
+        used, out = {}, {}
+        for port in sorted(self.p.pins, key=lambda x: (x[1], int(x[2:]))):
+            n = self.p.pin_name(port)
+            if n in used:
+                n = f"{n}_{port}"
+            used[n] = port
+            out[port] = n
+        return out
+
+    # ------------------------------------------------------------------ irq table
+    def irq_list(self):
+        """[(irq name, priority, reason)] of the interrupts that get a handler and are enabled in the NVIC."""
+        p = self.p
+        out = {}
+        pr = p.irq.get("prio", {})
+
+        def add(name, prio, why):
+            out.setdefault(name, [prio, []])[1].append(why)
+            out[name][0] = pr.get(name, out[name][0])
+        for u in self.usarts():
+            if self.periph_cfg(u).get("irq_rx"):
+                add(u, self.periph_cfg(u).get("prio", 2), f"{u} receive")
+        for t in self.timers():
+            s = self.periph_cfg(t)
+            if s.get("irq"):
+                add("TIM1_BRK_UP_TRG_COM" if t == "TIM1" else t, s.get("prio", 2), f"{t} update")
+        lines = self.exti_lines()
+        for n, port in lines.items():
+            grp = "EXTI0_1" if n < 2 else "EXTI2_3" if n < 4 else "EXTI4_15"
+            add(grp, p.irq.get("prio", {}).get(grp, 2), f"line {n} ({port})")
+        for name, prio in p.irq.get("extra", {}).items():
+            add(name, prio, "enabled on the Interrupts page")
+        return {k: (v[0], v[1]) for k, v in out.items()}
+
+    def exti_lines(self):
+        res = {}
+        for port, d in self.p.pins.items():
+            if d["func"] == "exti":
+                res[int(port[2:])] = port
+        return dict(sorted(res.items()))
+
+    # ------------------------------------------------------------------ header (init.h)
+    def init_h(self):
+        p, c, clk = self.p, self.c, self.clk
+        o = []
+        o.append(f"/* {p.name}: generated by Puya Studio - the code you write goes into main.c and the USER CODE sections. */")
+        o.append("#ifndef INIT_H\n#define INIT_H\n")
+        o.append(f'#include "{c.id}.h"\n')
+        o.append(section("Includes") + "\n")
+        o.append(f"#define SYSCLK_HZ  {clk.sysclk}UL")
+        o.append(f"#define HCLK_HZ    {clk.hclk}UL")
+        o.append(f"#define PCLK_HZ    {clk.pclk}UL")
+        o.append(f"#define TIMCLK_HZ  {clk.tim_clk}UL\n")
+        o.append("void Init_All(void);\nvoid SystemClock_Config(void);")
+        o.append("uint32_t millis(void);\nvoid delay_ms(uint32_t ms);")
+        o.append("void enter_sleep(void);\nvoid enter_stop(void);\n")
+        names = self.pin_macro_names()
+        self.names = names
+        if p.pins:
+            o.append("/* ---- pins: <NAME>_PORT / _PIN / _MASK, outputs: _HIGH() _LOW() _TOGGLE() _WRITE(x), inputs: _READ() ---- */")
+        for port, n in names.items():
+            d = p.pins[port]
+            pl, pn = port[1], int(port[2:])
+            o.append(f"#define {n}_PORT GPIO{pl}")
+            o.append(f"#define {n}_PIN {pn}")
+            o.append(f"#define {n}_MASK (1UL << {pn})")
+            if d["func"] == "gpio_out" or (d["func"] == "af" and False):
+                o.append(f"#define {n}_HIGH()   (GPIO{pl}->BSRR = {n}_MASK)")
+                o.append(f"#define {n}_LOW()    (GPIO{pl}->BSRR = {n}_MASK << 16)")
+                o.append(f"#define {n}_TOGGLE() (GPIO{pl}->ODR ^= {n}_MASK)")
+                o.append(f"#define {n}_WRITE(x) ((x) ? {n}_HIGH() : {n}_LOW())")
+                o.append(f"#define {n}_READ()   ((GPIO{pl}->ODR >> {pn}) & 1UL)")
+            elif d["func"] in ("gpio_in", "exti"):
+                o.append(f"#define {n}_READ()   ((GPIO{pl}->IDR >> {pn}) & 1UL)")
+            elif d["func"] == "analog":
+                for a in c.analog_of(port):
+                    if a.startswith("ADC_IN"):
+                        o.append(f"#define {n}_ADC_CH {a[6:]}")
+            elif d["func"] == "af" and d["signal"].split("_")[0].startswith("TIM") and "_CH" in d["signal"]:
+                tim, ch = d["signal"].split("_")[0], d["signal"].split("_CH")[1].rstrip("N")
+                if not d["signal"].endswith("N"):
+                    o.append(f"#define {n}_SET_DUTY(permille) {tim.lower()}_set_duty_permille({ch}, (permille))")
+        o.append("")
+        for u in self.usarts():
+            n = u.lower()
+            o.append(f"void {n}_putc(char ch);\nvoid {n}_puts(const char *s);\nint  {n}_getc_nb(void);   /* -1 if nothing received */")
+            o.append(f"void {n}_print_u32(uint32_t v);\nvoid {n}_print_hex(uint32_t v, int digits);")
+        for s in self.spis():
+            n = s.lower()
+            o.append(f"uint8_t {n}_transfer(uint8_t byte);")
+        for i in self.i2cs():
+            n = i.lower()
+            o.append(f"int {n}_write(uint8_t addr7, const uint8_t *data, uint16_t len);   /* 0 = ok, -1 = no ACK / timeout */")
+            o.append(f"int {n}_read(uint8_t addr7, uint8_t *data, uint16_t len);")
+            o.append(f"int {n}_probe(uint8_t addr7);")
+        if self.periph_cfg("ADC"):
+            o.append("uint16_t adc_read(uint8_t channel);   /* one conversion, polling */")
+        for t in self.timers():
+            if self.tim_pwm_channels(t):
+                o.append(f"void {t.lower()}_set_duty_permille(uint8_t channel, uint16_t permille);   /* 0..1000 */")
+            o.append(f"#define {t}_ARR_VALUE {self.tim_values(t)[1]}UL")
+        if self.periph_cfg("IWDG"):
+            o.append("#define IWDG_KICK() (IWDG->KR = 0xAAAAU)")
+        o.append("\n" + section("EC") + "\n")
+        o.append("#endif /* INIT_H */\n")
+        return "\n".join(o)
+
+    # ------------------------------------------------------------------ timers
+    def tim_pwm_channels(self, t):
+        ch = {}
+        for sig, ports in self.sig.items():
+            if sig.startswith(t + "_CH"):
+                tail = sig[len(t) + 3:]
+                ch[int(tail.rstrip("N"))] = ch.get(int(tail.rstrip("N")), [])
+                ch[int(tail.rstrip("N"))].append(tail.endswith("N"))
+        return ch
+
+    def tim_values(self, t):
+        s = self.periph_cfg(t)
+        bits = self.c.features["timers"][t]["bits"]
+        r = timing.timer_for_freq(self.clk.tim_clk, s["freq_hz"], bits)
+        if r is None:
+            return 0, 0, 0.0, 100.0
+        return r
+
+    # ------------------------------------------------------------------ clock
+    def clock_code(self):
+        c, p, clk = self.c, self.p, self.clk
+        cfg = p.clock
+        hsi = c.clock["hsi"]
+        o = ["void SystemClock_Config(void)", "{"]
+        o.append("    uint32_t t;")
+        raising = clk.flash_latency > 0
+        if c.clock["flash_latency"] and len(c.clock["flash_latency"]) > 1:
+            if raising:
+                o.append("    /* more than 24 MHz: one flash wait state before the faster clock is used */")
+                o.append("    FLASH->ACR = (FLASH->ACR & ~FLASH_ACR_LATENCY_Msk) | (1UL << FLASH_ACR_LATENCY_Pos);")
+        # HSI frequency + factory trim
+        fs_index = clk.hsi_fs
+        word = hsi["trim_addr"][str(fs_index)]
+        o.append(f"    /* HSI {cfg['hsi_hz'] / 1e6:g} MHz: select the frequency and load the factory trim value (RM 4.5.1) */")
+        o.append(f"    t = *(volatile uint32_t *) 0x{word:08X}UL;")
+        o.append("    RCC->ICSCR = (RCC->ICSCR & ~(RCC_ICSCR_HSI_FS_Msk | RCC_ICSCR_HSI_TRIM_Msk))")
+        o.append("               | (((t >> 16) & 7UL) << RCC_ICSCR_HSI_FS_Pos) | (t & RCC_ICSCR_HSI_TRIM_Msk);")
+        ft = c.flash_timing
+        if ft:
+            base = ft["epara_base"][str(fs_index)]
+            o.append("    /* flash erase/program timing for this HSI frequency (factory values, RM table 4-6) */")
+            o.append(f"    {{ volatile uint32_t *e = (volatile uint32_t *) 0x{base:08X}UL;")
+            lay = ft["layout"]
+            groups = {}
+            for reg, (w, width, shift, _) in lay.items():
+                groups.setdefault(reg, (w, width, shift))
+            for reg, (w, width, shift) in groups.items():
+                mask = (1 << width) - 1
+                o.append(f"      FLASH->{reg} = (e[{w}] >> {shift}) & 0x{mask:X}UL;")
+            o.append("    }")
+        o.append(f"    RCC->CR = (RCC->CR & ~RCC_CR_HSIDIV_Msk) | ({timing.HSIDIV_CODES.get(cfg['hsidiv'], 0)}UL << RCC_CR_HSIDIV_Pos);")
+        src = cfg["source"]
+        sw = timing.SW_CODES[src]
+        if src in ("HSE", "PLL") and (src == "HSE" or cfg.get("pll_src") == "HSE"):
+            hz = cfg["hse_hz"]
+            fcode = 0 if cfg.get("hse_bypass") else (1 if hz <= 8_000_000 else 2 if hz <= 16_000_000 else 3)
+            if "ECSCR" in c.peripherals["RCC"]["regs"]:
+                o.append(f"    RCC->ECSCR = (RCC->ECSCR & ~RCC_ECSCR_HSE_FREQ_Msk) | ({fcode}UL << RCC_ECSCR_HSE_FREQ_Pos);")
+            if cfg.get("hse_bypass") and "HSEBYP" in c.peripherals["RCC"]["regs"]["CR"]["fields"]:
+                o.append("    RCC->CR |= RCC_CR_HSEBYP;")
+            en = "HSEON" if "HSEON" in c.peripherals["RCC"]["regs"]["CR"]["fields"] else "HSEEN"
+            o.append(f"    RCC->CR |= RCC_CR_{en};")
+            if "HSERDY" in c.peripherals["RCC"]["regs"]["CR"]["fields"]:
+                o.append("    while (!(RCC->CR & RCC_CR_HSERDY)) { }")
+        if src == "PLL":
+            o.append(f"    RCC->PLLCFGR = {1 if cfg.get('pll_src') == 'HSE' else 0}UL;   /* PLL source: {cfg.get('pll_src', 'HSI')}; PLL multiplies by 2 */")
+            o.append("    RCC->CR |= RCC_CR_PLLON;")
+            o.append("    while (!(RCC->CR & RCC_CR_PLLRDY)) { }")
+        o.append(f"    RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_HPRE_Msk | RCC_CFGR_PPRE_Msk | RCC_CFGR_SW_Msk))")
+        o.append(f"              | ({timing.AHB_CODES.get(cfg['ahb_div'], 0)}UL << RCC_CFGR_HPRE_Pos)"
+                 f" | ({timing.APB_CODES.get(cfg['apb_div'], 0)}UL << RCC_CFGR_PPRE_Pos) | ({sw}UL << RCC_CFGR_SW_Pos);")
+        o.append(f"    while (((RCC->CFGR & RCC_CFGR_SWS_Msk) >> RCC_CFGR_SWS_Pos) != {sw}UL) {{ }}")
+        if c.clock["flash_latency"] and len(c.clock["flash_latency"]) > 1 and not raising:
+            o.append("    FLASH->ACR &= ~FLASH_ACR_LATENCY_Msk;   /* 24 MHz or less: no flash wait state */")
+        mco = cfg.get("mco")
+        if mco and "MCO" in self.sig:
+            sel = {v: int(k) for k, v in c.clock["mco"]["sel"].items()}.get(mco["src"])
+            if sel is not None:
+                pre = {1: 0, 2: 1, 4: 2, 8: 3, 16: 4, 32: 5, 64: 6, 128: 7}.get(mco.get("div", 1), 0)
+                o.append(f"    RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_MCOSEL_Msk | RCC_CFGR_MCOPRE_Msk)) | ({sel}UL << RCC_CFGR_MCOSEL_Pos) | ({pre}UL << RCC_CFGR_MCOPRE_Pos);")
+        if cfg.get("systick_hz"):
+            o.append(f"    SysTick->LOAD = (HCLK_HZ / {cfg['systick_hz']}UL) - 1UL;   /* {cfg['systick_hz']} Hz tick, used by millis() / delay_ms() */")
+            o.append("    SysTick->VAL = 0;")
+            o.append("    SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;")
+        o.append("}")
+        return "\n".join(o)
+
+    # ------------------------------------------------------------------ gpio
+    def gpio_code(self):
+        p, c = self.p, self.c
+        ports = {}
+        for port, d in p.pins.items():
+            ports.setdefault(port[1], []).append((int(port[2:]), port, d))
+        o = ["static void GPIO_Init(void)", "{"]
+        if not ports:
+            o.append("    /* no pins configured */")
+        else:
+            o.append("    RCC->IOPENR |= " + " | ".join(f"RCC_IOPENR_GPIO{l}EN" for l in sorted(ports)) + ";")
+        names = self.names
+        for letter in sorted(ports):
+            pins = sorted(ports[letter])
+            masks = {"MODER": [0, 0], "OSPEEDR": [0, 0], "PUPDR": [0, 0], "OTYPER": [0, 0], "AFRL": [0, 0], "AFRH": [0, 0]}
+            bsrr = 0
+            comments = []
+            for n, port, d in pins:
+                f = d["func"]
+                mode = {"gpio_in": "input", "exti": "input", "gpio_out": "output", "analog": "analog", "af": "af"}[f]
+                masks["MODER"][0] |= 3 << (2 * n)
+                masks["MODER"][1] |= MODE_CODE[mode] << (2 * n)
+                if mode in ("output", "af"):
+                    masks["OSPEEDR"][0] |= 3 << (2 * n)
+                    masks["OSPEEDR"][1] |= SPEED_CODE[d["speed"]] << (2 * n)
+                    masks["OTYPER"][0] |= 1 << n
+                    masks["OTYPER"][1] |= (1 if d["otype"] == "od" else 0) << n
+                if mode != "analog":
+                    masks["PUPDR"][0] |= 3 << (2 * n)
+                    masks["PUPDR"][1] |= PULL_CODE[d["pull"]] << (2 * n)
+                else:
+                    masks["PUPDR"][0] |= 3 << (2 * n)
+                if mode == "af":
+                    af = p.signal_af(port, d["signal"])
+                    reg = "AFRL" if n < 8 else "AFRH"
+                    masks[reg][0] |= 0xF << (4 * (n % 8))
+                    masks[reg][1] |= af << (4 * (n % 8))
+                if mode == "output":
+                    bsrr |= (1 << n) if d["init"] == "high" else (1 << (n + 16))
+                lab = names[port]
+                what = d["signal"] if f == "af" else f
+                comments.append(f"{port} {lab}: {what}")
+            o.append(f"    /* GPIO{letter}: " + "; ".join(comments) + " */")
+            for reg in ("AFRL", "AFRH", "OTYPER", "OSPEEDR", "PUPDR"):
+                m, v = masks[reg]
+                if m:
+                    o.append(f"    GPIO{letter}->{reg} = (GPIO{letter}->{reg} & ~0x{m:08X}UL) | 0x{v:08X}UL;")
+            if bsrr:
+                o.append(f"    GPIO{letter}->BSRR = 0x{bsrr:08X}UL;   /* output start levels, before the pin becomes an output */")
+            m, v = masks["MODER"]
+            o.append(f"    GPIO{letter}->MODER = (GPIO{letter}->MODER & ~0x{m:08X}UL) | 0x{v:08X}UL;")
+        o.append("}")
+        return "\n".join(o)
+
+    # ------------------------------------------------------------------ exti
+    def exti_code(self):
+        lines = self.exti_lines()
+        if not lines:
+            return ""
+        c = self.c
+        o = ["static void EXTI_Init(void)", "{"]
+        for n, port in lines.items():
+            letter = port[1]
+            allowed = c.exti.get(str(n))
+            if not allowed or letter not in allowed:
+                raise GenError(f"{port} cannot be an EXTI source on {c.name} (line {n} supports ports {allowed})")
+            code = allowed.index(letter)
+            reg = "EXTICR1" if n < 4 else "EXTICR2" if n < 8 else "EXTICR3"
+            if len(allowed) > 1 or n in (0, 1, 2, 3, 4, 5, 6, 7, 8):
+                if code or True:
+                    fld = f"EXTI{n}"
+                    if fld in c.peripherals["EXTI"]["regs"][reg]["fields"]:
+                        o.append(f"    EXTI->{reg} = (EXTI->{reg} & ~EXTI_{reg}_{fld}_Msk) | ({code}UL << EXTI_{reg}_{fld}_Pos);   /* line {n}: {port} */")
+            edge = self.p.pins[port]["edge"]
+            if edge in ("rising", "both"):
+                o.append(f"    EXTI->RTSR |= EXTI_RTSR_RT{n};")
+            if edge in ("falling", "both"):
+                o.append(f"    EXTI->FTSR |= EXTI_FTSR_FT{n};")
+            o.append(f"    EXTI->IMR |= EXTI_IMR_IM{n};")
+        o.append("}")
+        return "\n".join(o)
+
+    # ------------------------------------------------------------------ usart
+    def usart_code(self, u):
+        s = self.periph_cfg(u)
+        n = u.lower()
+        pclk = self.clk.pclk
+        brr, actual, err = timing.usart_brr(pclk, s["baud"])
+        if brr is None:
+            raise GenError(f"{u}: baud rate {s['baud']} impossible with PCLK {pclk} Hz")
+        tx, rx = f"{u}_TX" in self.sig, f"{u}_RX" in self.sig
+        total = s["bits"] + (0 if s["parity"] == "none" else 1)
+        if total not in (8, 9):
+            raise GenError(f"{u}: {s['bits']} data bits with parity '{s['parity']}' is not possible (frame must be 8 or 9 bits)")
+        cr1 = ["USART_CR1_UE"]
+        if tx:
+            cr1.append("USART_CR1_TE")
+        if rx:
+            cr1.append("USART_CR1_RE")
+        if total == 9:
+            cr1.append("USART_CR1_M")
+        if s["parity"] != "none":
+            cr1.append("USART_CR1_PCE")
+            if s["parity"] == "odd":
+                cr1.append("USART_CR1_PS")
+        if s.get("irq_rx") and rx:
+            cr1.append("USART_CR1_RXNEIE")
+        stop = 2 if s["stop"] == 2 else 0
+        o = [f"static void {u}_Init(void)", "{", "    " + self.enable_clock(u),
+             f"    {u}->BRR = {brr}UL;   /* {s['baud']} baud from PCLK {pclk} Hz: real {actual:.0f} baud, error {err:.2f} % */"]
+        if stop:
+            o.append(f"    {u}->CR2 = (2UL << USART_CR2_STOP_Pos);   /* 2 stop bits */")
+        o.append(f"    {u}->CR1 = " + " | ".join(cr1) + ";")
+        o.append("}")
+        o.append("")
+        if tx:
+            o.append(f"void {n}_putc(char ch)\n{{\n    while (!({u}->SR & USART_SR_TXE)) {{ }}\n    {u}->DR = (uint32_t) (uint8_t) ch;\n}}")
+            o.append(f"void {n}_puts(const char *s)\n{{\n    while (*s) {{ {n}_putc(*s++); }}\n}}")
+            o.append(f"void {n}_print_u32(uint32_t v)\n{{\n    char b[11]; int i = 10;\n    b[i] = 0;\n    do {{ b[--i] = (char) ('0' + v % 10U); v /= 10U; }} while (v);\n    {n}_puts(&b[i]);\n}}")
+            o.append(f"void {n}_print_hex(uint32_t v, int digits)\n{{\n    while (digits-- > 0) {{ {n}_putc(\"0123456789ABCDEF\"[(v >> (4 * digits)) & 15U]); }}\n}}")
+        else:
+            o.append(f"void {n}_putc(char ch) {{ (void) ch; }}\nvoid {n}_puts(const char *s) {{ (void) s; }}")
+            o.append(f"void {n}_print_u32(uint32_t v) {{ (void) v; }}\nvoid {n}_print_hex(uint32_t v, int digits) {{ (void) v; (void) digits; }}")
+        if rx and s.get("irq_rx"):
+            o.append(f"static volatile uint8_t {n}_rxbuf[64];\nstatic volatile uint8_t {n}_rxw, {n}_rxr;")
+            o.append(f"void {n}_rx_store(uint8_t b) {{ uint8_t w = ({n}_rxw + 1U) & 63U; if (w != {n}_rxr) {{ {n}_rxbuf[{n}_rxw] = b; {n}_rxw = w; }} }}")
+            o.append(f"int {n}_getc_nb(void)\n{{\n    int c;\n    if ({n}_rxr == {n}_rxw) {{ return -1; }}\n    c = {n}_rxbuf[{n}_rxr];\n    {n}_rxr = ({n}_rxr + 1U) & 63U;\n    return c;\n}}")
+        elif rx:
+            o.append(f"int {n}_getc_nb(void)\n{{\n    if ({u}->SR & (USART_SR_RXNE | USART_SR_ORE)) {{ return (int) ({u}->DR & 0xFFU); }}\n    return -1;\n}}")
+        else:
+            o.append(f"int {n}_getc_nb(void) {{ return -1; }}")
+        return "\n".join(o)
+
+    # ------------------------------------------------------------------ spi
+    def spi_code(self, sp):
+        s = self.periph_cfg(sp)
+        n = sp.lower()
+        br, actual = timing.spi_prescaler(self.clk.pclk, s["speed_hz"])
+        cr1 = []
+        if s["mode"] == "master":
+            cr1 += ["SPI_CR1_MSTR", "SPI_CR1_SSM", "SPI_CR1_SSI"]
+        if s["cpol"]:
+            cr1.append("SPI_CR1_CPOL")
+        if s["cpha"]:
+            cr1.append("SPI_CR1_CPHA")
+        if s["first"] == "lsb":
+            cr1.append("SPI_CR1_LSBFIRST")
+        cr2 = ["SPI_CR2_FRXTH"] if s["bits"] == 8 else ["SPI_CR2_DS"]
+        o = [f"static void {sp}_Init(void)", "{", "    " + self.enable_clock(sp),
+             f"    {sp}->CR1 = " + " | ".join(cr1 + [f"({br}UL << SPI_CR1_BR_Pos)"] if cr1 else [f"({br}UL << SPI_CR1_BR_Pos)"]) + f";   /* SCK {actual / 1e6:g} MHz */",
+             f"    {sp}->CR2 = " + " | ".join(cr2) + ";",
+             f"    {sp}->CR1 |= SPI_CR1_SPE;", "}", ""]
+        if s["bits"] == 8:
+            o.append(f"uint8_t {n}_transfer(uint8_t byte)\n{{\n    while (!({sp}->SR & SPI_SR_TXE)) {{ }}\n    *(volatile uint8_t *) &{sp}->DR = byte;\n    while (!({sp}->SR & SPI_SR_RXNE)) {{ }}\n    return *(volatile uint8_t *) &{sp}->DR;\n}}")
+        else:
+            o.append(f"uint8_t {n}_transfer(uint8_t byte)\n{{\n    while (!({sp}->SR & SPI_SR_TXE)) {{ }}\n    {sp}->DR = byte;\n    while (!({sp}->SR & SPI_SR_RXNE)) {{ }}\n    return (uint8_t) {sp}->DR;\n}}")
+        return "\n".join(o)
+
+    # ------------------------------------------------------------------ i2c
+    def i2c_code(self, ic):
+        s = self.periph_cfg(ic)
+        n = ic.lower()
+        t = timing.i2c_timing(self.clk.pclk, s["speed_hz"])
+        if t is None:
+            raise GenError(f"{ic}: PCLK {self.clk.pclk} Hz is too low for {s['speed_hz']} Hz")
+        ccr = t["CCR"] | (0x8000 if t["fast"] else 0)
+        o = [f"static void {ic}_Init(void)", "{", "    " + self.enable_clock("I2C"),
+             f"    I2C1->CR2 = {t['FREQ']}UL;   /* PCLK in MHz */",
+             f"    I2C1->CCR = 0x{ccr:04X}UL;   /* {'fast' if t['fast'] else 'standard'} mode, SCL {t['actual_hz'] / 1e3:.1f} kHz */",
+             f"    I2C1->TRISE = {t['TRISE']}UL;", "    I2C1->CR1 = I2C_CR1_PE;", "}", ""]
+        o.append("""#define I2C_TIMEOUT 200000UL
+static int i2c1_wait(uint32_t flag)
+{
+    uint32_t t = I2C_TIMEOUT;
+    while (!(I2C1->SR1 & flag)) { if (I2C1->SR1 & I2C_SR1_AF) { return -1; } if (--t == 0) { return -1; } }
+    return 0;
+}
+static int i2c1_busy_wait(void)
+{
+    uint32_t t = I2C_TIMEOUT;
+    while (I2C1->SR2 & I2C_SR2_BUSY) { if (--t == 0) { return -1; } }
+    return 0;
+}
+static void i2c1_fail(void) { I2C1->SR1 = 0; I2C1->CR1 |= I2C_CR1_STOP; }
+static int i2c1_start(uint8_t addr_byte)
+{
+    if (i2c1_busy_wait()) { return -1; }
+    I2C1->CR1 |= I2C_CR1_ACK | I2C_CR1_START;
+    if (i2c1_wait(I2C_SR1_SB)) { i2c1_fail(); return -1; }
+    I2C1->DR = addr_byte;
+    if (i2c1_wait(I2C_SR1_ADDR)) { i2c1_fail(); return -1; }
+    return 0;
+}
+int i2c1_write(uint8_t addr7, const uint8_t *data, uint16_t len)
+{
+    if (i2c1_start((uint8_t) (addr7 << 1))) { return -1; }
+    (void) I2C1->SR2;                                  /* clears ADDR */
+    while (len--) {
+        if (i2c1_wait(I2C_SR1_TxE)) { i2c1_fail(); return -1; }
+        I2C1->DR = *data++;
+    }
+    if (i2c1_wait(I2C_SR1_BTF)) { i2c1_fail(); return -1; }
+    I2C1->CR1 |= I2C_CR1_STOP;
+    return 0;
+}
+int i2c1_probe(uint8_t addr7)
+{
+    if (i2c1_start((uint8_t) (addr7 << 1))) { return -1; }
+    (void) I2C1->SR2;
+    I2C1->CR1 |= I2C_CR1_STOP;
+    return 0;
+}
+int i2c1_read(uint8_t addr7, uint8_t *data, uint16_t len)
+{
+    if (len == 0) { return 0; }
+    if (i2c1_start((uint8_t) ((addr7 << 1) | 1U))) { return -1; }
+    if (len == 1) {
+        I2C1->CR1 &= ~I2C_CR1_ACK;
+        (void) I2C1->SR2;
+        I2C1->CR1 |= I2C_CR1_STOP;
+        if (i2c1_wait(I2C_SR1_RxNE)) { i2c1_fail(); return -1; }
+        *data = (uint8_t) I2C1->DR;
+        return 0;
+    }
+    (void) I2C1->SR2;
+    while (len > 2) {                                  /* all but the last two bytes */
+        if (i2c1_wait(I2C_SR1_RxNE)) { i2c1_fail(); return -1; }
+        *data++ = (uint8_t) I2C1->DR;
+        len--;
+    }
+    if (i2c1_wait(I2C_SR1_BTF)) { i2c1_fail(); return -1; }   /* byte N-1 in DR, byte N in the shift register */
+    I2C1->CR1 &= ~I2C_CR1_ACK;
+    *data++ = (uint8_t) I2C1->DR;
+    I2C1->CR1 |= I2C_CR1_STOP;
+    if (i2c1_wait(I2C_SR1_RxNE)) { i2c1_fail(); return -1; }
+    *data = (uint8_t) I2C1->DR;
+    return 0;
+}""")
+        return "\n".join(o)
+
+    # ------------------------------------------------------------------ adc
+    def adc_code(self):
+        s = self.periph_cfg("ADC")
+        if not s:
+            return ""
+        code, adc_hz = timing.adc_clock_div(self.clk.pclk)
+        res = {12: 0, 10: 1, 8: 2, 6: 3}[s["resolution"]]
+        ts = self.c.adc["internal"]["TS_VIN"]
+        vr = self.c.adc["internal"]["VREFINT"]
+        o = ["static void ADC_Init(void)", "{", "    " + self.enable_clock("ADC"),
+             f"    ADC->CFGR2 = ({code}UL << ADC_CFGR2_CKMODE_Pos);   /* ADC clock PCLK/{2 ** code} = {adc_hz / 1e6:g} MHz (calibration needs this, RM 14.3.2) */",
+             f"    ADC->CFGR1 = ({res}UL << ADC_CFGR1_RESSEL_Pos);   /* {s['resolution']}-bit, right aligned */",
+             f"    ADC->SMPR = {s['sample']}UL;   /* sample time setting {s['sample']} */"]
+        ccr = []
+        if s.get("temp"):
+            ccr.append("ADC_CCR_TSEN")
+        if s.get("vref"):
+            ccr.append("ADC_CCR_VREFEN")
+        if ccr:
+            o.append("    ADC->CCR |= " + " | ".join(ccr) + ";")
+        o += ["    ADC->CR = ADC_CR_ADCAL;                  /* calibration (ADEN must be 0) */",
+              "    while (ADC->CR & ADC_CR_ADCAL) { }", "    ADC->CR = ADC_CR_ADEN;", "}", ""]
+        o.append(f"uint16_t adc_read(uint8_t channel)   /* external channels, {ts} = temperature sensor, {vr} = VREFINT */\n"
+                 "{\n    ADC->CHSELR = 1UL << channel;\n    ADC->ISR = ADC_ISR_EOC | ADC_ISR_EOSEQ | ADC_ISR_EOSMP;\n"
+                 "    ADC->CR |= ADC_CR_ADSTART;\n    while (!(ADC->ISR & ADC_ISR_EOC)) { }\n    return (uint16_t) ADC->DR;\n}")
+        return "\n".join(o)
+
+    # ------------------------------------------------------------------ timers
+    def tim_code(self, t):
+        s = self.periph_cfg(t)
+        info = self.c.features["timers"][t]
+        psc, arr, actual, err = self.tim_values(t)
+        chans = self.tim_pwm_channels(t)
+        regs = self.c.peripherals[t]["regs"]
+        m = self.mp(t)
+        has_bdtr = "BDTR" in regs
+        o = [f"static void {t}_Init(void)", "{", "    " + self.enable_clock(t),
+             f"    {t}->PSC = {psc}UL;", f"    {t}->ARR = {arr}UL;   /* update rate {actual:.3f} Hz (wanted {s['freq_hz']:g} Hz, error {err:.3f} %) */"]
+        ccmr = {1: [], 2: []}
+        ccer = []
+        for ch, comps in sorted(chans.items()):
+            reg = 1 if ch <= 2 else 2
+            sh = 0 if ch in (1, 3) else 8
+            ccmr[reg].append(f"(6UL << {4 + sh}) | (1UL << {3 + sh})")     # OCxM = PWM mode 1, OCxPE
+            if False in comps:
+                ccer.append(f"{m}_CCER_CC{ch}E")
+            if True in comps:
+                ccer.append(f"{m}_CCER_CC{ch}NE")
+            duty = s["duty"].get(str(ch), 50.0)
+            o.append(f"    {t}->CCR{ch} = {timing.pwm_ccr(arr, duty)}UL;   /* channel {ch}: {duty:g} % */")
+        for reg in (1, 2):
+            if ccmr[reg]:
+                o.append(f"    {t}->CCMR{reg} = " + " | ".join(ccmr[reg]) + ";   /* PWM mode 1, preload */")
+        if ccer:
+            o.append(f"    {t}->CCER = " + " | ".join(ccer) + ";")
+        if has_bdtr and chans:
+            o.append(f"    {t}->BDTR = {m}_BDTR_MOE;   /* main output enable */")
+        if s.get("irq"):
+            o.append(f"    {t}->DIER = {m}_DIER_UIE;")
+        o.append(f"    {t}->CR1 = {m}_CR1_ARPE | {m}_CR1_CEN;")
+        o.append(f"    {t}->EGR = {m}_EGR_UG;   /* load the registers */")
+        o.append("}")
+        if chans:
+            o.append("")
+            n = t.lower()
+            o.append(f"void {n}_set_duty_permille(uint8_t channel, uint16_t permille)\n{{\n    uint32_t v = (({t}->ARR + 1UL) * (uint32_t) permille) / 1000UL;\n    switch (channel) {{")
+            for ch in sorted(chans):
+                o.append(f"    case {ch}: {t}->CCR{ch} = v; break;")
+            o.append("    default: break;\n    }\n}")
+        return "\n".join(o)
+
+    # ------------------------------------------------------------------ iwdg
+    def iwdg_code(self):
+        s = self.periph_cfg("IWDG")
+        if not s:
+            return ""
+        r = timing.iwdg_for_timeout(self.c.clock["lsi_hz"], s["timeout_ms"])
+        if r is None:
+            raise GenError("IWDG timeout too long")
+        pr, rlr, actual = r
+        return "\n".join([
+            "static void IWDG_Start(void)", "{",
+            "    IWDG->KR = 0xCCCCU;                      /* start (the watchdog runs from the 32.768 kHz LSI) */",
+            "    IWDG->KR = 0x5555U;                      /* unlock PR / RLR */",
+            f"    IWDG->PR = {pr}UL;", f"    IWDG->RLR = {rlr}UL;   /* about {actual:.0f} ms */",
+            "    while (IWDG->SR) { }", "    IWDG->KR = 0xAAAAU;", "}"])
+
+    # ------------------------------------------------------------------ main init
+    def init_c(self):
+        p, c = self.p, self.c
+        o = ['#include "init.h"\n', section("Includes_c"), "", section("PV"), ""]
+        o.append("static volatile uint32_t g_ms;")
+        if p.clock.get("systick_hz"):
+            o.append(f"#define TICKS_PER_MS ({p.clock['systick_hz']}UL / 1000UL ? {p.clock['systick_hz']}UL / 1000UL : 1UL)")
+            o.append("uint32_t millis(void) { return g_ms / TICKS_PER_MS; }")
+            o.append("void delay_ms(uint32_t ms) { uint32_t t = g_ms; ms *= TICKS_PER_MS; while ((uint32_t) (g_ms - t) < ms) { } }")
+            o.append("void SysTick_Handler(void)\n{\n    g_ms++;\n" + section("SysTick") + "\n}")
+        else:
+            o.append("uint32_t millis(void) { return 0; }\nvoid delay_ms(uint32_t ms) { while (ms--) { for (volatile uint32_t i = 0; i < SYSCLK_HZ / 8000UL; i++) { } } }")
+        o.append("")
+        o.append(self.clock_code())
+        o.append("")
+        o.append(self.gpio_code())
+        o.append("")
+        for e in (self.exti_code(),):
+            if e:
+                o += [e, ""]
+        for u in self.usarts():
+            o += [self.usart_code(u), ""]
+        for s in self.spis():
+            o += [self.spi_code(s), ""]
+        for i in self.i2cs():
+            o += [self.i2c_code(i), ""]
+        if self.periph_cfg("ADC"):
+            o += [self.adc_code(), ""]
+        for t in self.timers():
+            o += [self.tim_code(t), ""]
+        if self.periph_cfg("IWDG"):
+            o += [self.iwdg_code(), ""]
+        # power helpers
+        o.append("void enter_sleep(void)\n{\n    SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;\n    __WFI();\n}")
+        lpr = "    PWR->CR1 |= PWR_CR1_LPR;   /* low-power regulator */\n" if p.power.get("stop_lpr") and "LPR" in c.peripherals["PWR"]["regs"]["CR1"]["fields"] else ""
+        lpr_off = "    PWR->CR1 &= ~PWR_CR1_LPR;\n" if lpr else ""
+        o.append("void enter_stop(void)   /* wake up with an EXTI pin interrupt; the clock is set up again afterwards */\n{\n"
+                 "    " + self.enable_clock("PWR").replace("RCC->", "RCC->") + "\n" + lpr +
+                 "    SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;\n    __WFI();\n    SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;\n" + lpr_off +
+                 "    SystemClock_Config();\n}")
+        o.append("")
+        # Init_All
+        o.append("void Init_All(void)\n{")
+        o.append("    SystemClock_Config();")
+        o.append("    GPIO_Init();")
+        if self.exti_lines():
+            o.append("    EXTI_Init();")
+        for u in self.usarts():
+            o.append(f"    {u}_Init();")
+        for s in self.spis():
+            o.append(f"    {s}_Init();")
+        for i in self.i2cs():
+            o.append(f"    {i}_Init();")
+        if self.periph_cfg("ADC"):
+            o.append("    ADC_Init();")
+        for t in self.timers():
+            o.append(f"    {t}_Init();")
+        for name, (prio, why) in self.irq_list().items():
+            o.append(f"    NVIC_SetPriority({name}_IRQn, {prio});\n    NVIC_EnableIRQ({name}_IRQn);   /* {', '.join(why)} */")
+        o.append(section("SysInit"))
+        if self.periph_cfg("IWDG"):
+            o.append("    IWDG_Start();")
+        o.append("    __enable_irq();\n}")
+        o.append("")
+        o.append(section("EC_c"))
+        return "\n".join(o) + "\n"
+
+    # ------------------------------------------------------------------ interrupts.c
+    def interrupts_c(self):
+        o = ['#include "init.h"\n', section("Includes_it"), ""]
+        for name, (prio, why) in self.irq_list().items():
+            o.append(f"void {name}_IRQHandler(void)   /* {', '.join(why)} */\n{{")
+            if name in self.c.features["usart"]:
+                n = name.lower()
+                s = self.periph_cfg(name)
+                if s and s.get("irq_rx"):
+                    o.append(f"    if ({name}->SR & (USART_SR_RXNE | USART_SR_ORE)) {{ {n}_rx_store((uint8_t) {name}->DR); }}")
+            elif name.startswith("TIM") or name == "TIM1_BRK_UP_TRG_COM":
+                t = "TIM1" if name == "TIM1_BRK_UP_TRG_COM" else name
+                m = self.mp(t)
+                o.append(f"    if ({t}->SR & {m}_SR_UIF) {{\n        {t}->SR = ~{m}_SR_UIF;\n{section('IRQ_' + t + '_update')}\n    }}")
+            elif name.startswith("EXTI"):
+                lo, hi = {"EXTI0_1": (0, 1), "EXTI2_3": (2, 3), "EXTI4_15": (4, 15)}[name]
+                lines = self.exti_lines()
+                for n, port in lines.items():
+                    if lo <= n <= hi:
+                        o.append(f"    if (EXTI->PR & EXTI_PR_PR{n}) {{\n        EXTI->PR = EXTI_PR_PR{n};   /* line {n}: {port} */\n{section('IRQ_EXTI' + str(n))}\n    }}")
+            o.append(section("IRQ_" + name))
+            o.append("}\n")
+        o.append(section("EC_it"))
+        return "\n".join(o) + "\n"
+
+    def usart_rx_proto(self):
+        return [f"void {u.lower()}_rx_store(uint8_t b);" for u in self.usarts() if self.periph_cfg(u).get("irq_rx")]
+
+    # ------------------------------------------------------------------ main.c
+    def main_c(self):
+        return "\n".join([
+            "/* " + self.p.name + " - " + self.c.name + ". Write your code between the USER CODE markers: it is kept when the project is regenerated. */",
+            section("Header"), "", '#include "init.h"', "", section("Includes_main"), "", section("PV_main"), "",
+            "int main(void)", "{", section("1"), "", "    Init_All();", "", section("2"), "", "    while (1) {",
+            section("3"), "    }", "}", "", section("EC_main"), ""])
+
+    # ------------------------------------------------------------------ startup, linker, makefile
+    def startup_c(self):
+        irqs = self.c.interrupts
+        o = ["/* Vector table and reset code. Generated by Puya Studio. */", "#include <stdint.h>", "",
+             "extern uint32_t _estack, _sidata, _sdata, _edata, _sbss, _ebss;", "extern int main(void);",
+             "void Reset_Handler(void);", "void Default_Handler(void);", "",
+             "#define WEAK_HANDLER __attribute__((weak, alias(\"Default_Handler\")))",
+             "void NMI_Handler(void) WEAK_HANDLER;", "void HardFault_Handler(void) WEAK_HANDLER;",
+             "void SVC_Handler(void) WEAK_HANDLER;", "void PendSV_Handler(void) WEAK_HANDLER;", "void SysTick_Handler(void) WEAK_HANDLER;"]
+        for n in sorted(irqs):
+            o.append(f"void {irqs[n]}_IRQHandler(void) WEAK_HANDLER;")
+        o += ["", '__attribute__((section(".isr_vector"), used)) void (*const g_vectors[])(void) = {',
+              "    (void (*)(void)) &_estack, Reset_Handler, NMI_Handler, HardFault_Handler,",
+              "    0, 0, 0, 0, 0, 0, 0, SVC_Handler, 0, 0, PendSV_Handler, SysTick_Handler,"]
+        for n in range(32):
+            o.append(f"    {irqs[n] + '_IRQHandler' if n in irqs else '0'},   /* IRQ {n} */")
+        o += ["};", "",
+              "void Reset_Handler(void)", "{", "    uint32_t *s = &_sidata, *d = &_sdata;",
+              "    while (d < &_edata) { *d++ = *s++; }", "    for (d = &_sbss; d < &_ebss; d++) { *d = 0; }",
+              "    main();", "    while (1) { }", "}", "",
+              "void Default_Handler(void)", "{", "    while (1) { }", "}", ""]
+        return "\n".join(o)
+
+    def linker_ld(self):
+        f, r = self.p.flash_kb, self.p.ram_kb
+        return f"""/* Memory layout of {self.p.part or self.c.name}: {f} KB flash, {r} KB RAM. Generated by Puya Studio. */
+ENTRY(Reset_Handler)
+MEMORY
+{{
+  FLASH (rx)  : ORIGIN = 0x08000000, LENGTH = {f}K
+  RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = {r}K
+}}
+_estack = ORIGIN(RAM) + LENGTH(RAM);
+SECTIONS
+{{
+  .isr_vector : {{ KEEP(*(.isr_vector)) }} > FLASH
+  .text : {{ *(.text*) *(.rodata*) . = ALIGN(4); }} > FLASH
+  .ARM.exidx : {{ *(.ARM.exidx*) }} > FLASH
+  _sidata = LOADADDR(.data);
+  .data : {{ _sdata = .; *(.data*) . = ALIGN(4); _edata = .; }} > RAM AT> FLASH
+  .bss : {{ _sbss = .; *(.bss*) *(COMMON) . = ALIGN(4); _ebss = .; }} > RAM
+  /DISCARD/ : {{ *(.ARM.attributes) }}
+}}
+"""
+
+    def makefile(self):
+        return f"""# Build with arm-none-eabi-gcc (Puya Studio uses its own copy; this file is for building outside the program).
+PREFIX ?= arm-none-eabi-
+NAME   := {identifier(self.p.name, 'firmware')}
+SRCS   := $(wildcard *.c)
+CFLAGS := -mcpu=cortex-m0plus -mthumb -Os -g -Wall -Wextra -ffunction-sections -fdata-sections -ffreestanding
+LDFLAGS := -mcpu=cortex-m0plus -mthumb -nostartfiles -Wl,--gc-sections -Wl,-Map=build/$(NAME).map -T link.ld --specs=nano.specs --specs=nosys.specs
+
+all: build/$(NAME).bin
+	$(PREFIX)size build/$(NAME).elf
+build/$(NAME).elf: $(SRCS) $(wildcard *.h) link.ld
+	mkdir -p build
+	$(PREFIX)gcc $(CFLAGS) $(SRCS) $(LDFLAGS) -o $@
+build/$(NAME).bin: build/$(NAME).elf
+	$(PREFIX)objcopy -O binary $< $@
+clean:
+	rm -rf build
+"""
+
+    # ------------------------------------------------------------------ everything
+    def files(self):
+        """All files as {name: text} before the USER CODE merge."""
+        self.names = self.pin_macro_names()
+        f = {
+            f"{self.c.id}.h": gen_header.generate(self.c),
+            "init.h": self.init_h(), "init.c": self.init_c(), "interrupts.c": self.interrupts_c(),
+            "main.c": self.main_c(), "startup.c": self.startup_c(), "link.ld": self.linker_ld(), "Makefile": self.makefile(),
+        }
+        protos = self.usart_rx_proto()
+        if protos:
+            f["init.h"] = f["init.h"].replace("void enter_sleep(void);", "\n".join(protos) + "\nvoid enter_sleep(void);")
+        return f
+
+
+GENERATED_ONLY = {"startup.c", "link.ld", "Makefile"}       # no user sections: always rewritten
+
+
+def generate(project, folder, user_sections=None):
+    """Write the project to `folder`.  User code from the files already there is kept.
+    `user_sections` {file: {section: body}} seeds sections (used by the examples).  Returns {file: text}."""
+    g = Gen(project)
+    files = g.files()
+    os.makedirs(folder, exist_ok=True)
+    out = {}
+    for name, text in files.items():
+        path = os.path.join(folder, name)
+        if name in (f"{g.c.id}.h",) or name in GENERATED_ONLY:
+            merged = text
+        else:
+            old = None
+            if os.path.exists(path):
+                with open(path, encoding="utf8") as fh:
+                    old = fh.read()
+            merged = usercode.merge(text, old) if old else text
+            if user_sections and name in user_sections:
+                merged = usercode.fill(merged, user_sections[name])
+        with open(path, "w", encoding="utf8", newline="\n") as fh:
+            fh.write(merged)
+        out[name] = merged
+    project.save(folder)
+    return out

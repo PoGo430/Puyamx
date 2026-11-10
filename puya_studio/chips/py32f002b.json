@@ -64,6 +64,12 @@
     "4": 536805632
    }
   },
+  "hsi_word": {
+   "fs_bits": 3,
+   "fs_shift_in_word": 16,
+   "note": "factory word: HSI_FS[2:0] at bit 16, HSI_TRIM[12:0] at bit 0 (RM 4.5.1)",
+   "trim_bits": 13
+  },
   "lse_hz": 32768,
   "lsi_alt_hz": 38400,
   "lsi_hz": 32768,
@@ -95,6 +101,48 @@
   "sysclk_max_hz": 24000000
  },
  "core": "Cortex-M0+",
+ "exti": {
+  "lines": {
+   "0": [
+    "A",
+    "B",
+    "C"
+   ],
+   "1": [
+    "A",
+    "B",
+    "C"
+   ],
+   "2": [
+    "A",
+    "B",
+    "C"
+   ],
+   "3": [
+    "A",
+    "B",
+    "C"
+   ],
+   "4": [
+    "A",
+    "B",
+    "C"
+   ],
+   "5": [
+    "A",
+    "B"
+   ],
+   "6": [
+    "A",
+    "B"
+   ],
+   "7": [
+    "A",
+    "B"
+   ]
+  },
+  "source": "RM v0.4 EXTI_EXTICR1-2; the code for port C (2) is not printed in the RM, inferred (verify on hardware)"
+ },
  "features": {
   "adc": {
    "bits": 12,
@@ -144,6 +192,7 @@
    "IWDG"
   ]
  },
+ "flash_timing": null,
  "interrupts": {
   "12": "ADC_COMP",
   "13": "TIM1_BRK_UP_TRG_COM",

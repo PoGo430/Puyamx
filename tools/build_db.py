@@ -181,7 +181,7 @@ def main():
         db["reset_values_from_rm"] = rm_reset_overrides(os.path.join(rmtxt, info["rmtxt"]), db["peripherals"])
         db["interrupts"] = rm_interrupts(os.path.join(rmtxt, info["rmtxt"]))
         for key in ("memory", "features", "clock", "option_bytes", "parts", "signal_alias", "notes", "adc",
-                    "bootloader", "flash_timing", "gpio_regs"):
+                    "bootloader", "flash_timing", "gpio_regs", "exti"):
             if key in info:
                 db[key] = info[key]
         F.apply_package_parts(chip, db)
