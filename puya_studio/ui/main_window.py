@@ -14,6 +14,7 @@ from .. import __version__, checks, codegen, examples, toolchain
 from ..project import FILE_NAME, Project
 from .chip_view import ChipView
 from .dialogs import NewProjectDialog
+from .programmer import MonitorPanel, ProgrammerPanel
 from .panels import (AdcPage, ClockPage, I2cPage, InterruptPage, PinPanel, PowerPage, ProjectPage, SpiPage, TimerPage,
                      UsartPage)
 
@@ -125,12 +126,6 @@ class MainWindow(QMainWindow):
         self.auto_confirm = False           # tests answer the safety questions themselves
         self.last_build = None
         self.workers = []
-        self.flasher = None
-        try:
-            from .. import flasher
-            self.flasher = flasher
-        except Exception:
-            self.flasher = None
         # centre: tabs; right: pin panel; bottom: problems
         self.tabs = QTabWidget()
         self.pinout = QWidget()
@@ -163,12 +158,12 @@ class MainWindow(QMainWindow):
         self.output = QPlainTextEdit()
         self.output.setReadOnly(True)
         self.output.setFont(QFont("monospace"))
-        self.monitor = QPlainTextEdit()
-        self.monitor.setReadOnly(True)
-        self.monitor.setFont(QFont("monospace"))
+        self.programmer = ProgrammerPanel(self)
+        self.monitor = MonitorPanel(self)
         self.bottom.addTab(self.problems, "Problems")
         self.bottom.addTab(self.diag, "Build errors")
         self.bottom.addTab(self.output, "Output")
+        self.bottom.addTab(self.programmer, "Programmer")
         self.bottom.addTab(self.monitor, "Monitor")
         dock = QDockWidget("", self)
         dock.setWidget(self.bottom)
@@ -176,6 +171,7 @@ class MainWindow(QMainWindow):
         dock.setFeatures(QDockWidget.NoDockWidgetFeatures)
         self.addDockWidget(Qt.BottomDockWidgetArea, dock)
         self.dock = dock
+        self.resizeDocks([dock], [190], Qt.Vertical)
         self.status = self.statusBar()
         self.usage = QLabel("")
         self.status.addPermanentWidget(self.usage)
@@ -429,17 +425,14 @@ class MainWindow(QMainWindow):
     def flash(self):
         r = self.build()
         if not r or not r.ok:
-            return
-        if not self.flasher:
-            QMessageBox.information(self, "Flash", "The flash tool is not available in this build.")
-            return
-        self.flasher.flash_from_window(self, r)
+            return None
+        self.bottom.setCurrentWidget(self.programmer)
+        return self.programmer.flash(r)
 
     def start_monitor(self):
-        if not self.flasher:
-            QMessageBox.information(self, "Monitor", "The serial monitor is not available in this build.")
-            return
-        self.flasher.monitor_from_window(self)
+        self.bottom.setCurrentWidget(self.monitor)
+        self.monitor.use_project_baud()
+        self.monitor.refresh()
 
     def about(self):
         QMessageBox.about(self, "Puya Studio",

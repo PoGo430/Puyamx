@@ -10,7 +10,7 @@ pytest.importorskip("PySide6")
 from PySide6.QtCore import QPointF, Qt
 from PySide6.QtGui import QKeyEvent
 from PySide6.QtTest import QTest
-from PySide6.QtWidgets import QApplication, QListWidgetItem
+from PySide6.QtWidgets import QApplication, QDialog, QListWidgetItem
 
 from puya_studio import chips, examples
 from puya_studio.project import Project
@@ -216,3 +216,109 @@ def test_pages_reflect_pin_changes():
     w.tabs.setCurrentWidget(w.pages["Low power"])
     pump()
     assert w.pages["Interrupts"].table.rowCount() == len(w.project.chip.interrupts)
+
+
+# ------------------------------------------------------------------ programming from the window (with a fake chip)
+class FakeSwd:
+    """Stands in for flasher.Swd: records what the window asks for."""
+    instances = []
+
+    def __init__(self, chip, flash_kb, **kw):
+        self.chip, self.kw, self.calls = chip, kw, []
+        from puya_studio import option_bytes
+        self.words = option_bytes.defaults(chip)
+        FakeSwd.instances.append(self)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        pass
+
+    def info(self):
+        from puya_studio import option_bytes
+        return {"target": "fake", "uid": "00", "option_words": dict(self.words), "option_valid": {k: True for k in self.words},
+                "read_protected": (self.words["user"] & 0xFF) != 0xAA if self.chip.option_bytes["rdp"] else False}
+
+    def program(self, path, **kw):
+        self.calls.append(("program", path))
+
+    def reset_run(self):
+        self.calls.append(("reset",))
+
+    def erase_chip(self):
+        self.calls.append(("erase",))
+
+    def write_options(self, words):
+        self.calls.append(("options", dict(words)))
+        self.words = dict(words)
+
+
+def run_tasks(w):
+    for _ in range(50):
+        w.programmer.wait()
+        pump()
+
+
+@pytest.mark.skipif(not __import__("puya_studio.toolchain", fromlist=["x"]).find_gcc_bin(), reason="needs the compiler")
+def test_flash_from_window_with_fake_chip(tmp_path):
+    FakeSwd.instances.clear()
+    w = make_window("py32f030")
+    p, sec, _ = examples.build("blink", "py32f030")
+    w.set_project(p, str(tmp_path / "b"))
+    w.programmer.swd_factory = FakeSwd
+    w.auto_confirm = True
+    w.flash()
+    run_tasks(w)
+    s = FakeSwd.instances[-1]
+    assert ("reset",) in s.calls and any(c[0] == "program" and c[1].endswith(".hex") for c in s.calls)
+
+
+@pytest.mark.skipif(not __import__("puya_studio.toolchain", fromlist=["x"]).find_gcc_bin(), reason="needs the compiler")
+def test_read_protected_chip_is_never_flashed_without_asking(tmp_path):
+    from puya_studio import option_bytes
+    FakeSwd.instances.clear()
+
+    class Locked(FakeSwd):
+        def __init__(self, chip, flash_kb, **kw):
+            super().__init__(chip, flash_kb, **kw)
+            self.words = option_bytes.set_field(chip, self.words, "user", "RDP", 0x55)
+    w = make_window("py32f030")
+    p, sec, _ = examples.build("blink", "py32f030")
+    w.set_project(p, str(tmp_path / "b"))
+    w.programmer.swd_factory = Locked
+    w.auto_confirm = True
+    w.flash()
+    run_tasks(w)
+    assert not [c for s in FakeSwd.instances for c in s.calls if c[0] in ("program", "erase")]
+    assert "read-protected" in w.output.toPlainText()
+
+
+def test_option_bytes_dialog_requires_typed_confirmation():
+    from puya_studio import option_bytes
+    FakeSwd.instances.clear()
+    w = make_window("py32f030")
+    w.programmer.swd_factory = FakeSwd
+    asked = []
+    w.programmer.confirm_text = lambda word, text: asked.append((word, text)) or False       # the user types nothing
+    w.programmer.option_dialog_hook = lambda dlg: (dlg.widgets[("user", "RDP")].setValue(0x55), setattr(dlg, "exec", lambda: QDialog.Accepted))
+    w.programmer.option_bytes()
+    run_tasks(w)
+    assert asked and asked[0][0] == "LOCK" and "read-out protection" in asked[0][1]
+    assert not [c for s in FakeSwd.instances for c in s.calls if c[0] == "options"]            # declined: nothing written
+    # now the user does type it
+    FakeSwd.instances.clear()
+    w.programmer.confirm_text = lambda word, text: True
+    w.programmer.option_bytes()
+    run_tasks(w)
+    wrote = [c for s in FakeSwd.instances for c in s.calls if c[0] == "options"]
+    assert wrote and wrote[0][1]["user"] & 0xFF == 0x55
+
+
+def test_programmer_and_monitor_panels_build_on_every_chip():
+    for chip in chips.CHIP_NAMES:
+        w = make_window(chip)
+        w.programmer.refresh_devices()
+        w.start_monitor()
+        w.monitor.refresh()
+        pump()

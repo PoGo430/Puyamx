@@ -30,7 +30,7 @@ class ChipView(QWidget):
         self.rects = {}             # pin number -> QRectF
         self.setMouseTracking(True)
         self.setFocusPolicy(Qt.StrongFocus)
-        self.setMinimumSize(420, 420)
+        self.setMinimumSize(520, 500)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
     # ------------------------------------------------------------------ data
@@ -88,7 +88,7 @@ class ChipView(QWidget):
                 rects[n - i] = QRectF(x0 + body_w, y, pw, ph)
         else:
             per = n // 4
-            pitch = min(38.0, (min(w, h) - 220) / max(per, 1))
+            pitch = min(38.0, (min(w - 2 * 270, h - 2 * 210) - 20) / max(per, 1))
             side = pitch * per + 20
             cx, cy = w / 2, h / 2
             x0, y0 = cx - side / 2, cy - side / 2
@@ -216,11 +216,11 @@ class ChipView(QWidget):
                 box = QRectF(rc.right() + 4, rc.top(), 176, rc.height()); al = Qt.AlignLeft | Qt.AlignVCenter
                 g.drawText(box, al, txt)
             elif rc.top() >= self.body.bottom() - 1:
-                g.save(); g.translate(rc.center().x(), rc.bottom() + 6); g.rotate(-90)
-                g.drawText(QRectF(-176, -rc.width() / 2, 176, rc.width()), Qt.AlignLeft | Qt.AlignVCenter, txt); g.restore()
+                g.save(); g.translate(rc.center().x(), rc.bottom() + 6); g.rotate(90)
+                g.drawText(QRectF(0, -rc.width() / 2, 140, rc.width()), Qt.AlignLeft | Qt.AlignVCenter, txt); g.restore()
             else:
                 g.save(); g.translate(rc.center().x(), rc.top() - 6); g.rotate(-90)
-                g.drawText(QRectF(0, -rc.width() / 2, 176, rc.width()), Qt.AlignLeft | Qt.AlignVCenter, txt); g.restore()
+                g.drawText(QRectF(0, -rc.width() / 2, 140, rc.width()), Qt.AlignLeft | Qt.AlignVCenter, txt); g.restore()
 
     # ------------------------------------------------------------------ mouse / keyboard
     def pin_at(self, pos):
