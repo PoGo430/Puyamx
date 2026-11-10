@@ -17,7 +17,6 @@ def words(pdf, page):
 def parse_page(pdf, page):
     ws = list(words(pdf, page))
     hdrs = sorted([w for w in ws if re.fullmatch(r"AF\d{1,2}", w[6])], key=lambda w: (round(w[1]), w[0]))
-    # group header words into rows by y
     rows = []
     for w in hdrs:
         if rows and abs(rows[-1][0][1] - w[1]) < 2.5:
@@ -25,27 +24,35 @@ def parse_page(pdf, page):
         else:
             rows.append([w])
     rows = [sorted(r, key=lambda w: w[0]) for r in rows if len(r) == 8]
-    ports = [w for w in ws if re.fullmatch(r"P[A-F]\d{1,2}", w[6]) and w[2] < min(r[0][2] for r in rows) - 1] if rows else []
+    if not rows:
+        return {}
+    col0 = min(r[0][0] for r in rows)
+    ports = [w for w in ws if re.match(r"P[A-F]\d{1,2}(?![0-9])", w[6]) and w[0] < col0 - 12]
     ports.sort(key=lambda w: w[1])
+    # blocks: each AF0-7 row starts a block, an AF8-15 row directly after belongs to it
+    blocks = []
+    for r in rows:
+        if r[0][6] == "AF0":
+            blocks.append([r])
+        elif blocks:
+            blocks[-1].append(r)
     res = {}
-    # rows come in pairs (AF0-7, AF8-15) for the 16-AF tables
-    for k in range(0, len(rows) - 1, 2):
-        r0, r8 = rows[k], rows[k + 1]
-        y_top, y_mid = r0[0][1], r8[0][1]
-        y_end = rows[k + 2][0][1] - 3 if k + 2 < len(rows) else y_mid + 40
-        # port label: nearest label to the pair's centre, not yet used
-        cands = [p for p in ports if y_top - 8 <= p[1] <= y_end + 4]
-        centre = (y_top + y_mid) / 2 + 4
-        cands.sort(key=lambda p: abs(p[1] - centre))
-        if not cands:
+    for i, blk in enumerate(blocks):
+        y0 = blk[0][0][1] - 3
+        y1 = blocks[i + 1][0][0][1] - 3 if i + 1 < len(blocks) else blk[-1][0][1] + 24
+        labs = [p for p in ports if y0 <= p[1] < y1]
+        if not labs:
             continue
-        name = cands[0][6]
-        ports = [p for p in ports if p is not cands[0]]
+        name = re.match(r"P[A-F]\d{1,2}", labs[0][6]).group(0)
         afs = {}
-        for hdr, ya, yb in ((r0, y_top + 2, y_mid - 2), (r8, y_mid + 2, y_end)):
+        for j, hdr in enumerate(blk):
+            ya = hdr[0][1] + 2
+            yb = blk[j + 1][0][1] - 2 if j + 1 < len(blk) else y1
             cols = {}
             for w in ws:
-                if not (ya < w[1] < yb) or re.fullmatch(r"AF\d+|P[A-F]\d+", w[6]):
+                if not (ya < w[1] < yb) or re.fullmatch(r"AF\d+|P[A-F]\d+.*", w[6]):
+                    continue
+                if not w[6].isascii() or re.fullmatch(r"[A-Z]", w[6]) or re.fullmatch(r"\d+/\d+|\d+-\d+", w[6]):
                     continue
                 if w[0] < hdr[0][0] - 25 or w[0] > hdr[-1][0] + 40:
                     continue

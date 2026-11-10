@@ -4,7 +4,11 @@ Source documents (not committed, from the community mirror github.com/decaday/PY
 F030 DS Rev2.2 (CN) / Rev1.4 EN, RM v1.2 · F003 DS Rev1.9 (CN) / Rev1.2 EN, RM v1.2 / v1.0 EN ·
 F002B DS V0.8 (CN) / V0.3 EN, RM v0.4 / v0.2 EN.
 
-- [ ] M1 chip databases + data tests  (dev tools `tools/extract_pinouts.py`, `tools/extract_af.py` done)
+- [x] M1 chip databases + data tests: pins (all leaded + QFN packages of the three main datasheets, every pinout variant),
+      AF tables, analog functions, registers (Puya SVD, offsets/reset checked against the RM), IRQs (RM), clocks, option bytes.
+      `python tools/build_db.py DFP_DIR RMTXT_DIR` rebuilds `puya_studio/chips/*.json`; `tools/verify_regs.py` re-checks the RM.
+      **Phase 2 (not done yet):** the separate single-package datasheets (F003 SOP8/SOP8L2/SOP16/MSOP10/DFN8, F030 DFN8/QFN20F3)
+      describe sub-families with their own function sets; the DB can hold them but they are not added.
 - [ ] M2 codegen / examples / simulator
 - [ ] M3 GUI
 - [ ] M4 programming

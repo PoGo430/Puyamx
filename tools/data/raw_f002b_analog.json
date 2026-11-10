@@ -1,0 +1,37 @@
+{
+ "PA3": [
+  "CMP2_INP"
+ ],
+ "PA4": [
+  "ADC_IN2",
+  "CMP2_INM"
+ ],
+ "PA6": [
+  "ADC_IN3",
+  "External_clock_in"
+ ],
+ "PA7": [
+  "ADC_IN4"
+ ],
+ "PB0": [
+  "ADC_IN7",
+  "CMP1_INM"
+ ],
+ "PB1": [
+  "ADC_IN0",
+  "CMP1_INM",
+  "CMP1_INP"
+ ],
+ "PB6": [
+  "ADC_IN6"
+ ],
+ "PB7": [
+  "OSCOUT"
+ ],
+ "PC0": [
+  "ADC_IN5"
+ ],
+ "PC1": [
+  "OSCIN"
+ ]
+}

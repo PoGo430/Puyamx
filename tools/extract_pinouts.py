@@ -53,6 +53,21 @@ def pair(nums, labs, ytop, ybot):
             pins.setdefault(best[1], []).append(t)
     return pins
 
+def extract(pdf, p0, p1):
+    """-> list of (page, caption, {pin: [labels]})"""
+    found = []
+    for page in range(p0, p1 + 1):
+        ws, caps, nums, labs = figures(pdf, page)
+        caps = sorted(caps, key=lambda c: c[0][1])
+        top = 0
+        for c, title in caps:
+            if not re.match(r"(Figure|图)\s*\d+-\d+", title):
+                continue
+            found.append((page, title, pair(nums, labs, top, c[1])))
+            top = c[3]
+    return found
+
+
 if __name__ == "__main__":
     pdf, p0, p1 = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
     for page in range(p0, p1 + 1):

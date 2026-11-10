@@ -1,0 +1,70 @@
+{
+ "PA0": [
+  "ADC_IN0",
+  "COMP1_INM"
+ ],
+ "PA1": [
+  "ADC_IN1",
+  "COMP1_INP"
+ ],
+ "PA10": [
+  "OS32IN"
+ ],
+ "PA2": [
+  "ADC_IN2",
+  "COMP2_INM"
+ ],
+ "PA3": [
+  "ADC_IN3",
+  "COMP2_INP"
+ ],
+ "PA4": [
+  "ADC_IN4"
+ ],
+ "PA5": [
+  "ADC_IN5"
+ ],
+ "PA6": [
+  "ADC_IN6"
+ ],
+ "PA7": [
+  "ADC_IN7"
+ ],
+ "PA9": [
+  "OSC32OUT"
+ ],
+ "PB0": [
+  "ADC_IN8"
+ ],
+ "PB1": [
+  "ADC_IN9",
+  "COMP1_INM"
+ ],
+ "PB2": [
+  "COMP1_INP"
+ ],
+ "PB3": [
+  "COMP2_INM"
+ ],
+ "PB4": [
+  "COMP2_INP"
+ ],
+ "PB6": [
+  "COMP2_INP"
+ ],
+ "PB7": [
+  "COMP2_INM"
+ ],
+ "PB8": [
+  "COMP1_INP"
+ ],
+ "PF0": [
+  "OSC_IN"
+ ],
+ "PF1": [
+  "OSC_OUT"
+ ],
+ "PF3": [
+  "COMP2_INP"
+ ]
+}

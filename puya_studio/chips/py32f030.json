@@ -1,0 +1,11349 @@
+{
+ "adc": {
+  "internal": {
+   "TS_VIN": 10,
+   "VREFINT": 11
+  },
+  "resolution_bits": 12
+ },
+ "boot0": "PF4",
+ "bootloader": {
+  "interface": "USART (see RM, boot loader app note)",
+  "size": 3584,
+  "system_memory": 536805376
+ },
+ "clock": {
+  "ahb_div": [
+   1,
+   2,
+   4,
+   8,
+   16,
+   64,
+   128,
+   256,
+   512
+  ],
+  "apb_div": [
+   1,
+   2,
+   4,
+   8,
+   16
+  ],
+  "flash_latency": [
+   {
+    "latency": 0,
+    "max_hz": 24000000
+   },
+   {
+    "latency": 1,
+    "max_hz": 48000000
+   }
+  ],
+  "hse": {
+   "bypass": true,
+   "crystal_hz": [
+    4000000,
+    32000000
+   ],
+   "freq_field": "RCC_ECSCR.HSE_FREQ"
+  },
+  "hsi": {
+   "default_after_reset_hz": 8000000,
+   "div": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128
+   ],
+   "freqs_hz": {
+    "0": 4000000,
+    "1": 8000000,
+    "2": 16000000,
+    "3": 22120000,
+    "4": 24000000
+   },
+   "select_reg": "RCC_ICSCR.HSI_FS",
+   "trim_addr": {
+    "0": 536809216,
+    "1": 536809220,
+    "2": 536809224,
+    "3": 536809228,
+    "4": 536809232
+   }
+  },
+  "lse_hz": 32768,
+  "lsi_hz": 32768,
+  "mco": {
+   "div": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128
+   ],
+   "sel": {
+    "1": "SYSCLK",
+    "3": "HSI",
+    "4": "HSE",
+    "5": "PLL",
+    "6": "LSI",
+    "7": "LSE"
+   }
+  },
+  "pll": {
+   "multiplier": 2,
+   "output_max_hz": 48000000,
+   "select_reg": "RCC_PLLCFGR.PLLSRC",
+   "sources": [
+    "HSI",
+    "HSE"
+   ]
+  },
+  "source": "RM v1.2 8.6.1-8.6.4, FLASH_ACR 4.8.1; DS Rev2.2 'Clock system'",
+  "sysclk_max_hz": 48000000
+ },
+ "core": "Cortex-M0+",
+ "features": {
+  "adc": {
+   "bits": 12,
+   "external_channels": 10
+  },
+  "comp": [
+   "COMP1",
+   "COMP2"
+  ],
+  "crc": true,
+  "dma_channels": 3,
+  "gpio_ports": [
+   "A",
+   "B",
+   "F"
+  ],
+  "i2c": [
+   "I2C1"
+  ],
+  "ir": true,
+  "led_controller": true,
+  "lptim": [
+   "LPTIM1"
+  ],
+  "rtc": true,
+  "spi": [
+   "SPI1",
+   "SPI2"
+  ],
+  "timers": {
+   "TIM1": {
+    "bits": 16,
+    "bkin": true,
+    "channels": 4,
+    "complementary": 3,
+    "kind": "advanced"
+   },
+   "TIM14": {
+    "bits": 16,
+    "channels": 1,
+    "kind": "general"
+   },
+   "TIM16": {
+    "bits": 16,
+    "bkin": true,
+    "channels": 1,
+    "complementary": 1,
+    "kind": "general"
+   },
+   "TIM17": {
+    "bits": 16,
+    "bkin": true,
+    "channels": 1,
+    "complementary": 1,
+    "kind": "general"
+   },
+   "TIM3": {
+    "bits": 16,
+    "channels": 4,
+    "kind": "general"
+   }
+  },
+  "usart": [
+   "USART1",
+   "USART2"
+  ],
+  "usart_lowpower": false,
+  "watchdogs": [
+   "IWDG",
+   "WWDG"
+  ]
+ },
+ "interrupts": {
+  "0": "WWDG",
+  "1": "PVD",
+  "10": "DMA_Channel2_3",
+  "12": "ADC_COMP",
+  "13": "TIM1_BRK_UP_TRG_COM",
+  "14": "TIM1_CC",
+  "16": "TIM3",
+  "17": "LPTIM1",
+  "19": "TIM14",
+  "2": "RTC",
+  "21": "TIM16",
+  "22": "TIM17",
+  "23": "I2C1",
+  "25": "SPI1",
+  "26": "SPI2",
+  "27": "USART1",
+  "28": "USART2",
+  "3": "FLASH",
+  "30": "LED",
+  "4": "RCC",
+  "5": "EXTI0_1",
+  "6": "EXTI2_3",
+  "7": "EXTI4_15",
+  "9": "DMA_Channel1"
+ },
+ "max_hz": 48000000,
+ "memory": {
+  "factory_base": 536809216,
+  "flash_base": 134217728,
+  "flash_ram_by_digit": {
+   "3": [
+    8,
+    1
+   ],
+   "4": [
+    16,
+    2
+   ],
+   "6": [
+    32,
+    4
+   ],
+   "7": [
+    48,
+    6
+   ],
+   "8": [
+    64,
+    8
+   ]
+  },
+  "option_base": 536809088,
+  "page_bytes": 128,
+  "ram_base": 536870912,
+  "sector_bytes": 4096,
+  "source": "RM v1.2 table 4-1",
+  "system_base": 536805376,
+  "uid_base": 536808960
+ },
+ "name": "PY32F030",
+ "notes": [
+  "LQFP32 K1 pin 1: DS Rev1.4 EN says NC, DS Rev2.2 says VCC; Rev2.2 is used.",
+  "TSSOP20 F4 (Pinout4) has the dual-bonded pad PA5/PB4 on pin 13; the pad is one clickable pin with a port choice.",
+  "Datasheet pin table shows LPUART_TX on PA2 (Rev1.4 EN only); the chip has no LPUART in the RM/SVD, ignored."
+ ],
+ "nrst": "PF2",
+ "option_bytes": {
+  "address": 536809088,
+  "danger": {
+   "NRST_MODE": "1 makes PF2 a GPIO: no hardware reset pin",
+   "RDP": "any value except 0xAA turns on read-out protection; going back to 0xAA mass-erases the chip",
+   "SDK": "SDK area is not readable by the debugger",
+   "WRP": "write-protects flash sectors",
+   "nBOOT1": "changes the boot source selection"
+  },
+  "rdp": {
+   "note": "0xAA = level 0 (open); any other value = level 1 (read-out protected)",
+   "unprotected": 170
+  },
+  "size": 128,
+  "source": "RM v1.2 4.4",
+  "stored_with_complement": true,
+  "unlock": {
+   "optkey1": 135866939,
+   "optkey2": 1281191551
+  },
+  "words": {
+   "sdk": {
+    "addr": 536809092,
+    "fields": {
+     "SDK_END": [
+      8,
+      5
+     ],
+     "SDK_STRT": [
+      0,
+      5
+     ]
+    },
+    "production": 4278190335
+   },
+   "user": {
+    "addr": 536809088,
+    "fields": {
+     "BOR_EN": [
+      8,
+      1
+     ],
+     "BOR_LEV": [
+      9,
+      3
+     ],
+     "IWDG_SW": [
+      12,
+      1
+     ],
+     "NRST_MODE": [
+      14,
+      1
+     ],
+     "RDP": [
+      0,
+      8
+     ],
+     "WWDG_SW": [
+      13,
+      1
+     ],
+     "nBOOT1": [
+      15,
+      1
+     ]
+    },
+    "production": 1096138410
+   },
+   "wrp": {
+    "addr": 536809100,
+    "fields": {
+     "WRP": [
+      0,
+      16
+     ]
+    },
+    "production": 65535
+   }
+  }
+ },
+ "ordering_base": "PY32F030",
+ "pack_device_prefix": "PY32F030",
+ "packages": {
+  "LQFP32-K1": {
+   "code": "K1",
+   "exposed_pad": false,
+   "letter": "T",
+   "pin_count": 32,
+   "pinout": 1,
+   "pins": [
+    {
+     "kind": "power",
+     "n": 1,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 4,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PF3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 6,
+     "notes": [],
+     "ports": [
+      "PA0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 7,
+     "notes": [],
+     "ports": [
+      "PA1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 9,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PA4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [],
+     "ports": [
+      "PA5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [],
+     "ports": [
+      "PA6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [],
+     "ports": [
+      "PA7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [],
+     "ports": [
+      "PB0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 15,
+     "notes": [],
+     "ports": [
+      "PB1"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 16,
+     "name": "VSS"
+    },
+    {
+     "kind": "power",
+     "n": 17,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [],
+     "ports": [
+      "PA8"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [
+      "OSC32_OUT"
+     ],
+     "ports": [
+      "PA9"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [
+      "OSC32_IN"
+     ],
+     "ports": [
+      "PA10"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 21,
+     "notes": [],
+     "ports": [
+      "PA11"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 22,
+     "notes": [],
+     "ports": [
+      "PA12"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 23,
+     "notes": [],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 24,
+     "notes": [],
+     "ports": [
+      "PA14"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 25,
+     "notes": [],
+     "ports": [
+      "PA15"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 26,
+     "notes": [],
+     "ports": [
+      "PB3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 27,
+     "notes": [],
+     "ports": [
+      "PB4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 28,
+     "notes": [],
+     "ports": [
+      "PB5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 29,
+     "notes": [],
+     "ports": [
+      "PB6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 30,
+     "notes": [],
+     "ports": [
+      "PB7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 31,
+     "notes": [
+      "BOOT0"
+     ],
+     "ports": [
+      "PF4"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 32,
+     "name": "VSS"
+    }
+   ],
+   "source": "图 3-1 LQFP32 Pinout1 PY32F030K1xT (page 21)",
+   "type": "LQFP32"
+  },
+  "LQFP32-K2": {
+   "code": "K2",
+   "exposed_pad": false,
+   "letter": "T",
+   "pin_count": 32,
+   "pinout": 2,
+   "pins": [
+    {
+     "kind": "power",
+     "n": 1,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 4,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PF3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 6,
+     "notes": [],
+     "ports": [
+      "PA0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 7,
+     "notes": [],
+     "ports": [
+      "PA1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 9,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PA4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [],
+     "ports": [
+      "PA5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [],
+     "ports": [
+      "PA6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [],
+     "ports": [
+      "PA7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [],
+     "ports": [
+      "PB0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 15,
+     "notes": [],
+     "ports": [
+      "PB1"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 16,
+     "name": "VSS"
+    },
+    {
+     "kind": "io",
+     "n": 17,
+     "notes": [],
+     "ports": [
+      "PB2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [],
+     "ports": [
+      "PA8"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [
+      "OSC32_OUT"
+     ],
+     "ports": [
+      "PA9"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [
+      "OSC32_IN"
+     ],
+     "ports": [
+      "PA10"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 21,
+     "notes": [],
+     "ports": [
+      "PA11"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 22,
+     "notes": [],
+     "ports": [
+      "PA12"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 23,
+     "notes": [],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 24,
+     "notes": [],
+     "ports": [
+      "PA14"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 25,
+     "notes": [],
+     "ports": [
+      "PA15"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 26,
+     "notes": [],
+     "ports": [
+      "PB3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 27,
+     "notes": [],
+     "ports": [
+      "PB4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 28,
+     "notes": [],
+     "ports": [
+      "PB5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 29,
+     "notes": [],
+     "ports": [
+      "PB6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 30,
+     "notes": [],
+     "ports": [
+      "PB7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 31,
+     "notes": [
+      "BOOT0"
+     ],
+     "ports": [
+      "PF4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 32,
+     "notes": [],
+     "ports": [
+      "PB8"
+     ]
+    }
+   ],
+   "source": "图 3-2 LQFP32 Pinout2 PY32F030K2xT (page 21)",
+   "type": "LQFP32"
+  },
+  "QFN20-F1": {
+   "code": "F1",
+   "exposed_pad": true,
+   "letter": "U",
+   "pin_count": 20,
+   "pinout": 1,
+   "pins": [
+    {
+     "kind": "io",
+     "n": 1,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [],
+     "ports": [
+      "PA4"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 4,
+     "name": "VSS"
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PB2"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 6,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 7,
+     "notes": [],
+     "ports": [
+      "PA9"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PA10"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 9,
+     "notes": [],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PA14"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [],
+     "ports": [
+      "PB4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [],
+     "ports": [
+      "PB5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [],
+     "ports": [
+      "PB7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [
+      "BOOT0"
+     ],
+     "ports": [
+      "PF4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 15,
+     "notes": [],
+     "ports": [
+      "PB8"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 16,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 17,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [],
+     "ports": [
+      "PA0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [],
+     "ports": [
+      "PA1"
+     ]
+    },
+    {
+     "exposed_pad": true,
+     "kind": "power",
+     "n": 21,
+     "name": "VSS"
+    }
+   ],
+   "source": "图 3-6 QFN20 Pinout1 PY32F030F1xU (page 23)",
+   "type": "QFN20"
+  },
+  "QFN20-F2": {
+   "code": "F2",
+   "exposed_pad": true,
+   "letter": "U",
+   "pin_count": 20,
+   "pinout": 2,
+   "pins": [
+    {
+     "kind": "io",
+     "n": 1,
+     "notes": [],
+     "ports": [
+      "PA5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [],
+     "ports": [
+      "PA6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [],
+     "ports": [
+      "PA7"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 4,
+     "name": "VSS"
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PA12"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 6,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 7,
+     "notes": [],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PA14"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 9,
+     "notes": [],
+     "ports": [
+      "PB5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PB6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [],
+     "ports": [
+      "PB7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [
+      "BOOT0"
+     ],
+     "ports": [
+      "PF4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 15,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 16,
+     "notes": [],
+     "ports": [
+      "PA0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 17,
+     "notes": [],
+     "ports": [
+      "PA1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [],
+     "ports": [
+      "PA4"
+     ]
+    },
+    {
+     "exposed_pad": true,
+     "kind": "power",
+     "n": 21,
+     "name": "VSS"
+    }
+   ],
+   "source": "图 3-7 QFN20 Pinout2 PY32F030F2xU (page 23)",
+   "type": "QFN20"
+  },
+  "QFN32-K2": {
+   "code": "K2",
+   "exposed_pad": true,
+   "letter": "U",
+   "pin_count": 32,
+   "pinout": 2,
+   "pins": [
+    {
+     "kind": "power",
+     "n": 1,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 4,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PF3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 6,
+     "notes": [],
+     "ports": [
+      "PA0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 7,
+     "notes": [],
+     "ports": [
+      "PA1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 9,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PA4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [],
+     "ports": [
+      "PA5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [],
+     "ports": [
+      "PA6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [],
+     "ports": [
+      "PA7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [],
+     "ports": [
+      "PB0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 15,
+     "notes": [],
+     "ports": [
+      "PB1"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 16,
+     "name": "VSS"
+    },
+    {
+     "kind": "io",
+     "n": 17,
+     "notes": [],
+     "ports": [
+      "PB2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [],
+     "ports": [
+      "PA8"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [
+      "OSC32_OUT"
+     ],
+     "ports": [
+      "PA9"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [
+      "OSC32_IN"
+     ],
+     "ports": [
+      "PA10"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 21,
+     "notes": [],
+     "ports": [
+      "PA11"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 22,
+     "notes": [],
+     "ports": [
+      "PA12"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 23,
+     "notes": [],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 24,
+     "notes": [],
+     "ports": [
+      "PA14"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 25,
+     "notes": [],
+     "ports": [
+      "PA15"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 26,
+     "notes": [],
+     "ports": [
+      "PB3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 27,
+     "notes": [],
+     "ports": [
+      "PB4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 28,
+     "notes": [],
+     "ports": [
+      "PB5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 29,
+     "notes": [],
+     "ports": [
+      "PB6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 30,
+     "notes": [],
+     "ports": [
+      "PB7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 31,
+     "notes": [
+      "BOOT0"
+     ],
+     "ports": [
+      "PF4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 32,
+     "notes": [],
+     "ports": [
+      "PB8"
+     ]
+    },
+    {
+     "exposed_pad": true,
+     "kind": "power",
+     "n": 33,
+     "name": "VSS"
+    }
+   ],
+   "source": "图 3-3 QFN32 Pinout2 PY32F030K2xU (page 22)",
+   "type": "QFN32"
+  },
+  "SSOP24-E1": {
+   "code": "E1",
+   "exposed_pad": false,
+   "letter": "M",
+   "pin_count": 24,
+   "pinout": 1,
+   "pins": [
+    {
+     "kind": "power",
+     "n": 1,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 4,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PA0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 6,
+     "notes": [],
+     "ports": [
+      "PA1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 7,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 9,
+     "notes": [],
+     "ports": [
+      "PA4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PA5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [],
+     "ports": [
+      "PA6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [],
+     "ports": [
+      "PA7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [],
+     "ports": [
+      "PB0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [],
+     "ports": [
+      "PB1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 15,
+     "notes": [],
+     "ports": [
+      "PA12"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 16,
+     "notes": [],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 17,
+     "notes": [],
+     "ports": [
+      "PA14"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [],
+     "ports": [
+      "PA15"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [],
+     "ports": [
+      "PB3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [],
+     "ports": [
+      "PB4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 21,
+     "notes": [],
+     "ports": [
+      "PB5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 22,
+     "notes": [
+      "BOOT0"
+     ],
+     "ports": [
+      "PF4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 23,
+     "notes": [],
+     "ports": [
+      "PB8"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 24,
+     "name": "VSS"
+    }
+   ],
+   "source": "图 3-4 SSOP24 Pinout1 PY32F030E1xM (page 22)",
+   "type": "SSOP24"
+  },
+  "SSOP24-E2": {
+   "code": "E2",
+   "exposed_pad": false,
+   "letter": "M",
+   "pin_count": 24,
+   "pinout": 2,
+   "pins": [
+    {
+     "kind": "power",
+     "n": 1,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 4,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PA0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 6,
+     "notes": [],
+     "ports": [
+      "PA1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 7,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 9,
+     "notes": [],
+     "ports": [
+      "PA4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PA5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [],
+     "ports": [
+      "PA6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [],
+     "ports": [
+      "PA7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [],
+     "ports": [
+      "PB0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [],
+     "ports": [
+      "PB1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 15,
+     "notes": [],
+     "ports": [
+      "PB2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 16,
+     "notes": [],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 17,
+     "notes": [],
+     "ports": [
+      "PA14"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [],
+     "ports": [
+      "PA15"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [],
+     "ports": [
+      "PB3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [],
+     "ports": [
+      "PB4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 21,
+     "notes": [],
+     "ports": [
+      "PB5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 22,
+     "notes": [
+      "BOOT0"
+     ],
+     "ports": [
+      "PF4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 23,
+     "notes": [],
+     "ports": [
+      "PB8"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 24,
+     "name": "VSS"
+    }
+   ],
+   "source": "图 3-5 SSOP24 Pinout2 PY32F030E2xM (page 22)",
+   "type": "SSOP24"
+  },
+  "TSSOP20-F1": {
+   "code": "F1",
+   "exposed_pad": false,
+   "letter": "P",
+   "pin_count": 20,
+   "pinout": 1,
+   "pins": [
+    {
+     "kind": "io",
+     "n": 1,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 4,
+     "notes": [],
+     "ports": [
+      "PF3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 6,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 7,
+     "name": "VSS"
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PB2"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 9,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PA8"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [
+      "OSC32_OUT"
+     ],
+     "ports": [
+      "PA9"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [
+      "OSC32_IN"
+     ],
+     "ports": [
+      "PA10"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [],
+     "ports": [
+      "PA11"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 15,
+     "notes": [],
+     "ports": [
+      "PA14"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 16,
+     "notes": [],
+     "ports": [
+      "PB4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 17,
+     "notes": [],
+     "ports": [
+      "PB5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [],
+     "ports": [
+      "PB6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [],
+     "ports": [
+      "PB7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [
+      "BOOT0"
+     ],
+     "ports": [
+      "PF4"
+     ]
+    }
+   ],
+   "source": "图 3-8 TSSOP20 Pinout1 PY32F030F1xP (page 24)",
+   "type": "TSSOP20"
+  },
+  "TSSOP20-F2": {
+   "code": "F2",
+   "exposed_pad": false,
+   "letter": "P",
+   "pin_count": 20,
+   "pinout": 2,
+   "pins": [
+    {
+     "kind": "io",
+     "n": 1,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [],
+     "ports": [
+      "PA4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 4,
+     "notes": [],
+     "ports": [
+      "PA5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PA6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 6,
+     "notes": [],
+     "ports": [
+      "PA7"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 7,
+     "name": "VSS"
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PA12"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 9,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [],
+     "ports": [
+      "PA14"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [],
+     "ports": [
+      "PB5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [],
+     "ports": [
+      "PB6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [],
+     "ports": [
+      "PB7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 15,
+     "notes": [
+      "BOOT0"
+     ],
+     "ports": [
+      "PF4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 16,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 17,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [],
+     "ports": [
+      "PA0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [],
+     "ports": [
+      "PA1"
+     ]
+    }
+   ],
+   "source": "图 3-9 TSSOP20 Pinout2 PY32F030F2xP (page 24)",
+   "type": "TSSOP20"
+  },
+  "TSSOP20-F3": {
+   "code": "F3",
+   "exposed_pad": false,
+   "letter": "P",
+   "pin_count": 20,
+   "pinout": 3,
+   "pins": [
+    {
+     "kind": "io",
+     "n": 1,
+     "notes": [
+      "BOOT0"
+     ],
+     "ports": [
+      "PF4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 4,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PF3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 6,
+     "notes": [],
+     "ports": [
+      "PA0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 7,
+     "notes": [],
+     "ports": [
+      "PA1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 9,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PA4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [],
+     "ports": [
+      "PA5"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [],
+     "ports": [
+      "PA6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [],
+     "ports": [
+      "PA7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [],
+     "ports": [
+      "PB1"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 15,
+     "name": "VSS"
+    },
+    {
+     "kind": "power",
+     "n": 16,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 17,
+     "notes": [],
+     "ports": [
+      "PA9"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [],
+     "ports": [
+      "PA10"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [],
+     "ports": [
+      "PA14"
+     ]
+    }
+   ],
+   "source": "图 3-10 TSSOP20 Pinout3 PY32F030F3xP (page 24)",
+   "type": "TSSOP20"
+  },
+  "TSSOP20-F4": {
+   "code": "F4",
+   "exposed_pad": false,
+   "letter": "P",
+   "pin_count": 20,
+   "pinout": 4,
+   "pins": [
+    {
+     "kind": "io",
+     "n": 1,
+     "notes": [],
+     "ports": [
+      "PA4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 2,
+     "notes": [],
+     "ports": [
+      "PA6"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 3,
+     "notes": [],
+     "ports": [
+      "PA7"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 4,
+     "notes": [],
+     "ports": [
+      "PB0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 5,
+     "notes": [],
+     "ports": [
+      "PB1"
+     ]
+    },
+    {
+     "kind": "power",
+     "n": 6,
+     "name": "VSS"
+    },
+    {
+     "kind": "power",
+     "n": 7,
+     "name": "VCC"
+    },
+    {
+     "kind": "io",
+     "n": 8,
+     "notes": [],
+     "ports": [
+      "PA8"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 9,
+     "notes": [],
+     "ports": [
+      "PA9"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 10,
+     "notes": [],
+     "ports": [
+      "PA10"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 11,
+     "notes": [
+      "SWDIO"
+     ],
+     "ports": [
+      "PA13"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 12,
+     "notes": [
+      "SWCLK"
+     ],
+     "ports": [
+      "PA14"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 13,
+     "notes": [],
+     "ports": [
+      "PA5",
+      "PB4"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 14,
+     "notes": [
+      "OSC_IN"
+     ],
+     "ports": [
+      "PF0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 15,
+     "notes": [
+      "OSC_OUT"
+     ],
+     "ports": [
+      "PF1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 16,
+     "notes": [
+      "NRST"
+     ],
+     "ports": [
+      "PF2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 17,
+     "notes": [],
+     "ports": [
+      "PA0"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 18,
+     "notes": [],
+     "ports": [
+      "PA1"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 19,
+     "notes": [],
+     "ports": [
+      "PA2"
+     ]
+    },
+    {
+     "kind": "io",
+     "n": 20,
+     "notes": [],
+     "ports": [
+      "PA3"
+     ]
+    }
+   ],
+   "source": "图 3-11 TSSOP20 Pinout4 PY32F030F4xP (page 25)",
+   "type": "TSSOP20"
+  }
+ },
+ "parts": [
+  {
+   "flash_kb": 8,
+   "package": "LQFP32-K1",
+   "part": "PY32F030K13T6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "LQFP32-K1",
+   "part": "PY32F030K14T6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "LQFP32-K1",
+   "part": "PY32F030K16T6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "LQFP32-K1",
+   "part": "PY32F030K17T6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "LQFP32-K1",
+   "part": "PY32F030K18T6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 8,
+   "package": "LQFP32-K2",
+   "part": "PY32F030K23T6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "LQFP32-K2",
+   "part": "PY32F030K24T6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "LQFP32-K2",
+   "part": "PY32F030K26T6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "LQFP32-K2",
+   "part": "PY32F030K27T6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "LQFP32-K2",
+   "part": "PY32F030K28T6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 8,
+   "package": "QFN32-K2",
+   "part": "PY32F030K23U6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "QFN32-K2",
+   "part": "PY32F030K24U6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "QFN32-K2",
+   "part": "PY32F030K26U6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "QFN32-K2",
+   "part": "PY32F030K27U6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "QFN32-K2",
+   "part": "PY32F030K28U6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 8,
+   "package": "SSOP24-E1",
+   "part": "PY32F030E13M6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "SSOP24-E1",
+   "part": "PY32F030E14M6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "SSOP24-E1",
+   "part": "PY32F030E16M6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "SSOP24-E1",
+   "part": "PY32F030E17M6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "SSOP24-E1",
+   "part": "PY32F030E18M6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 8,
+   "package": "SSOP24-E2",
+   "part": "PY32F030E23M6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "SSOP24-E2",
+   "part": "PY32F030E24M6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "SSOP24-E2",
+   "part": "PY32F030E26M6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "SSOP24-E2",
+   "part": "PY32F030E27M6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "SSOP24-E2",
+   "part": "PY32F030E28M6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 8,
+   "package": "QFN20-F1",
+   "part": "PY32F030F13U6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "QFN20-F1",
+   "part": "PY32F030F14U6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "QFN20-F1",
+   "part": "PY32F030F16U6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "QFN20-F1",
+   "part": "PY32F030F17U6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "QFN20-F1",
+   "part": "PY32F030F18U6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 8,
+   "package": "QFN20-F2",
+   "part": "PY32F030F23U6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "QFN20-F2",
+   "part": "PY32F030F24U6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "QFN20-F2",
+   "part": "PY32F030F26U6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "QFN20-F2",
+   "part": "PY32F030F27U6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "QFN20-F2",
+   "part": "PY32F030F28U6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 8,
+   "package": "TSSOP20-F1",
+   "part": "PY32F030F13P6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "TSSOP20-F1",
+   "part": "PY32F030F14P6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "TSSOP20-F1",
+   "part": "PY32F030F16P6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "TSSOP20-F1",
+   "part": "PY32F030F17P6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "TSSOP20-F1",
+   "part": "PY32F030F18P6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 8,
+   "package": "TSSOP20-F2",
+   "part": "PY32F030F23P6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "TSSOP20-F2",
+   "part": "PY32F030F24P6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "TSSOP20-F2",
+   "part": "PY32F030F26P6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "TSSOP20-F2",
+   "part": "PY32F030F27P6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "TSSOP20-F2",
+   "part": "PY32F030F28P6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 8,
+   "package": "TSSOP20-F3",
+   "part": "PY32F030F33P6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "TSSOP20-F3",
+   "part": "PY32F030F34P6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "TSSOP20-F3",
+   "part": "PY32F030F36P6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "TSSOP20-F3",
+   "part": "PY32F030F37P6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "TSSOP20-F3",
+   "part": "PY32F030F38P6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 8,
+   "package": "TSSOP20-F4",
+   "part": "PY32F030F43P6",
+   "ram_kb": 1,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 16,
+   "package": "TSSOP20-F4",
+   "part": "PY32F030F44P6",
+   "ram_kb": 2,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 32,
+   "package": "TSSOP20-F4",
+   "part": "PY32F030F46P6",
+   "ram_kb": 4,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 48,
+   "package": "TSSOP20-F4",
+   "part": "PY32F030F47P6",
+   "ram_kb": 6,
+   "source": "DS ordering information (7)"
+  },
+  {
+   "flash_kb": 64,
+   "package": "TSSOP20-F4",
+   "part": "PY32F030F48P6",
+   "ram_kb": 8,
+   "source": "DS ordering information (7)"
+  }
+ ],
+ "peripherals": {
+  "ADC": {
+   "base": 1073816576,
+   "regs": {
+    "CALFIR1": {
+     "fields": {
+      "CALBIO": [
+       16,
+       7
+      ],
+      "CALC4IO": [
+       0,
+       8
+      ],
+      "CALC5IO": [
+       8,
+       8
+      ]
+     },
+     "off": 80,
+     "reset": 0
+    },
+    "CALFIR2": {
+     "fields": {
+      "CALC0IO": [
+       0,
+       8
+      ],
+      "CALC1IO": [
+       8,
+       8
+      ],
+      "CALC2IO": [
+       16,
+       8
+      ],
+      "CALC3IO": [
+       24,
+       8
+      ]
+     },
+     "off": 84,
+     "reset": 0
+    },
+    "CALRR1": {
+     "fields": {
+      "CALBOUT": [
+       16,
+       7
+      ],
+      "CALC4OUT": [
+       0,
+       8
+      ],
+      "CALC5OUT": [
+       8,
+       8
+      ]
+     },
+     "off": 72,
+     "reset": 0
+    },
+    "CALRR2": {
+     "fields": {
+      "CALC0OUT": [
+       0,
+       8
+      ],
+      "CALC1OUT": [
+       8,
+       8
+      ],
+      "CALC2OUT": [
+       16,
+       8
+      ],
+      "CALC3OUT": [
+       24,
+       8
+      ]
+     },
+     "off": 76,
+     "reset": 0
+    },
+    "CCR": {
+     "fields": {
+      "TSEN": [
+       23,
+       1
+      ],
+      "VREFEN": [
+       22,
+       1
+      ]
+     },
+     "off": 776,
+     "reset": 0
+    },
+    "CCSR": {
+     "fields": {
+      "CALFAIL": [
+       30,
+       1
+      ],
+      "CALON": [
+       31,
+       1
+      ],
+      "CALSEL": [
+       11,
+       1
+      ],
+      "CALSET": [
+       15,
+       1
+      ],
+      "CALSMP": [
+       12,
+       2
+      ]
+     },
+     "off": 68,
+     "reset": 0
+    },
+    "CFGR1": {
+     "fields": {
+      "ALIGN": [
+       5,
+       1
+      ],
+      "AWDCH": [
+       26,
+       4
+      ],
+      "AWDEN": [
+       23,
+       1
+      ],
+      "AWDSGL": [
+       22,
+       1
+      ],
+      "CONT": [
+       13,
+       1
+      ],
+      "DISCEN": [
+       16,
+       1
+      ],
+      "DMACFG": [
+       1,
+       1
+      ],
+      "DMAEN": [
+       0,
+       1
+      ],
+      "EXTEN": [
+       10,
+       2
+      ],
+      "EXTSEL": [
+       6,
+       3
+      ],
+      "OVRMOD": [
+       12,
+       1
+      ],
+      "RESSEL": [
+       3,
+       2
+      ],
+      "SCANDIR": [
+       2,
+       1
+      ],
+      "WAIT": [
+       14,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "CFGR2": {
+     "fields": {
+      "CKMODE": [
+       28,
+       4
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "CHSELR": {
+     "fields": {
+      "CHSEL0": [
+       0,
+       1
+      ],
+      "CHSEL1": [
+       1,
+       1
+      ],
+      "CHSEL11": [
+       11,
+       1
+      ],
+      "CHSEL12": [
+       12,
+       1
+      ],
+      "CHSEL2": [
+       2,
+       1
+      ],
+      "CHSEL3": [
+       3,
+       1
+      ],
+      "CHSEL4": [
+       4,
+       1
+      ],
+      "CHSEL5": [
+       5,
+       1
+      ],
+      "CHSEL6": [
+       6,
+       1
+      ],
+      "CHSEL7": [
+       7,
+       1
+      ],
+      "CHSEL8": [
+       8,
+       1
+      ],
+      "CHSEL9": [
+       9,
+       1
+      ]
+     },
+     "off": 40,
+     "reset": 0,
+     "svd_reset": 268369920
+    },
+    "CR": {
+     "fields": {
+      "ADCAL": [
+       31,
+       1
+      ],
+      "ADEN": [
+       0,
+       1
+      ],
+      "ADSTART": [
+       2,
+       1
+      ],
+      "ADSTP": [
+       4,
+       1
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "DR": {
+     "fields": {
+      "DATA": [
+       0,
+       16
+      ]
+     },
+     "off": 64,
+     "reset": 0
+    },
+    "IER": {
+     "fields": {
+      "AWDIE": [
+       7,
+       1
+      ],
+      "EOCIE": [
+       2,
+       1
+      ],
+      "EOSEQIE": [
+       3,
+       1
+      ],
+      "EOSMPIE": [
+       1,
+       1
+      ],
+      "OVRIE": [
+       4,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "ISR": {
+     "fields": {
+      "AWD": [
+       7,
+       1
+      ],
+      "EOC": [
+       2,
+       1
+      ],
+      "EOSEQ": [
+       3,
+       1
+      ],
+      "EOSMP": [
+       1,
+       1
+      ],
+      "OVR": [
+       4,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "SMPR": {
+     "fields": {
+      "SMP": [
+       0,
+       3
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "TR": {
+     "fields": {
+      "HT": [
+       16,
+       12
+      ],
+      "LT": [
+       0,
+       12
+      ]
+     },
+     "off": 32,
+     "reset": 268369920
+    }
+   }
+  },
+  "COMP1": {
+   "base": 1073807872,
+   "regs": {
+    "CSR": {
+     "fields": {
+      "COMP_EN": [
+       0,
+       1
+      ],
+      "COMP_OUT": [
+       30,
+       1
+      ],
+      "HYST": [
+       16,
+       1
+      ],
+      "INMSEL": [
+       4,
+       4
+      ],
+      "INPSEL": [
+       8,
+       2
+      ],
+      "LOCK": [
+       31,
+       1
+      ],
+      "POLARITY": [
+       15,
+       1
+      ],
+      "PWRMODE": [
+       18,
+       2
+      ],
+      "SCALER_EN": [
+       1,
+       1
+      ],
+      "WINMODE": [
+       11,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "FR": {
+     "fields": {
+      "FLTCNT": [
+       16,
+       16
+      ],
+      "FLTEN": [
+       0,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    }
+   }
+  },
+  "COMP2": {
+   "base": 1073807888,
+   "regs": {
+    "CSR": {
+     "fields": {
+      "COMP_EN": [
+       0,
+       1
+      ],
+      "COMP_OUT": [
+       30,
+       1
+      ],
+      "INMSEL": [
+       4,
+       4
+      ],
+      "INPSEL": [
+       8,
+       2
+      ],
+      "LOCK": [
+       31,
+       1
+      ],
+      "POLARITY": [
+       15,
+       1
+      ],
+      "PWRMODE": [
+       18,
+       2
+      ],
+      "WINMODE": [
+       11,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "FR": {
+     "fields": {
+      "FLTCNT": [
+       16,
+       16
+      ],
+      "FLTEN": [
+       0,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    }
+   }
+  },
+  "CRC": {
+   "base": 1073885184,
+   "regs": {
+    "CR": {
+     "fields": {
+      "RESET": [
+       0,
+       1
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "DR": {
+     "fields": {
+      "DR": [
+       0,
+       32
+      ]
+     },
+     "off": 0,
+     "reset": 4294967295
+    },
+    "IDR": {
+     "fields": {
+      "IDR": [
+       0,
+       8
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    }
+   }
+  },
+  "DBGMCU": {
+   "base": 1073829888,
+   "regs": {
+    "APB_FZ1": {
+     "fields": {
+      "DBG_IWDG_STOP": [
+       12,
+       1
+      ],
+      "DBG_LPTIM_STOP": [
+       31,
+       1
+      ],
+      "DBG_RTC_STOP": [
+       10,
+       1
+      ],
+      "DBG_TIMER3_STOP": [
+       1,
+       1
+      ],
+      "DBG_WWDG_STOP": [
+       11,
+       1
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "APB_FZ2": {
+     "fields": {
+      "DBG_TIMER14_STOP": [
+       15,
+       1
+      ],
+      "DBG_TIMER16_STOP": [
+       17,
+       1
+      ],
+      "DBG_TIMER17_STOP": [
+       18,
+       1
+      ],
+      "DBG_TIMER1_STOP": [
+       11,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "CR": {
+     "fields": {
+      "DBG_STOP": [
+       1,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "IDCODE": {
+     "fields": {},
+     "off": 0,
+     "reset": 0
+    }
+   }
+  },
+  "DMA": {
+   "base": 1073872896,
+   "regs": {
+    "CCR1": {
+     "fields": {
+      "CIRC": [
+       5,
+       1
+      ],
+      "DIR": [
+       4,
+       1
+      ],
+      "EN": [
+       0,
+       1
+      ],
+      "HTIE": [
+       2,
+       1
+      ],
+      "MEM2MEM": [
+       14,
+       1
+      ],
+      "MINC": [
+       7,
+       1
+      ],
+      "MSIZE": [
+       10,
+       2
+      ],
+      "PINC": [
+       6,
+       1
+      ],
+      "PL": [
+       12,
+       2
+      ],
+      "PSIZE": [
+       8,
+       2
+      ],
+      "TCIE": [
+       1,
+       1
+      ],
+      "TEIE": [
+       3,
+       1
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "CCR2": {
+     "fields": {
+      "CIRC": [
+       5,
+       1
+      ],
+      "DIR": [
+       4,
+       1
+      ],
+      "EN": [
+       0,
+       1
+      ],
+      "HTIE": [
+       2,
+       1
+      ],
+      "MEM2MEM": [
+       14,
+       1
+      ],
+      "MINC": [
+       7,
+       1
+      ],
+      "MSIZE": [
+       10,
+       2
+      ],
+      "PINC": [
+       6,
+       1
+      ],
+      "PL": [
+       12,
+       2
+      ],
+      "PSIZE": [
+       8,
+       2
+      ],
+      "TCIE": [
+       1,
+       1
+      ],
+      "TEIE": [
+       3,
+       1
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "CCR3": {
+     "fields": {
+      "CIRC": [
+       5,
+       1
+      ],
+      "DIR": [
+       4,
+       1
+      ],
+      "EN": [
+       0,
+       1
+      ],
+      "HTIE": [
+       2,
+       1
+      ],
+      "MEM2MEM": [
+       14,
+       1
+      ],
+      "MINC": [
+       7,
+       1
+      ],
+      "MSIZE": [
+       10,
+       2
+      ],
+      "PINC": [
+       6,
+       1
+      ],
+      "PL": [
+       12,
+       2
+      ],
+      "PSIZE": [
+       8,
+       2
+      ],
+      "TCIE": [
+       1,
+       1
+      ],
+      "TEIE": [
+       3,
+       1
+      ]
+     },
+     "off": 48,
+     "reset": 0
+    },
+    "CMAR1": {
+     "fields": {
+      "MA": [
+       0,
+       32
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "CMAR2": {
+     "fields": {
+      "MA": [
+       0,
+       32
+      ]
+     },
+     "off": 40,
+     "reset": 0
+    },
+    "CMAR3": {
+     "fields": {
+      "MA": [
+       0,
+       32
+      ]
+     },
+     "off": 60,
+     "reset": 0
+    },
+    "CNDTR1": {
+     "fields": {
+      "NDT": [
+       0,
+       16
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "CNDTR2": {
+     "fields": {
+      "NDT": [
+       0,
+       16
+      ]
+     },
+     "off": 32,
+     "reset": 0
+    },
+    "CNDTR3": {
+     "fields": {
+      "NDT": [
+       0,
+       16
+      ]
+     },
+     "off": 52,
+     "reset": 0
+    },
+    "CPAR1": {
+     "fields": {
+      "PA": [
+       0,
+       32
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "CPAR2": {
+     "fields": {
+      "PA": [
+       0,
+       32
+      ]
+     },
+     "off": 36,
+     "reset": 0
+    },
+    "CPAR3": {
+     "fields": {
+      "PA": [
+       0,
+       32
+      ]
+     },
+     "off": 56,
+     "reset": 0
+    },
+    "IFCR": {
+     "fields": {
+      "CGIF1": [
+       0,
+       1
+      ],
+      "CGIF2": [
+       4,
+       1
+      ],
+      "CGIF3": [
+       8,
+       1
+      ],
+      "CHTIF1": [
+       2,
+       1
+      ],
+      "CHTIF2": [
+       6,
+       1
+      ],
+      "CHTIF3": [
+       10,
+       1
+      ],
+      "CTCIF1": [
+       1,
+       1
+      ],
+      "CTCIF2": [
+       5,
+       1
+      ],
+      "CTCIF3": [
+       9,
+       1
+      ],
+      "CTEIF1": [
+       3,
+       1
+      ],
+      "CTEIF2": [
+       7,
+       1
+      ],
+      "CTEIF3": [
+       11,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "ISR": {
+     "fields": {
+      "GIF1": [
+       0,
+       1
+      ],
+      "GIF2": [
+       4,
+       1
+      ],
+      "GIF3": [
+       8,
+       1
+      ],
+      "HTIF1": [
+       2,
+       1
+      ],
+      "HTIF2": [
+       6,
+       1
+      ],
+      "HTIF3": [
+       10,
+       1
+      ],
+      "TCIF1": [
+       1,
+       1
+      ],
+      "TCIF2": [
+       5,
+       1
+      ],
+      "TCIF3": [
+       9,
+       1
+      ],
+      "TEIF1": [
+       3,
+       1
+      ],
+      "TEIF2": [
+       7,
+       1
+      ],
+      "TEIF3": [
+       11,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    }
+   }
+  },
+  "EXTI": {
+   "base": 1073879040,
+   "regs": {
+    "EMR": {
+     "fields": {
+      "EM0": [
+       0,
+       1
+      ],
+      "EM1": [
+       1,
+       1
+      ],
+      "EM10": [
+       10,
+       1
+      ],
+      "EM11": [
+       11,
+       1
+      ],
+      "EM12": [
+       12,
+       1
+      ],
+      "EM13": [
+       13,
+       1
+      ],
+      "EM14": [
+       14,
+       1
+      ],
+      "EM15": [
+       15,
+       1
+      ],
+      "EM16": [
+       16,
+       1
+      ],
+      "EM17": [
+       17,
+       1
+      ],
+      "EM18": [
+       18,
+       1
+      ],
+      "EM19": [
+       19,
+       1
+      ],
+      "EM2": [
+       2,
+       1
+      ],
+      "EM29": [
+       29,
+       1
+      ],
+      "EM3": [
+       3,
+       1
+      ],
+      "EM4": [
+       4,
+       1
+      ],
+      "EM5": [
+       5,
+       1
+      ],
+      "EM6": [
+       6,
+       1
+      ],
+      "EM7": [
+       7,
+       1
+      ],
+      "EM8": [
+       8,
+       1
+      ],
+      "EM9": [
+       9,
+       1
+      ]
+     },
+     "off": 132,
+     "reset": 0
+    },
+    "EXTICR1": {
+     "fields": {
+      "EXTI0": [
+       0,
+       2
+      ],
+      "EXTI1": [
+       8,
+       2
+      ],
+      "EXTI2": [
+       16,
+       2
+      ],
+      "EXTI3": [
+       24,
+       2
+      ]
+     },
+     "off": 96,
+     "reset": 0
+    },
+    "EXTICR2": {
+     "fields": {
+      "EXTI4": [
+       0,
+       2
+      ],
+      "EXTI5": [
+       8,
+       1
+      ],
+      "EXTI6": [
+       16,
+       1
+      ],
+      "EXTI7": [
+       24,
+       1
+      ]
+     },
+     "off": 100,
+     "reset": 0
+    },
+    "EXTICR3": {
+     "fields": {
+      "EXTI8": [
+       0,
+       1
+      ]
+     },
+     "off": 104,
+     "reset": 0
+    },
+    "FTSR": {
+     "fields": {
+      "FT0": [
+       0,
+       1
+      ],
+      "FT1": [
+       1,
+       1
+      ],
+      "FT10": [
+       10,
+       1
+      ],
+      "FT11": [
+       11,
+       1
+      ],
+      "FT12": [
+       12,
+       1
+      ],
+      "FT13": [
+       13,
+       1
+      ],
+      "FT14": [
+       14,
+       1
+      ],
+      "FT15": [
+       15,
+       1
+      ],
+      "FT16": [
+       16,
+       1
+      ],
+      "FT17": [
+       17,
+       1
+      ],
+      "FT18": [
+       18,
+       1
+      ],
+      "FT2": [
+       2,
+       1
+      ],
+      "FT3": [
+       3,
+       1
+      ],
+      "FT4": [
+       4,
+       1
+      ],
+      "FT5": [
+       5,
+       1
+      ],
+      "FT6": [
+       6,
+       1
+      ],
+      "FT7": [
+       7,
+       1
+      ],
+      "FT8": [
+       8,
+       1
+      ],
+      "FT9": [
+       9,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "IMR": {
+     "fields": {
+      "IM0": [
+       0,
+       1
+      ],
+      "IM1": [
+       1,
+       1
+      ],
+      "IM10": [
+       10,
+       1
+      ],
+      "IM11": [
+       11,
+       1
+      ],
+      "IM12": [
+       12,
+       1
+      ],
+      "IM13": [
+       13,
+       1
+      ],
+      "IM14": [
+       14,
+       1
+      ],
+      "IM15": [
+       15,
+       1
+      ],
+      "IM16": [
+       16,
+       1
+      ],
+      "IM17": [
+       17,
+       1
+      ],
+      "IM18": [
+       18,
+       1
+      ],
+      "IM19": [
+       19,
+       1
+      ],
+      "IM2": [
+       2,
+       1
+      ],
+      "IM29": [
+       29,
+       1
+      ],
+      "IM3": [
+       3,
+       1
+      ],
+      "IM4": [
+       4,
+       1
+      ],
+      "IM5": [
+       5,
+       1
+      ],
+      "IM6": [
+       6,
+       1
+      ],
+      "IM7": [
+       7,
+       1
+      ],
+      "IM8": [
+       8,
+       1
+      ],
+      "IM9": [
+       9,
+       1
+      ]
+     },
+     "off": 128,
+     "reset": 537395200,
+     "svd_reset": 4294443008
+    },
+    "PR": {
+     "fields": {
+      "PR0": [
+       0,
+       1
+      ],
+      "PR1": [
+       1,
+       1
+      ],
+      "PR10": [
+       10,
+       1
+      ],
+      "PR11": [
+       11,
+       1
+      ],
+      "PR12": [
+       12,
+       1
+      ],
+      "PR13": [
+       13,
+       1
+      ],
+      "PR14": [
+       14,
+       1
+      ],
+      "PR15": [
+       15,
+       1
+      ],
+      "PR16": [
+       16,
+       1
+      ],
+      "PR17": [
+       17,
+       1
+      ],
+      "PR18": [
+       18,
+       1
+      ],
+      "PR2": [
+       2,
+       1
+      ],
+      "PR3": [
+       3,
+       1
+      ],
+      "PR4": [
+       4,
+       1
+      ],
+      "PR5": [
+       5,
+       1
+      ],
+      "PR6": [
+       6,
+       1
+      ],
+      "PR7": [
+       7,
+       1
+      ],
+      "PR8": [
+       8,
+       1
+      ],
+      "PR9": [
+       9,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "RTSR": {
+     "fields": {
+      "RT0": [
+       0,
+       1
+      ],
+      "RT1": [
+       1,
+       1
+      ],
+      "RT10": [
+       10,
+       1
+      ],
+      "RT11": [
+       11,
+       1
+      ],
+      "RT12": [
+       12,
+       1
+      ],
+      "RT13": [
+       13,
+       1
+      ],
+      "RT14": [
+       14,
+       1
+      ],
+      "RT15": [
+       15,
+       1
+      ],
+      "RT16": [
+       16,
+       1
+      ],
+      "RT17": [
+       17,
+       1
+      ],
+      "RT18": [
+       18,
+       1
+      ],
+      "RT2": [
+       2,
+       1
+      ],
+      "RT3": [
+       3,
+       1
+      ],
+      "RT4": [
+       4,
+       1
+      ],
+      "RT5": [
+       5,
+       1
+      ],
+      "RT6": [
+       6,
+       1
+      ],
+      "RT7": [
+       7,
+       1
+      ],
+      "RT8": [
+       8,
+       1
+      ],
+      "RT9": [
+       9,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "SWIER": {
+     "fields": {
+      "SWI0": [
+       0,
+       1
+      ],
+      "SWI1": [
+       1,
+       1
+      ],
+      "SWI10": [
+       10,
+       1
+      ],
+      "SWI11": [
+       11,
+       1
+      ],
+      "SWI12": [
+       12,
+       1
+      ],
+      "SWI13": [
+       13,
+       1
+      ],
+      "SWI14": [
+       14,
+       1
+      ],
+      "SWI15": [
+       15,
+       1
+      ],
+      "SWI16": [
+       16,
+       1
+      ],
+      "SWI17": [
+       17,
+       1
+      ],
+      "SWI18": [
+       18,
+       1
+      ],
+      "SWI2": [
+       2,
+       1
+      ],
+      "SWI3": [
+       3,
+       1
+      ],
+      "SWI4": [
+       4,
+       1
+      ],
+      "SWI5": [
+       5,
+       1
+      ],
+      "SWI6": [
+       6,
+       1
+      ],
+      "SWI7": [
+       7,
+       1
+      ],
+      "SWI8": [
+       8,
+       1
+      ],
+      "SWI9": [
+       9,
+       1
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    }
+   }
+  },
+  "FLASH": {
+   "base": 1073881088,
+   "regs": {
+    "ACR": {
+     "fields": {
+      "LATENCY": [
+       0,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0,
+     "svd_reset": 1536
+    },
+    "CR": {
+     "fields": {
+      "EOPIE": [
+       24,
+       1
+      ],
+      "ERRIE": [
+       25,
+       1
+      ],
+      "LOCK": [
+       31,
+       1
+      ],
+      "MER": [
+       2,
+       1
+      ],
+      "OBL_LAUNCH": [
+       27,
+       1
+      ],
+      "OPTLOCK": [
+       30,
+       1
+      ],
+      "OPTSTRT": [
+       17,
+       1
+      ],
+      "PER": [
+       1,
+       1
+      ],
+      "PG": [
+       0,
+       1
+      ],
+      "PGTSTRT": [
+       19,
+       1
+      ],
+      "SER": [
+       11,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 3221225472
+    },
+    "KEYR": {
+     "fields": {
+      "KEY": [
+       0,
+       32
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "OPTKEYR": {
+     "fields": {
+      "OPTKEY": [
+       0,
+       32
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "OPTR": {
+     "fields": {
+      "BOREN": [
+       8,
+       1
+      ],
+      "BORF_LEV": [
+       9,
+       3
+      ],
+      "IDWG_SW": [
+       12,
+       1
+      ],
+      "NRST_MODE": [
+       14,
+       1
+      ],
+      "RDP": [
+       0,
+       8
+      ],
+      "WWDG_SW": [
+       13,
+       1
+      ],
+      "nBOOT1": [
+       15,
+       1
+      ]
+     },
+     "off": 32,
+     "reset": 0,
+     "svd_reset": 1331015850
+    },
+    "PERTPE": {
+     "fields": {
+      "PERTPE": [
+       0,
+       17
+      ]
+     },
+     "off": 276,
+     "reset": 1,
+     "svd_reset": 60000
+    },
+    "PRETPE": {
+     "fields": {
+      "PRETPE": [
+       0,
+       13
+      ]
+     },
+     "off": 288,
+     "reset": 0,
+     "svd_reset": 4800
+    },
+    "PRGTPE": {
+     "fields": {
+      "PRGTPE": [
+       0,
+       16
+      ]
+     },
+     "off": 284,
+     "reset": 0,
+     "svd_reset": 36000
+    },
+    "SDKR": {
+     "fields": {
+      "SDK_END": [
+       8,
+       5
+      ],
+      "SDK_STRT": [
+       0,
+       5
+      ]
+     },
+     "off": 36,
+     "reset": 4292870175
+    },
+    "SMERTPE": {
+     "fields": {
+      "SMERTPE": [
+       0,
+       17
+      ]
+     },
+     "off": 280,
+     "reset": 1,
+     "svd_reset": 64800
+    },
+    "SR": {
+     "fields": {
+      "BSY": [
+       16,
+       1
+      ],
+      "EOP": [
+       0,
+       1
+      ],
+      "OPTVERR": [
+       15,
+       1
+      ],
+      "WRPERR": [
+       4,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "STCR": {
+     "fields": {
+      "SLEEP_EN": [
+       0,
+       1
+      ],
+      "SLEEP_TIME": [
+       8,
+       8
+      ]
+     },
+     "off": 144,
+     "reset": 25600
+    },
+    "TPS3": {
+     "fields": {
+      "TPS3": [
+       0,
+       11
+      ]
+     },
+     "off": 268,
+     "reset": 0,
+     "svd_reset": 1728
+    },
+    "TS0": {
+     "fields": {
+      "TS0": [
+       0,
+       8
+      ]
+     },
+     "off": 256,
+     "reset": 0,
+     "svd_reset": 180
+    },
+    "TS1": {
+     "fields": {
+      "TS1": [
+       0,
+       9
+      ]
+     },
+     "off": 260,
+     "reset": 0,
+     "svd_reset": 432
+    },
+    "TS2P": {
+     "fields": {
+      "TS2P": [
+       0,
+       8
+      ]
+     },
+     "off": 264,
+     "reset": 0,
+     "svd_reset": 180
+    },
+    "TS3": {
+     "fields": {
+      "TS3": [
+       0,
+       8
+      ]
+     },
+     "off": 272,
+     "reset": 0,
+     "svd_reset": 180
+    },
+    "WRPR": {
+     "fields": {
+      "WRP": [
+       0,
+       16
+      ]
+     },
+     "off": 44,
+     "reset": 0,
+     "svd_reset": 65535
+    }
+   }
+  },
+  "GPIOA": {
+   "base": 1342177280,
+   "regs": {
+    "AFRH": {
+     "fields": {
+      "AFSEL10": [
+       8,
+       4
+      ],
+      "AFSEL11": [
+       12,
+       4
+      ],
+      "AFSEL12": [
+       16,
+       4
+      ],
+      "AFSEL13": [
+       20,
+       4
+      ],
+      "AFSEL14": [
+       24,
+       4
+      ],
+      "AFSEL15": [
+       28,
+       4
+      ],
+      "AFSEL8": [
+       0,
+       4
+      ],
+      "AFSEL9": [
+       4,
+       4
+      ]
+     },
+     "off": 36,
+     "reset": 0
+    },
+    "AFRL": {
+     "fields": {
+      "AFSEL0": [
+       0,
+       4
+      ],
+      "AFSEL1": [
+       4,
+       4
+      ],
+      "AFSEL2": [
+       8,
+       4
+      ],
+      "AFSEL3": [
+       12,
+       4
+      ],
+      "AFSEL4": [
+       16,
+       4
+      ],
+      "AFSEL5": [
+       20,
+       4
+      ],
+      "AFSEL6": [
+       24,
+       4
+      ],
+      "AFSEL7": [
+       28,
+       4
+      ]
+     },
+     "off": 32,
+     "reset": 0
+    },
+    "BRR": {
+     "fields": {
+      "BR0": [
+       0,
+       1
+      ],
+      "BR1": [
+       1,
+       1
+      ],
+      "BR10": [
+       10,
+       1
+      ],
+      "BR11": [
+       11,
+       1
+      ],
+      "BR12": [
+       12,
+       1
+      ],
+      "BR13": [
+       13,
+       1
+      ],
+      "BR14": [
+       14,
+       1
+      ],
+      "BR15": [
+       15,
+       1
+      ],
+      "BR2": [
+       2,
+       1
+      ],
+      "BR3": [
+       3,
+       1
+      ],
+      "BR4": [
+       4,
+       1
+      ],
+      "BR5": [
+       5,
+       1
+      ],
+      "BR6": [
+       6,
+       1
+      ],
+      "BR7": [
+       7,
+       1
+      ],
+      "BR8": [
+       8,
+       1
+      ],
+      "BR9": [
+       9,
+       1
+      ]
+     },
+     "off": 40,
+     "reset": 0
+    },
+    "BSRR": {
+     "fields": {
+      "BR0": [
+       16,
+       1
+      ],
+      "BR1": [
+       17,
+       1
+      ],
+      "BR10": [
+       26,
+       1
+      ],
+      "BR11": [
+       27,
+       1
+      ],
+      "BR12": [
+       28,
+       1
+      ],
+      "BR13": [
+       29,
+       1
+      ],
+      "BR14": [
+       30,
+       1
+      ],
+      "BR15": [
+       31,
+       1
+      ],
+      "BR2": [
+       18,
+       1
+      ],
+      "BR3": [
+       19,
+       1
+      ],
+      "BR4": [
+       20,
+       1
+      ],
+      "BR5": [
+       21,
+       1
+      ],
+      "BR6": [
+       22,
+       1
+      ],
+      "BR7": [
+       23,
+       1
+      ],
+      "BR8": [
+       24,
+       1
+      ],
+      "BR9": [
+       25,
+       1
+      ],
+      "BS0": [
+       0,
+       1
+      ],
+      "BS1": [
+       1,
+       1
+      ],
+      "BS10": [
+       10,
+       1
+      ],
+      "BS11": [
+       11,
+       1
+      ],
+      "BS12": [
+       12,
+       1
+      ],
+      "BS13": [
+       13,
+       1
+      ],
+      "BS14": [
+       14,
+       1
+      ],
+      "BS15": [
+       15,
+       1
+      ],
+      "BS2": [
+       2,
+       1
+      ],
+      "BS3": [
+       3,
+       1
+      ],
+      "BS4": [
+       4,
+       1
+      ],
+      "BS5": [
+       5,
+       1
+      ],
+      "BS6": [
+       6,
+       1
+      ],
+      "BS7": [
+       7,
+       1
+      ],
+      "BS8": [
+       8,
+       1
+      ],
+      "BS9": [
+       9,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "IDR": {
+     "fields": {
+      "ID0": [
+       0,
+       1
+      ],
+      "ID1": [
+       1,
+       1
+      ],
+      "ID10": [
+       10,
+       1
+      ],
+      "ID11": [
+       11,
+       1
+      ],
+      "ID12": [
+       12,
+       1
+      ],
+      "ID13": [
+       13,
+       1
+      ],
+      "ID14": [
+       14,
+       1
+      ],
+      "ID15": [
+       15,
+       1
+      ],
+      "ID2": [
+       2,
+       1
+      ],
+      "ID3": [
+       3,
+       1
+      ],
+      "ID4": [
+       4,
+       1
+      ],
+      "ID5": [
+       5,
+       1
+      ],
+      "ID6": [
+       6,
+       1
+      ],
+      "ID7": [
+       7,
+       1
+      ],
+      "ID8": [
+       8,
+       1
+      ],
+      "ID9": [
+       9,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "LCKR": {
+     "fields": {
+      "LCK0": [
+       0,
+       1
+      ],
+      "LCK1": [
+       1,
+       1
+      ],
+      "LCK10": [
+       10,
+       1
+      ],
+      "LCK11": [
+       11,
+       1
+      ],
+      "LCK12": [
+       12,
+       1
+      ],
+      "LCK13": [
+       13,
+       1
+      ],
+      "LCK14": [
+       14,
+       1
+      ],
+      "LCK15": [
+       15,
+       1
+      ],
+      "LCK2": [
+       2,
+       1
+      ],
+      "LCK3": [
+       3,
+       1
+      ],
+      "LCK4": [
+       4,
+       1
+      ],
+      "LCK5": [
+       5,
+       1
+      ],
+      "LCK6": [
+       6,
+       1
+      ],
+      "LCK7": [
+       7,
+       1
+      ],
+      "LCK8": [
+       8,
+       1
+      ],
+      "LCK9": [
+       9,
+       1
+      ],
+      "LCKK": [
+       16,
+       1
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "MODER": {
+     "fields": {
+      "MODE0": [
+       0,
+       2
+      ],
+      "MODE1": [
+       2,
+       2
+      ],
+      "MODE10": [
+       20,
+       2
+      ],
+      "MODE11": [
+       22,
+       2
+      ],
+      "MODE12": [
+       24,
+       2
+      ],
+      "MODE13": [
+       26,
+       2
+      ],
+      "MODE14": [
+       28,
+       2
+      ],
+      "MODE15": [
+       30,
+       2
+      ],
+      "MODE2": [
+       4,
+       2
+      ],
+      "MODE3": [
+       6,
+       2
+      ],
+      "MODE4": [
+       8,
+       2
+      ],
+      "MODE5": [
+       10,
+       2
+      ],
+      "MODE6": [
+       12,
+       2
+      ],
+      "MODE7": [
+       14,
+       2
+      ],
+      "MODE8": [
+       16,
+       2
+      ],
+      "MODE9": [
+       18,
+       2
+      ]
+     },
+     "off": 0,
+     "reset": 3959422975
+    },
+    "ODR": {
+     "fields": {
+      "OD0": [
+       0,
+       1
+      ],
+      "OD1": [
+       1,
+       1
+      ],
+      "OD10": [
+       10,
+       1
+      ],
+      "OD11": [
+       11,
+       1
+      ],
+      "OD12": [
+       12,
+       1
+      ],
+      "OD13": [
+       13,
+       1
+      ],
+      "OD14": [
+       14,
+       1
+      ],
+      "OD15": [
+       15,
+       1
+      ],
+      "OD2": [
+       2,
+       1
+      ],
+      "OD3": [
+       3,
+       1
+      ],
+      "OD4": [
+       4,
+       1
+      ],
+      "OD5": [
+       5,
+       1
+      ],
+      "OD6": [
+       6,
+       1
+      ],
+      "OD7": [
+       7,
+       1
+      ],
+      "OD8": [
+       8,
+       1
+      ],
+      "OD9": [
+       9,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "OSPEEDR": {
+     "fields": {
+      "OSPEED0": [
+       0,
+       2
+      ],
+      "OSPEED1": [
+       2,
+       2
+      ],
+      "OSPEED10": [
+       20,
+       2
+      ],
+      "OSPEED11": [
+       22,
+       2
+      ],
+      "OSPEED12": [
+       24,
+       2
+      ],
+      "OSPEED13": [
+       26,
+       2
+      ],
+      "OSPEED14": [
+       28,
+       2
+      ],
+      "OSPEED15": [
+       30,
+       2
+      ],
+      "OSPEED2": [
+       4,
+       2
+      ],
+      "OSPEED3": [
+       6,
+       2
+      ],
+      "OSPEED4": [
+       8,
+       2
+      ],
+      "OSPEED5": [
+       10,
+       2
+      ],
+      "OSPEED6": [
+       12,
+       2
+      ],
+      "OSPEED7": [
+       14,
+       2
+      ],
+      "OSPEED8": [
+       16,
+       2
+      ],
+      "OSPEED9": [
+       18,
+       2
+      ]
+     },
+     "off": 8,
+     "reset": 201326592
+    },
+    "OTYPER": {
+     "fields": {
+      "OT0": [
+       0,
+       1
+      ],
+      "OT1": [
+       1,
+       1
+      ],
+      "OT10": [
+       10,
+       1
+      ],
+      "OT11": [
+       11,
+       1
+      ],
+      "OT12": [
+       12,
+       1
+      ],
+      "OT13": [
+       13,
+       1
+      ],
+      "OT14": [
+       14,
+       1
+      ],
+      "OT15": [
+       15,
+       1
+      ],
+      "OT2": [
+       2,
+       1
+      ],
+      "OT3": [
+       3,
+       1
+      ],
+      "OT4": [
+       4,
+       1
+      ],
+      "OT5": [
+       5,
+       1
+      ],
+      "OT6": [
+       6,
+       1
+      ],
+      "OT7": [
+       7,
+       1
+      ],
+      "OT8": [
+       8,
+       1
+      ],
+      "OT9": [
+       9,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "PUPDR": {
+     "fields": {
+      "PUPD0": [
+       0,
+       2
+      ],
+      "PUPD1": [
+       2,
+       2
+      ],
+      "PUPD10": [
+       20,
+       2
+      ],
+      "PUPD11": [
+       22,
+       2
+      ],
+      "PUPD12": [
+       24,
+       2
+      ],
+      "PUPD13": [
+       26,
+       2
+      ],
+      "PUPD14": [
+       28,
+       2
+      ],
+      "PUPD15": [
+       30,
+       2
+      ],
+      "PUPD2": [
+       4,
+       2
+      ],
+      "PUPD3": [
+       6,
+       2
+      ],
+      "PUPD4": [
+       8,
+       2
+      ],
+      "PUPD5": [
+       10,
+       2
+      ],
+      "PUPD6": [
+       12,
+       2
+      ],
+      "PUPD7": [
+       14,
+       2
+      ],
+      "PUPD8": [
+       16,
+       2
+      ],
+      "PUPD9": [
+       18,
+       2
+      ]
+     },
+     "off": 12,
+     "reset": 603979776
+    }
+   }
+  },
+  "GPIOB": {
+   "base": 1342178304,
+   "regs": {
+    "AFRH": {
+     "fields": {
+      "AFSEL10": [
+       8,
+       4
+      ],
+      "AFSEL11": [
+       12,
+       4
+      ],
+      "AFSEL12": [
+       16,
+       4
+      ],
+      "AFSEL13": [
+       20,
+       4
+      ],
+      "AFSEL14": [
+       24,
+       4
+      ],
+      "AFSEL15": [
+       28,
+       4
+      ],
+      "AFSEL8": [
+       0,
+       4
+      ],
+      "AFSEL9": [
+       4,
+       4
+      ]
+     },
+     "off": 36,
+     "reset": 0
+    },
+    "AFRL": {
+     "fields": {
+      "AFSEL0": [
+       0,
+       4
+      ],
+      "AFSEL1": [
+       4,
+       4
+      ],
+      "AFSEL2": [
+       8,
+       4
+      ],
+      "AFSEL3": [
+       12,
+       4
+      ],
+      "AFSEL4": [
+       16,
+       4
+      ],
+      "AFSEL5": [
+       20,
+       4
+      ],
+      "AFSEL6": [
+       24,
+       4
+      ],
+      "AFSEL7": [
+       28,
+       4
+      ]
+     },
+     "off": 32,
+     "reset": 0
+    },
+    "BRR": {
+     "fields": {
+      "BR0": [
+       0,
+       1
+      ],
+      "BR1": [
+       1,
+       1
+      ],
+      "BR2": [
+       2,
+       1
+      ],
+      "BR3": [
+       3,
+       1
+      ],
+      "BR4": [
+       4,
+       1
+      ],
+      "BR5": [
+       5,
+       1
+      ],
+      "BR6": [
+       6,
+       1
+      ],
+      "BR7": [
+       7,
+       1
+      ],
+      "BR8": [
+       8,
+       1
+      ]
+     },
+     "off": 40,
+     "reset": 0
+    },
+    "BSRR": {
+     "fields": {
+      "BR0": [
+       16,
+       1
+      ],
+      "BR1": [
+       17,
+       1
+      ],
+      "BR2": [
+       18,
+       1
+      ],
+      "BR3": [
+       19,
+       1
+      ],
+      "BR4": [
+       20,
+       1
+      ],
+      "BR5": [
+       21,
+       1
+      ],
+      "BR6": [
+       22,
+       1
+      ],
+      "BR7": [
+       23,
+       1
+      ],
+      "BR8": [
+       24,
+       1
+      ],
+      "BS0": [
+       0,
+       1
+      ],
+      "BS1": [
+       1,
+       1
+      ],
+      "BS2": [
+       2,
+       1
+      ],
+      "BS3": [
+       3,
+       1
+      ],
+      "BS4": [
+       4,
+       1
+      ],
+      "BS5": [
+       5,
+       1
+      ],
+      "BS6": [
+       6,
+       1
+      ],
+      "BS7": [
+       7,
+       1
+      ],
+      "BS8": [
+       8,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "IDR": {
+     "fields": {
+      "ID0": [
+       0,
+       1
+      ],
+      "ID1": [
+       1,
+       1
+      ],
+      "ID2": [
+       2,
+       1
+      ],
+      "ID3": [
+       3,
+       1
+      ],
+      "ID4": [
+       4,
+       1
+      ],
+      "ID5": [
+       5,
+       1
+      ],
+      "ID6": [
+       6,
+       1
+      ],
+      "ID7": [
+       7,
+       1
+      ],
+      "ID8": [
+       8,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "LCKR": {
+     "fields": {
+      "LCK0": [
+       0,
+       1
+      ],
+      "LCK1": [
+       1,
+       1
+      ],
+      "LCK2": [
+       2,
+       1
+      ],
+      "LCK3": [
+       3,
+       1
+      ],
+      "LCK4": [
+       4,
+       1
+      ],
+      "LCK5": [
+       5,
+       1
+      ],
+      "LCK6": [
+       6,
+       1
+      ],
+      "LCK7": [
+       7,
+       1
+      ],
+      "LCK8": [
+       8,
+       1
+      ],
+      "LCKK": [
+       16,
+       1
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "MODER": {
+     "fields": {
+      "MODE0": [
+       0,
+       2
+      ],
+      "MODE1": [
+       2,
+       2
+      ],
+      "MODE2": [
+       4,
+       2
+      ],
+      "MODE3": [
+       6,
+       2
+      ],
+      "MODE4": [
+       8,
+       2
+      ],
+      "MODE5": [
+       10,
+       2
+      ],
+      "MODE6": [
+       12,
+       2
+      ],
+      "MODE7": [
+       14,
+       2
+      ],
+      "MODE8": [
+       16,
+       2
+      ]
+     },
+     "off": 0,
+     "reset": 4294967295
+    },
+    "ODR": {
+     "fields": {
+      "OD0": [
+       0,
+       1
+      ],
+      "OD1": [
+       1,
+       1
+      ],
+      "OD2": [
+       2,
+       1
+      ],
+      "OD3": [
+       3,
+       1
+      ],
+      "OD4": [
+       4,
+       1
+      ],
+      "OD5": [
+       5,
+       1
+      ],
+      "OD6": [
+       6,
+       1
+      ],
+      "OD7": [
+       7,
+       1
+      ],
+      "OD8": [
+       8,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "OSPEEDR": {
+     "fields": {
+      "OSPEED0": [
+       0,
+       2
+      ],
+      "OSPEED1": [
+       2,
+       2
+      ],
+      "OSPEED2": [
+       4,
+       2
+      ],
+      "OSPEED3": [
+       6,
+       2
+      ],
+      "OSPEED4": [
+       8,
+       2
+      ],
+      "OSPEED5": [
+       10,
+       2
+      ],
+      "OSPEED6": [
+       12,
+       2
+      ],
+      "OSPEED7": [
+       14,
+       2
+      ],
+      "OSPEED8": [
+       16,
+       2
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "OTYPER": {
+     "fields": {
+      "OT0": [
+       0,
+       1
+      ],
+      "OT1": [
+       1,
+       1
+      ],
+      "OT2": [
+       2,
+       1
+      ],
+      "OT3": [
+       3,
+       1
+      ],
+      "OT4": [
+       4,
+       1
+      ],
+      "OT5": [
+       5,
+       1
+      ],
+      "OT6": [
+       6,
+       1
+      ],
+      "OT7": [
+       7,
+       1
+      ],
+      "OT8": [
+       8,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "PUPDR": {
+     "fields": {
+      "PUPD0": [
+       0,
+       2
+      ],
+      "PUPD1": [
+       2,
+       2
+      ],
+      "PUPD2": [
+       4,
+       2
+      ],
+      "PUPD3": [
+       6,
+       2
+      ],
+      "PUPD4": [
+       8,
+       2
+      ],
+      "PUPD5": [
+       10,
+       2
+      ],
+      "PUPD6": [
+       12,
+       2
+      ],
+      "PUPD7": [
+       14,
+       2
+      ],
+      "PUPD8": [
+       16,
+       2
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    }
+   }
+  },
+  "GPIOF": {
+   "base": 1342182400,
+   "regs": {
+    "AFRH": {
+     "fields": {
+      "AFSEL10": [
+       8,
+       4
+      ],
+      "AFSEL11": [
+       12,
+       4
+      ],
+      "AFSEL12": [
+       16,
+       4
+      ],
+      "AFSEL13": [
+       20,
+       4
+      ],
+      "AFSEL14": [
+       24,
+       4
+      ],
+      "AFSEL15": [
+       28,
+       4
+      ],
+      "AFSEL8": [
+       0,
+       4
+      ],
+      "AFSEL9": [
+       4,
+       4
+      ]
+     },
+     "off": 36,
+     "reset": 0
+    },
+    "AFRL": {
+     "fields": {
+      "AFSEL0": [
+       0,
+       4
+      ],
+      "AFSEL1": [
+       4,
+       4
+      ],
+      "AFSEL2": [
+       8,
+       4
+      ],
+      "AFSEL3": [
+       12,
+       4
+      ],
+      "AFSEL4": [
+       16,
+       4
+      ],
+      "AFSEL5": [
+       20,
+       4
+      ],
+      "AFSEL6": [
+       24,
+       4
+      ],
+      "AFSEL7": [
+       28,
+       4
+      ]
+     },
+     "off": 32,
+     "reset": 0
+    },
+    "BRR": {
+     "fields": {
+      "BR0": [
+       0,
+       1
+      ],
+      "BR1": [
+       1,
+       1
+      ],
+      "BR2": [
+       2,
+       1
+      ],
+      "BR3": [
+       3,
+       1
+      ],
+      "BR4": [
+       4,
+       1
+      ],
+      "BR5": [
+       5,
+       1
+      ],
+      "BR6": [
+       6,
+       1
+      ],
+      "BR7": [
+       7,
+       1
+      ],
+      "BR8": [
+       8,
+       1
+      ]
+     },
+     "off": 40,
+     "reset": 0
+    },
+    "BSRR": {
+     "fields": {
+      "BR0": [
+       16,
+       1
+      ],
+      "BR1": [
+       17,
+       1
+      ],
+      "BR2": [
+       18,
+       1
+      ],
+      "BR3": [
+       19,
+       1
+      ],
+      "BR4": [
+       20,
+       1
+      ],
+      "BR5": [
+       21,
+       1
+      ],
+      "BR6": [
+       22,
+       1
+      ],
+      "BR7": [
+       23,
+       1
+      ],
+      "BR8": [
+       24,
+       1
+      ],
+      "BS0": [
+       0,
+       1
+      ],
+      "BS1": [
+       1,
+       1
+      ],
+      "BS2": [
+       2,
+       1
+      ],
+      "BS3": [
+       3,
+       1
+      ],
+      "BS4": [
+       4,
+       1
+      ],
+      "BS5": [
+       5,
+       1
+      ],
+      "BS6": [
+       6,
+       1
+      ],
+      "BS7": [
+       7,
+       1
+      ],
+      "BS8": [
+       8,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "IDR": {
+     "fields": {
+      "ID0": [
+       0,
+       1
+      ],
+      "ID1": [
+       1,
+       1
+      ],
+      "ID2": [
+       2,
+       1
+      ],
+      "ID3": [
+       3,
+       1
+      ],
+      "ID4": [
+       4,
+       1
+      ],
+      "ID5": [
+       5,
+       1
+      ],
+      "ID6": [
+       6,
+       1
+      ],
+      "ID7": [
+       7,
+       1
+      ],
+      "ID8": [
+       8,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "LCKR": {
+     "fields": {
+      "LCK0": [
+       0,
+       1
+      ],
+      "LCK1": [
+       1,
+       1
+      ],
+      "LCK2": [
+       2,
+       1
+      ],
+      "LCK3": [
+       3,
+       1
+      ],
+      "LCK4": [
+       4,
+       1
+      ],
+      "LCK5": [
+       5,
+       1
+      ],
+      "LCK6": [
+       6,
+       1
+      ],
+      "LCK7": [
+       7,
+       1
+      ],
+      "LCK8": [
+       8,
+       1
+      ],
+      "LCKK": [
+       16,
+       1
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "MODER": {
+     "fields": {
+      "MODE0": [
+       0,
+       2
+      ],
+      "MODE1": [
+       2,
+       2
+      ],
+      "MODE2": [
+       4,
+       2
+      ],
+      "MODE3": [
+       6,
+       2
+      ],
+      "MODE4": [
+       8,
+       2
+      ],
+      "MODE5": [
+       10,
+       2
+      ],
+      "MODE6": [
+       12,
+       2
+      ],
+      "MODE7": [
+       14,
+       2
+      ],
+      "MODE8": [
+       16,
+       2
+      ]
+     },
+     "off": 0,
+     "reset": 4294967295
+    },
+    "ODR": {
+     "fields": {
+      "OD0": [
+       0,
+       1
+      ],
+      "OD1": [
+       1,
+       1
+      ],
+      "OD2": [
+       2,
+       1
+      ],
+      "OD3": [
+       3,
+       1
+      ],
+      "OD4": [
+       4,
+       1
+      ],
+      "OD5": [
+       5,
+       1
+      ],
+      "OD6": [
+       6,
+       1
+      ],
+      "OD7": [
+       7,
+       1
+      ],
+      "OD8": [
+       8,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "OSPEEDR": {
+     "fields": {
+      "OSPEED0": [
+       0,
+       2
+      ],
+      "OSPEED1": [
+       2,
+       2
+      ],
+      "OSPEED2": [
+       4,
+       2
+      ],
+      "OSPEED3": [
+       6,
+       2
+      ],
+      "OSPEED4": [
+       8,
+       2
+      ],
+      "OSPEED5": [
+       10,
+       2
+      ],
+      "OSPEED6": [
+       12,
+       2
+      ],
+      "OSPEED7": [
+       14,
+       2
+      ],
+      "OSPEED8": [
+       16,
+       2
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "OTYPER": {
+     "fields": {
+      "OT0": [
+       0,
+       1
+      ],
+      "OT1": [
+       1,
+       1
+      ],
+      "OT2": [
+       2,
+       1
+      ],
+      "OT3": [
+       3,
+       1
+      ],
+      "OT4": [
+       4,
+       1
+      ],
+      "OT5": [
+       5,
+       1
+      ],
+      "OT6": [
+       6,
+       1
+      ],
+      "OT7": [
+       7,
+       1
+      ],
+      "OT8": [
+       8,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "PUPDR": {
+     "fields": {
+      "PUPD0": [
+       0,
+       2
+      ],
+      "PUPD1": [
+       2,
+       2
+      ],
+      "PUPD2": [
+       4,
+       2
+      ],
+      "PUPD3": [
+       6,
+       2
+      ],
+      "PUPD4": [
+       8,
+       2
+      ],
+      "PUPD5": [
+       10,
+       2
+      ],
+      "PUPD6": [
+       12,
+       2
+      ],
+      "PUPD7": [
+       14,
+       2
+      ],
+      "PUPD8": [
+       16,
+       2
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    }
+   },
+   "same_as": "GPIOB"
+  },
+  "I2C": {
+   "base": 1073763328,
+   "regs": {
+    "CCR": {
+     "fields": {
+      "CCR": [
+       0,
+       12
+      ],
+      "DUTY": [
+       14,
+       1
+      ],
+      "F_S": [
+       15,
+       1
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "CR1": {
+     "fields": {
+      "ACK": [
+       10,
+       1
+      ],
+      "ENGC": [
+       6,
+       1
+      ],
+      "ENPEC": [
+       5,
+       1
+      ],
+      "NOSTRETCH": [
+       7,
+       1
+      ],
+      "PE": [
+       0,
+       1
+      ],
+      "PEC": [
+       12,
+       1
+      ],
+      "POS": [
+       11,
+       1
+      ],
+      "START": [
+       8,
+       1
+      ],
+      "STOP": [
+       9,
+       1
+      ],
+      "SWRST": [
+       15,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "CR2": {
+     "fields": {
+      "DMAEN": [
+       11,
+       1
+      ],
+      "FREQ": [
+       0,
+       6
+      ],
+      "ITBUFEN": [
+       10,
+       1
+      ],
+      "ITERREN": [
+       8,
+       1
+      ],
+      "ITEVTEN": [
+       9,
+       1
+      ],
+      "LAST": [
+       12,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "DR": {
+     "fields": {
+      "DR": [
+       0,
+       8
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "OAR1": {
+     "fields": {
+      "ADD": [
+       1,
+       7
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "SR1": {
+     "fields": {
+      "ADDR": [
+       1,
+       1
+      ],
+      "AF": [
+       10,
+       1
+      ],
+      "ARLO": [
+       9,
+       1
+      ],
+      "BERR": [
+       8,
+       1
+      ],
+      "BTF": [
+       2,
+       1
+      ],
+      "OVR": [
+       11,
+       1
+      ],
+      "PECERR": [
+       12,
+       1
+      ],
+      "RxNE": [
+       6,
+       1
+      ],
+      "SB": [
+       0,
+       1
+      ],
+      "STOPF": [
+       4,
+       1
+      ],
+      "TxE": [
+       7,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "SR2": {
+     "fields": {
+      "BUSY": [
+       1,
+       1
+      ],
+      "DUALF": [
+       7,
+       1
+      ],
+      "GENCALL": [
+       4,
+       1
+      ],
+      "MSL": [
+       0,
+       1
+      ],
+      "PEC": [
+       8,
+       8
+      ],
+      "TRA": [
+       2,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "TRISE": {
+     "fields": {
+      "TRISE": [
+       0,
+       6
+      ]
+     },
+     "off": 32,
+     "reset": 0,
+     "svd_reset": 2
+    }
+   }
+  },
+  "IWDG": {
+   "base": 1073754112,
+   "regs": {
+    "KR": {
+     "fields": {
+      "KEY": [
+       0,
+       16
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "PR": {
+     "fields": {
+      "PR": [
+       0,
+       3
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "RLR": {
+     "fields": {
+      "RL": [
+       0,
+       12
+      ]
+     },
+     "off": 8,
+     "reset": 4095
+    },
+    "SR": {
+     "fields": {
+      "PVU": [
+       0,
+       1
+      ],
+      "RVU": [
+       1,
+       1
+      ],
+      "WVU": [
+       2,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "WINR": {
+     "fields": {
+      "WIN": [
+       0,
+       12
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    }
+   }
+  },
+  "LED": {
+   "base": 1073751040,
+   "regs": {
+    "CR": {
+     "fields": {
+      "EHS": [
+       12,
+       2
+      ],
+      "IE": [
+       3,
+       1
+      ],
+      "LEDON": [
+       0,
+       1
+      ],
+      "LED_COM_SEL": [
+       1,
+       2
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "DR0": {
+     "fields": {
+      "DATA0_A": [
+       0,
+       1
+      ],
+      "DATA0_B": [
+       1,
+       1
+      ],
+      "DATA0_C": [
+       2,
+       1
+      ],
+      "DATA0_D": [
+       3,
+       1
+      ],
+      "DATA0_DP": [
+       7,
+       1
+      ],
+      "DATA0_E": [
+       4,
+       1
+      ],
+      "DATA0_F": [
+       5,
+       1
+      ],
+      "DATA0_G": [
+       6,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "DR1": {
+     "fields": {
+      "DATA1_A": [
+       0,
+       1
+      ],
+      "DATA1_B": [
+       1,
+       1
+      ],
+      "DATA1_C": [
+       2,
+       1
+      ],
+      "DATA1_D": [
+       3,
+       1
+      ],
+      "DATA1_DP": [
+       7,
+       1
+      ],
+      "DATA1_E": [
+       4,
+       1
+      ],
+      "DATA1_F": [
+       5,
+       1
+      ],
+      "DATA1_G": [
+       6,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "DR2": {
+     "fields": {
+      "DATA2_A": [
+       0,
+       1
+      ],
+      "DATA2_B": [
+       1,
+       1
+      ],
+      "DATA2_C": [
+       2,
+       1
+      ],
+      "DATA2_D": [
+       3,
+       1
+      ],
+      "DATA2_DP": [
+       7,
+       1
+      ],
+      "DATA2_E": [
+       4,
+       1
+      ],
+      "DATA2_F": [
+       5,
+       1
+      ],
+      "DATA2_G": [
+       6,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "DR3": {
+     "fields": {
+      "DATA3_A": [
+       0,
+       1
+      ],
+      "DATA3_B": [
+       1,
+       1
+      ],
+      "DATA3_C": [
+       2,
+       1
+      ],
+      "DATA3_D": [
+       3,
+       1
+      ],
+      "DATA3_DP": [
+       7,
+       1
+      ],
+      "DATA3_E": [
+       4,
+       1
+      ],
+      "DATA3_F": [
+       5,
+       1
+      ],
+      "DATA3_G": [
+       6,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "IR": {
+     "fields": {
+      "FLAG": [
+       0,
+       1
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "PR": {
+     "fields": {
+      "PR": [
+       0,
+       8
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "TR": {
+     "fields": {
+      "T1": [
+       0,
+       8
+      ],
+      "T2": [
+       8,
+       8
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    }
+   }
+  },
+  "LPTIM": {
+   "base": 1073773568,
+   "regs": {
+    "ARR": {
+     "fields": {
+      "ARR": [
+       0,
+       16
+      ]
+     },
+     "off": 24,
+     "reset": 1
+    },
+    "CFGR": {
+     "fields": {
+      "PRELOAD": [
+       22,
+       1
+      ],
+      "PRESC": [
+       9,
+       3
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "CNT": {
+     "fields": {
+      "CNT": [
+       0,
+       16
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "CR": {
+     "fields": {
+      "ENABLE": [
+       0,
+       1
+      ],
+      "RSTARE": [
+       4,
+       1
+      ],
+      "SNGSTRT": [
+       1,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "ICR": {
+     "fields": {
+      "ARRMCF": [
+       1,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "IER": {
+     "fields": {
+      "ARRMIE": [
+       1,
+       1
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "ISR": {
+     "fields": {
+      "ARRM": [
+       1,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    }
+   }
+  },
+  "PWR": {
+   "base": 1073770496,
+   "regs": {
+    "CR1": {
+     "fields": {
+      "BIAS_CR": [
+       0,
+       4
+      ],
+      "BIAS_CR_SEL": [
+       4,
+       1
+      ],
+      "DBP": [
+       8,
+       1
+      ],
+      "FLS_SLPTIME": [
+       12,
+       2
+      ],
+      "HSION_CTRL": [
+       19,
+       1
+      ],
+      "LPR": [
+       14,
+       1
+      ],
+      "MRRDY_TIME": [
+       10,
+       2
+      ],
+      "SRAM_RETV": [
+       16,
+       3
+      ],
+      "VOS": [
+       9,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 458752,
+     "svd_reset": 196608
+    },
+    "CR2": {
+     "fields": {
+      "FLTEN": [
+       8,
+       1
+      ],
+      "FLT_TIME": [
+       9,
+       3
+      ],
+      "PVDE": [
+       0,
+       1
+      ],
+      "PVDT": [
+       4,
+       3
+      ],
+      "SRCSEL": [
+       2,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 1280
+    },
+    "SR": {
+     "fields": {
+      "PVDO": [
+       11,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    }
+   }
+  },
+  "RCC": {
+   "base": 1073876992,
+   "regs": {
+    "AHBENR": {
+     "fields": {
+      "CRCEN": [
+       12,
+       1
+      ],
+      "DMAEN": [
+       0,
+       1
+      ],
+      "FLASHEN": [
+       8,
+       1
+      ],
+      "SRAMEN": [
+       9,
+       1
+      ]
+     },
+     "off": 56,
+     "reset": 768,
+     "svd_reset": 0
+    },
+    "AHBRSTR": {
+     "fields": {
+      "CRCRST": [
+       12,
+       1
+      ],
+      "DMARST": [
+       0,
+       1
+      ]
+     },
+     "off": 40,
+     "reset": 0
+    },
+    "APBENR1": {
+     "fields": {
+      "DBGEN": [
+       27,
+       1
+      ],
+      "I2CEN": [
+       21,
+       1
+      ],
+      "LPTIMEN": [
+       31,
+       1
+      ],
+      "PWREN": [
+       28,
+       1
+      ],
+      "RTCAPBEN": [
+       10,
+       1
+      ],
+      "SPI2EN": [
+       14,
+       1
+      ],
+      "TIM3EN": [
+       1,
+       1
+      ],
+      "USART2EN": [
+       17,
+       1
+      ],
+      "WWDGEN": [
+       11,
+       1
+      ]
+     },
+     "off": 60,
+     "reset": 0
+    },
+    "APBENR2": {
+     "fields": {
+      "ADCEN": [
+       20,
+       1
+      ],
+      "COMP1EN": [
+       21,
+       1
+      ],
+      "COMP2EN": [
+       22,
+       1
+      ],
+      "LEDEN": [
+       23,
+       1
+      ],
+      "SPI1EN": [
+       12,
+       1
+      ],
+      "SYSCFGEN": [
+       0,
+       1
+      ],
+      "TIM14EN": [
+       15,
+       1
+      ],
+      "TIM16EN": [
+       17,
+       1
+      ],
+      "TIM17EN": [
+       18,
+       1
+      ],
+      "TIM1EN": [
+       11,
+       1
+      ],
+      "USART1EN": [
+       14,
+       1
+      ]
+     },
+     "off": 64,
+     "reset": 0
+    },
+    "APBRSTR1": {
+     "fields": {
+      "DBGRST": [
+       27,
+       1
+      ],
+      "I2CRST": [
+       21,
+       1
+      ],
+      "LPTIMRST": [
+       31,
+       1
+      ],
+      "PWRRST": [
+       28,
+       1
+      ],
+      "SPI2RST": [
+       14,
+       1
+      ],
+      "TIM3RST": [
+       1,
+       1
+      ],
+      "USART2RST": [
+       17,
+       1
+      ]
+     },
+     "off": 44,
+     "reset": 0
+    },
+    "APBRSTR2": {
+     "fields": {
+      "ADCRST": [
+       20,
+       1
+      ],
+      "COMP1RST": [
+       21,
+       1
+      ],
+      "COMP2RST": [
+       22,
+       1
+      ],
+      "LEDRST": [
+       23,
+       1
+      ],
+      "SPI1RST": [
+       12,
+       1
+      ],
+      "SYSCFGRST": [
+       0,
+       1
+      ],
+      "TIM14RST": [
+       15,
+       1
+      ],
+      "TIM16RST": [
+       17,
+       1
+      ],
+      "TIM17RST": [
+       18,
+       1
+      ],
+      "TIM1RST": [
+       11,
+       1
+      ],
+      "USART1RST": [
+       14,
+       1
+      ]
+     },
+     "off": 48,
+     "reset": 0
+    },
+    "BDCR": {
+     "fields": {
+      "BDRST": [
+       16,
+       1
+      ],
+      "LSCOEN": [
+       24,
+       1
+      ],
+      "LSCOSEL": [
+       25,
+       1
+      ],
+      "LSEBYP": [
+       2,
+       1
+      ],
+      "LSECSSD": [
+       6,
+       1
+      ],
+      "LSECSSON": [
+       5,
+       1
+      ],
+      "LSEON": [
+       0,
+       1
+      ],
+      "LSERDY": [
+       1,
+       1
+      ],
+      "RTCEN": [
+       15,
+       1
+      ],
+      "RTCSEL": [
+       8,
+       2
+      ]
+     },
+     "off": 92,
+     "reset": 0
+    },
+    "CCIPR": {
+     "fields": {
+      "COMP1SEL": [
+       8,
+       1
+      ],
+      "COMP2SEL": [
+       9,
+       1
+      ],
+      "LPTIM1SEL": [
+       18,
+       2
+      ],
+      "PVDSEL": [
+       7,
+       1
+      ]
+     },
+     "off": 84,
+     "reset": 0
+    },
+    "CFGR": {
+     "fields": {
+      "HPRE": [
+       8,
+       4
+      ],
+      "MCOPRE": [
+       28,
+       3
+      ],
+      "MCOSEL": [
+       24,
+       3
+      ],
+      "PPRE": [
+       12,
+       3
+      ],
+      "SW": [
+       0,
+       3
+      ],
+      "SWS": [
+       3,
+       3
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "CICR": {
+     "fields": {
+      "CSSC": [
+       8,
+       1
+      ],
+      "HSERDYC": [
+       4,
+       1
+      ],
+      "HSIRDYC": [
+       3,
+       1
+      ],
+      "LSECSSC": [
+       9,
+       1
+      ],
+      "LSERDYC": [
+       1,
+       1
+      ],
+      "LSIRDYC": [
+       0,
+       1
+      ],
+      "PLLRDYC": [
+       5,
+       1
+      ]
+     },
+     "off": 32,
+     "reset": 0
+    },
+    "CIER": {
+     "fields": {
+      "HSERDYIE": [
+       4,
+       1
+      ],
+      "HSIRDYIE": [
+       3,
+       1
+      ],
+      "LSERDYIE": [
+       1,
+       1
+      ],
+      "LSIRDYIE": [
+       0,
+       1
+      ],
+      "PLLRDYIE": [
+       5,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CIFR": {
+     "fields": {
+      "CSSF": [
+       8,
+       1
+      ],
+      "HSERDYF": [
+       4,
+       1
+      ],
+      "HSIRDYF": [
+       3,
+       1
+      ],
+      "LSECSSF": [
+       9,
+       1
+      ],
+      "LSERDYF": [
+       1,
+       1
+      ],
+      "LSIRDYF": [
+       0,
+       1
+      ],
+      "PLLRDYF": [
+       5,
+       1
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "CR": {
+     "fields": {
+      "CSSON": [
+       19,
+       1
+      ],
+      "HSEBYP": [
+       18,
+       1
+      ],
+      "HSEON": [
+       16,
+       1
+      ],
+      "HSERDY": [
+       17,
+       1
+      ],
+      "HSIDIV": [
+       11,
+       3
+      ],
+      "HSIKERON": [
+       9,
+       1
+      ],
+      "HSION": [
+       8,
+       1
+      ],
+      "HSIRDY": [
+       10,
+       1
+      ],
+      "PLLON": [
+       24,
+       1
+      ],
+      "PLLRDY": [
+       25,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 256
+    },
+    "CSR": {
+     "fields": {
+      "IWDGRSTF": [
+       29,
+       1
+      ],
+      "LSION": [
+       0,
+       1
+      ],
+      "LSIRDY": [
+       1,
+       1
+      ],
+      "OBLRSTF": [
+       25,
+       1
+      ],
+      "PINRSTF": [
+       26,
+       1
+      ],
+      "PWRRSTF": [
+       27,
+       1
+      ],
+      "RMVF": [
+       23,
+       1
+      ],
+      "SFTRSTF": [
+       28,
+       1
+      ],
+      "WWDGRSTF": [
+       30,
+       1
+      ]
+     },
+     "off": 96,
+     "reset": 0
+    },
+    "ECSCR": {
+     "fields": {
+      "HSE_FREQ": [
+       2,
+       2
+      ],
+      "LSE_DRIVER": [
+       16,
+       2
+      ]
+     },
+     "off": 16,
+     "reset": 65536,
+     "svd_reset": 0
+    },
+    "ICSCR": {
+     "fields": {
+      "HSI_FS": [
+       13,
+       3
+      ],
+      "HSI_TRIM": [
+       0,
+       13
+      ],
+      "LSI_STARTUP": [
+       26,
+       2
+      ],
+      "LSI_TRIM": [
+       16,
+       9
+      ]
+     },
+     "off": 4,
+     "reset": 16716031,
+     "svd_reset": 268435456
+    },
+    "IOPENR": {
+     "fields": {
+      "GPIOAEN": [
+       0,
+       1
+      ],
+      "GPIOBEN": [
+       1,
+       1
+      ],
+      "GPIOFEN": [
+       5,
+       1
+      ]
+     },
+     "off": 52,
+     "reset": 0
+    },
+    "IOPRSTR": {
+     "fields": {
+      "GPIOARST": [
+       0,
+       1
+      ],
+      "GPIOBRST": [
+       1,
+       1
+      ],
+      "GPIOFRST": [
+       5,
+       1
+      ]
+     },
+     "off": 36,
+     "reset": 0
+    },
+    "PLLCFGR": {
+     "fields": {
+      "PLLSRC": [
+       0,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    }
+   }
+  },
+  "RTC": {
+   "base": 1073752064,
+   "regs": {
+    "ALRH": {
+     "fields": {
+      "ALRH": [
+       0,
+       16
+      ]
+     },
+     "off": 32,
+     "reset": 65535
+    },
+    "ALRL": {
+     "fields": {
+      "ALRL": [
+       0,
+       16
+      ]
+     },
+     "off": 36,
+     "reset": 65535
+    },
+    "CNTH": {
+     "fields": {
+      "CNTH": [
+       0,
+       16
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CNTL": {
+     "fields": {
+      "CNTL": [
+       0,
+       16
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "CRH": {
+     "fields": {
+      "ALRIE": [
+       1,
+       1
+      ],
+      "OWIE": [
+       2,
+       1
+      ],
+      "SECIE": [
+       0,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "CRL": {
+     "fields": {
+      "ALRF": [
+       1,
+       1
+      ],
+      "CNF": [
+       4,
+       1
+      ],
+      "OWF": [
+       2,
+       1
+      ],
+      "RSF": [
+       3,
+       1
+      ],
+      "RTOFF": [
+       5,
+       1
+      ],
+      "SECF": [
+       0,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 32
+    },
+    "DIVH": {
+     "fields": {
+      "DIVH": [
+       0,
+       4
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "DIVL": {
+     "fields": {
+      "DIVL": [
+       0,
+       16
+      ]
+     },
+     "off": 20,
+     "reset": 32768
+    },
+    "PRLH": {
+     "fields": {
+      "PRLH": [
+       0,
+       4
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "PRLL": {
+     "fields": {
+      "PRLL": [
+       0,
+       16
+      ]
+     },
+     "off": 12,
+     "reset": 32768
+    },
+    "RTCCR": {
+     "fields": {
+      "ASOE": [
+       8,
+       1
+      ],
+      "ASOS": [
+       9,
+       1
+      ],
+      "CAL": [
+       0,
+       7
+      ],
+      "CCO": [
+       7,
+       1
+      ]
+     },
+     "off": 44,
+     "reset": 0
+    }
+   }
+  },
+  "SPI1": {
+   "base": 1073819648,
+   "regs": {
+    "CR1": {
+     "fields": {
+      "BIDIMODE": [
+       15,
+       1
+      ],
+      "BIDIOE": [
+       14,
+       1
+      ],
+      "BR": [
+       3,
+       3
+      ],
+      "CPHA": [
+       0,
+       1
+      ],
+      "CPOL": [
+       1,
+       1
+      ],
+      "LSBFIRST": [
+       7,
+       1
+      ],
+      "MSTR": [
+       2,
+       1
+      ],
+      "RXONLY": [
+       10,
+       1
+      ],
+      "SPE": [
+       6,
+       1
+      ],
+      "SSI": [
+       8,
+       1
+      ],
+      "SSM": [
+       9,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "CR2": {
+     "fields": {
+      "DS": [
+       11,
+       1
+      ],
+      "ERRIE": [
+       5,
+       1
+      ],
+      "FRXTH": [
+       12,
+       1
+      ],
+      "LDMA_RX": [
+       13,
+       1
+      ],
+      "LDMA_TX": [
+       14,
+       1
+      ],
+      "RXDMAEN": [
+       0,
+       1
+      ],
+      "RXNEIE": [
+       6,
+       1
+      ],
+      "SLVFM": [
+       15,
+       1
+      ],
+      "SSOE": [
+       2,
+       1
+      ],
+      "TXDMAEN": [
+       1,
+       1
+      ],
+      "TXEIE": [
+       7,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "DR": {
+     "fields": {
+      "DR": [
+       0,
+       16
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "SR": {
+     "fields": {
+      "BSY": [
+       7,
+       1
+      ],
+      "FRLVL": [
+       9,
+       2
+      ],
+      "FTLVL": [
+       11,
+       2
+      ],
+      "MODF": [
+       5,
+       1
+      ],
+      "OVR": [
+       6,
+       1
+      ],
+      "RXNE": [
+       0,
+       1
+      ],
+      "TXE": [
+       1,
+       1
+      ]
+     },
+     "off": 8,
+     "reset": 2
+    }
+   }
+  },
+  "SPI2": {
+   "base": 1073756160,
+   "regs": {
+    "CR1": {
+     "fields": {
+      "BIDIMODE": [
+       15,
+       1
+      ],
+      "BIDIOE": [
+       14,
+       1
+      ],
+      "BR": [
+       3,
+       3
+      ],
+      "CPHA": [
+       0,
+       1
+      ],
+      "CPOL": [
+       1,
+       1
+      ],
+      "LSBFIRST": [
+       7,
+       1
+      ],
+      "MSTR": [
+       2,
+       1
+      ],
+      "RXONLY": [
+       10,
+       1
+      ],
+      "SPE": [
+       6,
+       1
+      ],
+      "SSI": [
+       8,
+       1
+      ],
+      "SSM": [
+       9,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "CR2": {
+     "fields": {
+      "DS": [
+       11,
+       1
+      ],
+      "ERRIE": [
+       5,
+       1
+      ],
+      "FRXTH": [
+       12,
+       1
+      ],
+      "LDMA_RX": [
+       13,
+       1
+      ],
+      "LDMA_TX": [
+       14,
+       1
+      ],
+      "RXDMAEN": [
+       0,
+       1
+      ],
+      "RXNEIE": [
+       6,
+       1
+      ],
+      "SLVFM": [
+       15,
+       1
+      ],
+      "SSOE": [
+       2,
+       1
+      ],
+      "TXDMAEN": [
+       1,
+       1
+      ],
+      "TXEIE": [
+       7,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "DR": {
+     "fields": {
+      "DR": [
+       0,
+       16
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "SR": {
+     "fields": {
+      "BSY": [
+       7,
+       1
+      ],
+      "FRLVL": [
+       9,
+       2
+      ],
+      "FTLVL": [
+       11,
+       2
+      ],
+      "MODF": [
+       5,
+       1
+      ],
+      "OVR": [
+       6,
+       1
+      ],
+      "RXNE": [
+       0,
+       1
+      ],
+      "TXE": [
+       1,
+       1
+      ]
+     },
+     "off": 8,
+     "reset": 2
+    }
+   },
+   "same_as": "SPI1"
+  },
+  "SYSCFG": {
+   "base": 1073807360,
+   "regs": {
+    "CFGR1": {
+     "fields": {
+      "I2C_PA10_ANF": [
+       23,
+       1
+      ],
+      "I2C_PA11_ANF": [
+       24,
+       1
+      ],
+      "I2C_PA12_ANF": [
+       25,
+       1
+      ],
+      "I2C_PA2_ANF": [
+       18,
+       1
+      ],
+      "I2C_PA3_ANF": [
+       19,
+       1
+      ],
+      "I2C_PA7_ANF": [
+       20,
+       1
+      ],
+      "I2C_PA8_ANF": [
+       21,
+       1
+      ],
+      "I2C_PA9_ANF": [
+       22,
+       1
+      ],
+      "I2C_PB6_ANF": [
+       26,
+       1
+      ],
+      "I2C_PB7_ANF": [
+       27,
+       1
+      ],
+      "I2C_PB8_ANF": [
+       28,
+       1
+      ],
+      "I2C_PF0_ANF": [
+       29,
+       1
+      ],
+      "I2C_PF1_ANF": [
+       30,
+       1
+      ],
+      "MEM_MODE": [
+       0,
+       2
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "CFGR2": {
+     "fields": {
+      "COMP1_BRK_TIM1": [
+       3,
+       1
+      ],
+      "COMP1_BRK_TIM16": [
+       5,
+       1
+      ],
+      "COMP1_BRK_TIM17": [
+       7,
+       1
+      ],
+      "COMP2_BRK_TIM1": [
+       4,
+       1
+      ],
+      "COMP2_BRK_TIM16": [
+       6,
+       1
+      ],
+      "COMP2_BRK_TIM17": [
+       8,
+       1
+      ],
+      "ETR_SRC_TIM1": [
+       9,
+       2
+      ],
+      "LOCKUP_LOCK": [
+       0,
+       1
+      ],
+      "PVD_LOCK": [
+       2,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CFGR3": {
+     "fields": {
+      "DMA1_MAP": [
+       0,
+       5
+      ],
+      "DMA2_MAP": [
+       8,
+       5
+      ],
+      "DMA3_MAP": [
+       16,
+       5
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    }
+   }
+  },
+  "TIM1": {
+   "base": 1073818624,
+   "regs": {
+    "ARR": {
+     "fields": {
+      "ARR": [
+       0,
+       16
+      ]
+     },
+     "off": 44,
+     "reset": 65535,
+     "svd_reset": 0
+    },
+    "BDTR": {
+     "fields": {
+      "AOE": [
+       14,
+       1
+      ],
+      "BKE": [
+       12,
+       1
+      ],
+      "BKP": [
+       13,
+       1
+      ],
+      "DTG": [
+       0,
+       8
+      ],
+      "LOCK": [
+       8,
+       2
+      ],
+      "MOE": [
+       15,
+       1
+      ],
+      "OSSI": [
+       10,
+       1
+      ],
+      "OSSR": [
+       11,
+       1
+      ]
+     },
+     "off": 68,
+     "reset": 0
+    },
+    "CCER": {
+     "fields": {
+      "CC1E": [
+       0,
+       1
+      ],
+      "CC1NE": [
+       2,
+       1
+      ],
+      "CC1NP": [
+       3,
+       1
+      ],
+      "CC1P": [
+       1,
+       1
+      ],
+      "CC2E": [
+       4,
+       1
+      ],
+      "CC2NE": [
+       6,
+       1
+      ],
+      "CC2NP": [
+       7,
+       1
+      ],
+      "CC2P": [
+       5,
+       1
+      ],
+      "CC3E": [
+       8,
+       1
+      ],
+      "CC3NE": [
+       10,
+       1
+      ],
+      "CC3NP": [
+       11,
+       1
+      ],
+      "CC3P": [
+       9,
+       1
+      ],
+      "CC4E": [
+       12,
+       1
+      ],
+      "CC4P": [
+       13,
+       1
+      ]
+     },
+     "off": 32,
+     "reset": 0
+    },
+    "CCMR1_Input": {
+     "fields": {
+      "CC1S": [
+       0,
+       2
+      ],
+      "CC2S": [
+       8,
+       2
+      ],
+      "IC1F": [
+       4,
+       4
+      ],
+      "IC2F": [
+       12,
+       4
+      ],
+      "IC2PSC": [
+       10,
+       2
+      ],
+      "ICPSC": [
+       2,
+       2
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CCMR1_Output": {
+     "fields": {
+      "CC1S": [
+       0,
+       2
+      ],
+      "CC2S": [
+       8,
+       2
+      ],
+      "OC1CE": [
+       7,
+       1
+      ],
+      "OC1FE": [
+       2,
+       1
+      ],
+      "OC1M": [
+       4,
+       3
+      ],
+      "OC1PE": [
+       3,
+       1
+      ],
+      "OC2CE": [
+       15,
+       1
+      ],
+      "OC2FE": [
+       10,
+       1
+      ],
+      "OC2M": [
+       12,
+       3
+      ],
+      "OC2PE": [
+       11,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CCMR2_Input": {
+     "fields": {
+      "CC3S": [
+       0,
+       2
+      ],
+      "CC4S": [
+       8,
+       2
+      ],
+      "IC3F": [
+       4,
+       4
+      ],
+      "IC3PSC": [
+       2,
+       2
+      ],
+      "IC4F": [
+       12,
+       4
+      ],
+      "IC4PSC": [
+       10,
+       2
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "CCMR2_Output": {
+     "fields": {
+      "CC3S": [
+       0,
+       2
+      ],
+      "CC4S": [
+       8,
+       2
+      ],
+      "OC3CE": [
+       7,
+       1
+      ],
+      "OC3FE": [
+       2,
+       1
+      ],
+      "OC3M": [
+       4,
+       3
+      ],
+      "OC3PE": [
+       3,
+       1
+      ],
+      "OC4CE": [
+       15,
+       1
+      ],
+      "OC4FE": [
+       10,
+       1
+      ],
+      "OC4M": [
+       12,
+       3
+      ],
+      "OC4PE": [
+       11,
+       1
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "CCR1": {
+     "fields": {
+      "CCR1": [
+       0,
+       16
+      ]
+     },
+     "off": 52,
+     "reset": 0
+    },
+    "CCR2": {
+     "fields": {
+      "CCR2": [
+       0,
+       16
+      ]
+     },
+     "off": 56,
+     "reset": 0
+    },
+    "CCR3": {
+     "fields": {
+      "CCR3": [
+       0,
+       16
+      ]
+     },
+     "off": 60,
+     "reset": 0
+    },
+    "CCR4": {
+     "fields": {
+      "CCR4": [
+       0,
+       16
+      ]
+     },
+     "off": 64,
+     "reset": 0
+    },
+    "CNT": {
+     "fields": {
+      "CNT": [
+       0,
+       16
+      ]
+     },
+     "off": 36,
+     "reset": 0
+    },
+    "CR1": {
+     "fields": {
+      "ARPE": [
+       7,
+       1
+      ],
+      "CEN": [
+       0,
+       1
+      ],
+      "CKD": [
+       8,
+       2
+      ],
+      "CMS": [
+       5,
+       2
+      ],
+      "DIR": [
+       4,
+       1
+      ],
+      "OPM": [
+       3,
+       1
+      ],
+      "UDIS": [
+       1,
+       1
+      ],
+      "URS": [
+       2,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "CR2": {
+     "fields": {
+      "CCDS": [
+       3,
+       1
+      ],
+      "CCPC": [
+       0,
+       1
+      ],
+      "CCUS": [
+       2,
+       1
+      ],
+      "MMS": [
+       4,
+       3
+      ],
+      "OIS1": [
+       8,
+       1
+      ],
+      "OIS1N": [
+       9,
+       1
+      ],
+      "OIS2": [
+       10,
+       1
+      ],
+      "OIS2N": [
+       11,
+       1
+      ],
+      "OIS3": [
+       12,
+       1
+      ],
+      "OIS3N": [
+       13,
+       1
+      ],
+      "OIS4": [
+       14,
+       1
+      ],
+      "TI1S": [
+       7,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "DCR": {
+     "fields": {
+      "DBA": [
+       0,
+       5
+      ],
+      "DBL": [
+       8,
+       5
+      ]
+     },
+     "off": 72,
+     "reset": 0
+    },
+    "DIER": {
+     "fields": {
+      "BIE": [
+       7,
+       1
+      ],
+      "CC1DE": [
+       9,
+       1
+      ],
+      "CC1IE": [
+       1,
+       1
+      ],
+      "CC2DE": [
+       10,
+       1
+      ],
+      "CC2IE": [
+       2,
+       1
+      ],
+      "CC3DE": [
+       11,
+       1
+      ],
+      "CC3IE": [
+       3,
+       1
+      ],
+      "CC4DE": [
+       12,
+       1
+      ],
+      "CC4IE": [
+       4,
+       1
+      ],
+      "COMDE": [
+       13,
+       1
+      ],
+      "COMIE": [
+       5,
+       1
+      ],
+      "TDE": [
+       14,
+       1
+      ],
+      "TIE": [
+       6,
+       1
+      ],
+      "UDE": [
+       8,
+       1
+      ],
+      "UIE": [
+       0,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "DMAR": {
+     "fields": {
+      "DMAB": [
+       0,
+       16
+      ]
+     },
+     "off": 76,
+     "reset": 0
+    },
+    "EGR": {
+     "fields": {
+      "BG": [
+       7,
+       1
+      ],
+      "CC1G": [
+       1,
+       1
+      ],
+      "CC2G": [
+       2,
+       1
+      ],
+      "CC3G": [
+       3,
+       1
+      ],
+      "CC4G": [
+       4,
+       1
+      ],
+      "COMG": [
+       5,
+       1
+      ],
+      "TG": [
+       6,
+       1
+      ],
+      "UG": [
+       0,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "PSC": {
+     "fields": {
+      "PSC": [
+       0,
+       16
+      ]
+     },
+     "off": 40,
+     "reset": 0
+    },
+    "RCR": {
+     "fields": {
+      "REP": [
+       0,
+       8
+      ]
+     },
+     "off": 48,
+     "reset": 0
+    },
+    "SMCR": {
+     "fields": {
+      "ECE": [
+       14,
+       1
+      ],
+      "ETF": [
+       8,
+       4
+      ],
+      "ETP": [
+       15,
+       1
+      ],
+      "ETPS": [
+       12,
+       2
+      ],
+      "MSM": [
+       7,
+       1
+      ],
+      "OCCS": [
+       3,
+       1
+      ],
+      "SMS": [
+       0,
+       3
+      ],
+      "TS": [
+       4,
+       3
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "SR": {
+     "fields": {
+      "BIF": [
+       7,
+       1
+      ],
+      "CC1IF": [
+       1,
+       1
+      ],
+      "CC1OF": [
+       9,
+       1
+      ],
+      "CC2IF": [
+       2,
+       1
+      ],
+      "CC2OF": [
+       10,
+       1
+      ],
+      "CC3IF": [
+       3,
+       1
+      ],
+      "CC3OF": [
+       11,
+       1
+      ],
+      "CC4IF": [
+       4,
+       1
+      ],
+      "CC4OF": [
+       12,
+       1
+      ],
+      "COMIF": [
+       5,
+       1
+      ],
+      "TIF": [
+       6,
+       1
+      ],
+      "UIF": [
+       0,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    }
+   }
+  },
+  "TIM14": {
+   "base": 1073750016,
+   "regs": {
+    "ARR": {
+     "fields": {
+      "ARR": [
+       0,
+       16
+      ]
+     },
+     "off": 44,
+     "reset": 65535,
+     "svd_reset": 0
+    },
+    "CCER": {
+     "fields": {
+      "CC1E": [
+       0,
+       1
+      ],
+      "CC1NP": [
+       3,
+       1
+      ],
+      "CC1P": [
+       1,
+       1
+      ]
+     },
+     "off": 32,
+     "reset": 0
+    },
+    "CCMR1_Input": {
+     "fields": {
+      "CC1S": [
+       0,
+       2
+      ],
+      "IC1F": [
+       4,
+       4
+      ],
+      "IC1PSC": [
+       2,
+       2
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CCMR1_Output": {
+     "fields": {
+      "CC1S": [
+       0,
+       2
+      ],
+      "OC1FE": [
+       2,
+       1
+      ],
+      "OC1M": [
+       4,
+       3
+      ],
+      "OC1PE": [
+       3,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CCR1": {
+     "fields": {
+      "CCR1": [
+       0,
+       16
+      ]
+     },
+     "off": 52,
+     "reset": 0
+    },
+    "CNT": {
+     "fields": {
+      "CNT": [
+       0,
+       16
+      ]
+     },
+     "off": 36,
+     "reset": 0
+    },
+    "CR1": {
+     "fields": {
+      "ARPE": [
+       7,
+       1
+      ],
+      "CEN": [
+       0,
+       1
+      ],
+      "CKD": [
+       8,
+       2
+      ],
+      "UDIS": [
+       1,
+       1
+      ],
+      "URS": [
+       2,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "DIER": {
+     "fields": {
+      "CC1IE": [
+       1,
+       1
+      ],
+      "UIE": [
+       0,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "EGR": {
+     "fields": {
+      "CC1G": [
+       1,
+       1
+      ],
+      "UG": [
+       0,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "OR": {
+     "fields": {
+      "TI1_RMP": [
+       0,
+       2
+      ]
+     },
+     "off": 80,
+     "reset": 0
+    },
+    "PSC": {
+     "fields": {
+      "PSC": [
+       0,
+       16
+      ]
+     },
+     "off": 40,
+     "reset": 0
+    },
+    "SR": {
+     "fields": {
+      "CC1IF": [
+       1,
+       1
+      ],
+      "CC1OF": [
+       9,
+       1
+      ],
+      "UIF": [
+       0,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    }
+   }
+  },
+  "TIM16": {
+   "base": 1073824768,
+   "regs": {
+    "ARR": {
+     "fields": {
+      "ARR": [
+       0,
+       16
+      ]
+     },
+     "off": 44,
+     "reset": 0
+    },
+    "BDTR": {
+     "fields": {
+      "AOE": [
+       14,
+       1
+      ],
+      "BKE": [
+       12,
+       1
+      ],
+      "BKP": [
+       13,
+       1
+      ],
+      "DTG": [
+       0,
+       8
+      ],
+      "LOCK": [
+       8,
+       2
+      ],
+      "MOE": [
+       15,
+       1
+      ],
+      "OSSI": [
+       10,
+       1
+      ],
+      "OSSR": [
+       11,
+       1
+      ]
+     },
+     "off": 68,
+     "reset": 0
+    },
+    "CCER": {
+     "fields": {
+      "CC1E": [
+       0,
+       1
+      ],
+      "CC1NE": [
+       2,
+       1
+      ],
+      "CC1NP": [
+       3,
+       1
+      ],
+      "CC1P": [
+       1,
+       1
+      ]
+     },
+     "off": 32,
+     "reset": 0
+    },
+    "CCMR1_Input": {
+     "fields": {
+      "CC1S": [
+       0,
+       2
+      ],
+      "IC1F": [
+       4,
+       4
+      ],
+      "IC1PSC": [
+       2,
+       2
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CCMR1_Output": {
+     "fields": {
+      "CC1S": [
+       0,
+       2
+      ],
+      "OC1FE": [
+       2,
+       1
+      ],
+      "OC1M": [
+       4,
+       3
+      ],
+      "OC1PE": [
+       3,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CCR1": {
+     "fields": {
+      "CCR1": [
+       0,
+       16
+      ]
+     },
+     "off": 52,
+     "reset": 0
+    },
+    "CNT": {
+     "fields": {
+      "CNT": [
+       0,
+       16
+      ]
+     },
+     "off": 36,
+     "reset": 0
+    },
+    "CR1": {
+     "fields": {
+      "ARPE": [
+       7,
+       1
+      ],
+      "CEN": [
+       0,
+       1
+      ],
+      "CKD": [
+       8,
+       2
+      ],
+      "OPM": [
+       3,
+       1
+      ],
+      "UDIS": [
+       1,
+       1
+      ],
+      "URS": [
+       2,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "CR2": {
+     "fields": {
+      "CCDS": [
+       3,
+       1
+      ],
+      "CCPC": [
+       0,
+       1
+      ],
+      "OIS1": [
+       8,
+       1
+      ],
+      "OIS1N": [
+       9,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "DCR": {
+     "fields": {
+      "DBA": [
+       0,
+       5
+      ],
+      "DBL": [
+       8,
+       5
+      ]
+     },
+     "off": 72,
+     "reset": 0
+    },
+    "DIER": {
+     "fields": {
+      "BIE": [
+       7,
+       1
+      ],
+      "CC1DE": [
+       9,
+       1
+      ],
+      "CC1IE": [
+       1,
+       1
+      ],
+      "COMIE": [
+       5,
+       1
+      ],
+      "UDE": [
+       8,
+       1
+      ],
+      "UIE": [
+       0,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "DMAR": {
+     "fields": {
+      "DMAB": [
+       0,
+       32
+      ]
+     },
+     "off": 76,
+     "reset": 0
+    },
+    "EGR": {
+     "fields": {
+      "BG": [
+       7,
+       1
+      ],
+      "CC1G": [
+       1,
+       1
+      ],
+      "COMG": [
+       5,
+       1
+      ],
+      "UG": [
+       0,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "PSC": {
+     "fields": {
+      "PSC": [
+       0,
+       16
+      ]
+     },
+     "off": 40,
+     "reset": 0
+    },
+    "RCR": {
+     "fields": {
+      "REP": [
+       0,
+       8
+      ]
+     },
+     "off": 48,
+     "reset": 0
+    },
+    "SR": {
+     "fields": {
+      "BIF": [
+       7,
+       1
+      ],
+      "CC1IF": [
+       1,
+       1
+      ],
+      "CC1OF": [
+       9,
+       1
+      ],
+      "COMIF": [
+       5,
+       1
+      ],
+      "UIF": [
+       0,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    }
+   }
+  },
+  "TIM17": {
+   "base": 1073825792,
+   "regs": {
+    "ARR": {
+     "fields": {
+      "ARR": [
+       0,
+       16
+      ]
+     },
+     "off": 44,
+     "reset": 0
+    },
+    "BDTR": {
+     "fields": {
+      "AOE": [
+       14,
+       1
+      ],
+      "BKE": [
+       12,
+       1
+      ],
+      "BKP": [
+       13,
+       1
+      ],
+      "DTG": [
+       0,
+       8
+      ],
+      "LOCK": [
+       8,
+       2
+      ],
+      "MOE": [
+       15,
+       1
+      ],
+      "OSSI": [
+       10,
+       1
+      ],
+      "OSSR": [
+       11,
+       1
+      ]
+     },
+     "off": 68,
+     "reset": 0
+    },
+    "CCER": {
+     "fields": {
+      "CC1E": [
+       0,
+       1
+      ],
+      "CC1NE": [
+       2,
+       1
+      ],
+      "CC1NP": [
+       3,
+       1
+      ],
+      "CC1P": [
+       1,
+       1
+      ]
+     },
+     "off": 32,
+     "reset": 0
+    },
+    "CCMR1_Input": {
+     "fields": {
+      "CC1S": [
+       0,
+       2
+      ],
+      "IC1F": [
+       4,
+       4
+      ],
+      "IC1PSC": [
+       2,
+       2
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CCMR1_Output": {
+     "fields": {
+      "CC1S": [
+       0,
+       2
+      ],
+      "OC1FE": [
+       2,
+       1
+      ],
+      "OC1M": [
+       4,
+       3
+      ],
+      "OC1PE": [
+       3,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CCR1": {
+     "fields": {
+      "CCR1": [
+       0,
+       16
+      ]
+     },
+     "off": 52,
+     "reset": 0
+    },
+    "CNT": {
+     "fields": {
+      "CNT": [
+       0,
+       16
+      ]
+     },
+     "off": 36,
+     "reset": 0
+    },
+    "CR1": {
+     "fields": {
+      "ARPE": [
+       7,
+       1
+      ],
+      "CEN": [
+       0,
+       1
+      ],
+      "CKD": [
+       8,
+       2
+      ],
+      "OPM": [
+       3,
+       1
+      ],
+      "UDIS": [
+       1,
+       1
+      ],
+      "URS": [
+       2,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "CR2": {
+     "fields": {
+      "CCDS": [
+       3,
+       1
+      ],
+      "CCPC": [
+       0,
+       1
+      ],
+      "OIS1": [
+       8,
+       1
+      ],
+      "OIS1N": [
+       9,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "DCR": {
+     "fields": {
+      "DBA": [
+       0,
+       5
+      ],
+      "DBL": [
+       8,
+       5
+      ]
+     },
+     "off": 72,
+     "reset": 0
+    },
+    "DIER": {
+     "fields": {
+      "BIE": [
+       7,
+       1
+      ],
+      "CC1DE": [
+       9,
+       1
+      ],
+      "CC1IE": [
+       1,
+       1
+      ],
+      "COMIE": [
+       5,
+       1
+      ],
+      "UDE": [
+       8,
+       1
+      ],
+      "UIE": [
+       0,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "DMAR": {
+     "fields": {
+      "DMAB": [
+       0,
+       32
+      ]
+     },
+     "off": 76,
+     "reset": 0
+    },
+    "EGR": {
+     "fields": {
+      "BG": [
+       7,
+       1
+      ],
+      "CC1G": [
+       1,
+       1
+      ],
+      "COMG": [
+       5,
+       1
+      ],
+      "UG": [
+       0,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "PSC": {
+     "fields": {
+      "PSC": [
+       0,
+       16
+      ]
+     },
+     "off": 40,
+     "reset": 0
+    },
+    "RCR": {
+     "fields": {
+      "REP": [
+       0,
+       8
+      ]
+     },
+     "off": 48,
+     "reset": 0
+    },
+    "SR": {
+     "fields": {
+      "BIF": [
+       7,
+       1
+      ],
+      "CC1IF": [
+       1,
+       1
+      ],
+      "CC1OF": [
+       9,
+       1
+      ],
+      "COMIF": [
+       5,
+       1
+      ],
+      "UIF": [
+       0,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    }
+   },
+   "same_as": "TIM16"
+  },
+  "TIM3": {
+   "base": 1073742848,
+   "regs": {
+    "ARR": {
+     "fields": {
+      "ARR": [
+       0,
+       16
+      ]
+     },
+     "off": 44,
+     "reset": 65535,
+     "svd_reset": 0
+    },
+    "CCER": {
+     "fields": {
+      "CC1E": [
+       0,
+       1
+      ],
+      "CC1NP": [
+       3,
+       1
+      ],
+      "CC1P": [
+       1,
+       1
+      ],
+      "CC2E": [
+       4,
+       1
+      ],
+      "CC2NP": [
+       7,
+       1
+      ],
+      "CC2P": [
+       5,
+       1
+      ],
+      "CC3E": [
+       8,
+       1
+      ],
+      "CC3NP": [
+       11,
+       1
+      ],
+      "CC3P": [
+       9,
+       1
+      ],
+      "CC4E": [
+       12,
+       1
+      ],
+      "CC4NP": [
+       15,
+       1
+      ],
+      "CC4P": [
+       13,
+       1
+      ]
+     },
+     "off": 32,
+     "reset": 0
+    },
+    "CCMR1_Input": {
+     "fields": {
+      "CC1S": [
+       0,
+       2
+      ],
+      "CC2S": [
+       8,
+       2
+      ],
+      "IC1F": [
+       4,
+       4
+      ],
+      "IC1PSC": [
+       2,
+       2
+      ],
+      "IC2F": [
+       12,
+       4
+      ],
+      "IC2PSC": [
+       10,
+       2
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CCMR1_Output": {
+     "fields": {
+      "CC1S": [
+       0,
+       2
+      ],
+      "CC2S": [
+       8,
+       2
+      ],
+      "OC1CE": [
+       7,
+       1
+      ],
+      "OC1FE": [
+       2,
+       1
+      ],
+      "OC1M": [
+       4,
+       3
+      ],
+      "OC1PE": [
+       3,
+       1
+      ],
+      "OC2CE": [
+       15,
+       1
+      ],
+      "OC2FE": [
+       10,
+       1
+      ],
+      "OC2M": [
+       12,
+       3
+      ],
+      "OC2PE": [
+       11,
+       1
+      ]
+     },
+     "off": 24,
+     "reset": 0
+    },
+    "CCMR2_Input": {
+     "fields": {
+      "CC3S": [
+       0,
+       2
+      ],
+      "CC4S": [
+       8,
+       2
+      ],
+      "IC3F": [
+       4,
+       4
+      ],
+      "IC3PSC": [
+       2,
+       2
+      ],
+      "IC4F": [
+       12,
+       4
+      ],
+      "IC4PSC": [
+       10,
+       2
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "CCMR2_Output": {
+     "fields": {
+      "CC3S": [
+       0,
+       2
+      ],
+      "CC4S": [
+       8,
+       2
+      ],
+      "OC3CE": [
+       7,
+       1
+      ],
+      "OC3FE": [
+       2,
+       1
+      ],
+      "OC3M": [
+       4,
+       3
+      ],
+      "OC3PE": [
+       3,
+       1
+      ],
+      "OC4CE": [
+       15,
+       1
+      ],
+      "OC4FE": [
+       10,
+       1
+      ],
+      "OC4M": [
+       12,
+       3
+      ],
+      "OC4PE": [
+       11,
+       1
+      ]
+     },
+     "off": 28,
+     "reset": 0
+    },
+    "CCR1": {
+     "fields": {
+      "CCR1": [
+       0,
+       16
+      ]
+     },
+     "off": 52,
+     "reset": 0
+    },
+    "CCR2": {
+     "fields": {
+      "CCR2": [
+       0,
+       16
+      ]
+     },
+     "off": 56,
+     "reset": 0
+    },
+    "CCR3": {
+     "fields": {
+      "CCR3": [
+       0,
+       16
+      ]
+     },
+     "off": 60,
+     "reset": 0
+    },
+    "CCR4": {
+     "fields": {
+      "CCR4": [
+       0,
+       16
+      ]
+     },
+     "off": 64,
+     "reset": 0
+    },
+    "CNT": {
+     "fields": {
+      "CNT": [
+       0,
+       16
+      ]
+     },
+     "off": 36,
+     "reset": 0
+    },
+    "CR1": {
+     "fields": {
+      "ARPE": [
+       7,
+       1
+      ],
+      "CEN": [
+       0,
+       1
+      ],
+      "CKD": [
+       8,
+       2
+      ],
+      "CMS": [
+       5,
+       2
+      ],
+      "DIR": [
+       4,
+       1
+      ],
+      "OPM": [
+       3,
+       1
+      ],
+      "UDIS": [
+       1,
+       1
+      ],
+      "URS": [
+       2,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 0
+    },
+    "CR2": {
+     "fields": {
+      "CCDS": [
+       3,
+       1
+      ],
+      "MMS": [
+       4,
+       3
+      ],
+      "TI1S": [
+       7,
+       1
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "DCR": {
+     "fields": {
+      "DBA": [
+       0,
+       5
+      ],
+      "DBL": [
+       8,
+       5
+      ]
+     },
+     "off": 72,
+     "reset": 0
+    },
+    "DIER": {
+     "fields": {
+      "CC1DE": [
+       9,
+       1
+      ],
+      "CC1IE": [
+       1,
+       1
+      ],
+      "CC2DE": [
+       10,
+       1
+      ],
+      "CC2IE": [
+       2,
+       1
+      ],
+      "CC3DE": [
+       11,
+       1
+      ],
+      "CC3IE": [
+       3,
+       1
+      ],
+      "CC4DE": [
+       12,
+       1
+      ],
+      "CC4IE": [
+       4,
+       1
+      ],
+      "TDE": [
+       14,
+       1
+      ],
+      "TIE": [
+       6,
+       1
+      ],
+      "UDE": [
+       8,
+       1
+      ],
+      "UIE": [
+       0,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "DMAR": {
+     "fields": {
+      "DMAB": [
+       0,
+       32
+      ]
+     },
+     "off": 76,
+     "reset": 0
+    },
+    "EGR": {
+     "fields": {
+      "CC1G": [
+       1,
+       1
+      ],
+      "CC2G": [
+       2,
+       1
+      ],
+      "CC3G": [
+       3,
+       1
+      ],
+      "CC4G": [
+       4,
+       1
+      ],
+      "TG": [
+       6,
+       1
+      ],
+      "UG": [
+       0,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "PSC": {
+     "fields": {
+      "PSC": [
+       0,
+       16
+      ]
+     },
+     "off": 40,
+     "reset": 0
+    },
+    "SMCR": {
+     "fields": {
+      "MSM": [
+       7,
+       1
+      ],
+      "OCCS": [
+       3,
+       1
+      ],
+      "SMS": [
+       0,
+       3
+      ],
+      "TS": [
+       4,
+       3
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "SR": {
+     "fields": {
+      "CC1IF": [
+       1,
+       1
+      ],
+      "CC1OF": [
+       9,
+       1
+      ],
+      "CC2IF": [
+       2,
+       1
+      ],
+      "CC2OF": [
+       10,
+       1
+      ],
+      "CC3IF": [
+       3,
+       1
+      ],
+      "CC3OF": [
+       11,
+       1
+      ],
+      "CC4IF": [
+       4,
+       1
+      ],
+      "CC4OF": [
+       12,
+       1
+      ],
+      "TIF": [
+       6,
+       1
+      ],
+      "UIF": [
+       0,
+       1
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    }
+   }
+  },
+  "USART1": {
+   "base": 1073821696,
+   "regs": {
+    "BRR": {
+     "fields": {
+      "DIV_Fraction": [
+       0,
+       4
+      ],
+      "DIV_Mantissa": [
+       4,
+       12
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "CR1": {
+     "fields": {
+      "IDLEIE": [
+       4,
+       1
+      ],
+      "M": [
+       12,
+       1
+      ],
+      "PCE": [
+       10,
+       1
+      ],
+      "PEIE": [
+       8,
+       1
+      ],
+      "PS": [
+       9,
+       1
+      ],
+      "RE": [
+       2,
+       1
+      ],
+      "RWU": [
+       1,
+       1
+      ],
+      "RXNEIE": [
+       5,
+       1
+      ],
+      "SBK": [
+       0,
+       1
+      ],
+      "TCIE": [
+       6,
+       1
+      ],
+      "TE": [
+       3,
+       1
+      ],
+      "TXEIE": [
+       7,
+       1
+      ],
+      "UE": [
+       13,
+       1
+      ],
+      "WAKE": [
+       11,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "CR2": {
+     "fields": {
+      "ADD": [
+       0,
+       4
+      ],
+      "CLKEN": [
+       11,
+       1
+      ],
+      "CPHA": [
+       9,
+       1
+      ],
+      "CPOL": [
+       10,
+       1
+      ],
+      "LBCL": [
+       8,
+       1
+      ],
+      "STOP": [
+       12,
+       2
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "CR3": {
+     "fields": {
+      "ABREN": [
+       12,
+       1
+      ],
+      "ABRMOD": [
+       13,
+       2
+      ],
+      "CTSE": [
+       9,
+       1
+      ],
+      "CTSIE": [
+       10,
+       1
+      ],
+      "DMAR": [
+       6,
+       1
+      ],
+      "DMAT": [
+       7,
+       1
+      ],
+      "EIE": [
+       0,
+       1
+      ],
+      "HDSEL": [
+       3,
+       1
+      ],
+      "IREN": [
+       1,
+       1
+      ],
+      "IRLP": [
+       2,
+       1
+      ],
+      "OVER8": [
+       11,
+       1
+      ],
+      "RTSE": [
+       8,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "DR": {
+     "fields": {
+      "DR": [
+       0,
+       9
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "SR": {
+     "fields": {
+      "ABRE": [
+       11,
+       1
+      ],
+      "ABRF": [
+       10,
+       1
+      ],
+      "ABRRQ": [
+       12,
+       1
+      ],
+      "CTS": [
+       9,
+       1
+      ],
+      "FE": [
+       1,
+       1
+      ],
+      "IDLE": [
+       4,
+       1
+      ],
+      "NE": [
+       2,
+       1
+      ],
+      "ORE": [
+       3,
+       1
+      ],
+      "PE": [
+       0,
+       1
+      ],
+      "RXNE": [
+       5,
+       1
+      ],
+      "TC": [
+       6,
+       1
+      ],
+      "TXE": [
+       7,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 192
+    }
+   }
+  },
+  "USART2": {
+   "base": 1073759232,
+   "regs": {
+    "BRR": {
+     "fields": {
+      "DIV_Fraction": [
+       0,
+       4
+      ],
+      "DIV_Mantissa": [
+       4,
+       12
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    },
+    "CR1": {
+     "fields": {
+      "IDLEIE": [
+       4,
+       1
+      ],
+      "M": [
+       12,
+       1
+      ],
+      "PCE": [
+       10,
+       1
+      ],
+      "PEIE": [
+       8,
+       1
+      ],
+      "PS": [
+       9,
+       1
+      ],
+      "RE": [
+       2,
+       1
+      ],
+      "RWU": [
+       1,
+       1
+      ],
+      "RXNEIE": [
+       5,
+       1
+      ],
+      "SBK": [
+       0,
+       1
+      ],
+      "TCIE": [
+       6,
+       1
+      ],
+      "TE": [
+       3,
+       1
+      ],
+      "TXEIE": [
+       7,
+       1
+      ],
+      "UE": [
+       13,
+       1
+      ],
+      "WAKE": [
+       11,
+       1
+      ]
+     },
+     "off": 12,
+     "reset": 0
+    },
+    "CR2": {
+     "fields": {
+      "ADD": [
+       0,
+       4
+      ],
+      "CLKEN": [
+       11,
+       1
+      ],
+      "CPHA": [
+       9,
+       1
+      ],
+      "CPOL": [
+       10,
+       1
+      ],
+      "LBCL": [
+       8,
+       1
+      ],
+      "STOP": [
+       12,
+       2
+      ]
+     },
+     "off": 16,
+     "reset": 0
+    },
+    "CR3": {
+     "fields": {
+      "ABREN": [
+       12,
+       1
+      ],
+      "ABRMOD": [
+       13,
+       2
+      ],
+      "CTSE": [
+       9,
+       1
+      ],
+      "CTSIE": [
+       10,
+       1
+      ],
+      "DMAR": [
+       6,
+       1
+      ],
+      "DMAT": [
+       7,
+       1
+      ],
+      "EIE": [
+       0,
+       1
+      ],
+      "HDSEL": [
+       3,
+       1
+      ],
+      "IREN": [
+       1,
+       1
+      ],
+      "IRLP": [
+       2,
+       1
+      ],
+      "OVER8": [
+       11,
+       1
+      ],
+      "RTSE": [
+       8,
+       1
+      ]
+     },
+     "off": 20,
+     "reset": 0
+    },
+    "DR": {
+     "fields": {
+      "DR": [
+       0,
+       9
+      ]
+     },
+     "off": 4,
+     "reset": 0
+    },
+    "SR": {
+     "fields": {
+      "ABRE": [
+       11,
+       1
+      ],
+      "ABRF": [
+       10,
+       1
+      ],
+      "ABRRQ": [
+       12,
+       1
+      ],
+      "CTS": [
+       9,
+       1
+      ],
+      "FE": [
+       1,
+       1
+      ],
+      "IDLE": [
+       4,
+       1
+      ],
+      "NE": [
+       2,
+       1
+      ],
+      "ORE": [
+       3,
+       1
+      ],
+      "PE": [
+       0,
+       1
+      ],
+      "RXNE": [
+       5,
+       1
+      ],
+      "TC": [
+       6,
+       1
+      ],
+      "TXE": [
+       7,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 192
+    }
+   },
+   "same_as": "USART1"
+  },
+  "WWDG": {
+   "base": 1073753088,
+   "regs": {
+    "CFR": {
+     "fields": {
+      "EWI": [
+       9,
+       1
+      ],
+      "W": [
+       0,
+       7
+      ],
+      "WDGTB": [
+       7,
+       2
+      ]
+     },
+     "off": 4,
+     "reset": 127
+    },
+    "CR": {
+     "fields": {
+      "T": [
+       0,
+       7
+      ],
+      "WDGA": [
+       7,
+       1
+      ]
+     },
+     "off": 0,
+     "reset": 127
+    },
+    "SR": {
+     "fields": {
+      "EWIF": [
+       0,
+       1
+      ]
+     },
+     "off": 8,
+     "reset": 0
+    }
+   }
+  }
+ },
+ "pin_default_boot0_as_gpio": true,
+ "ports": {
+  "PA0": {
+   "af": {
+    "0": "SPI2_SCK",
+    "1": "USART1_CTS",
+    "10": "SPI1_MISO",
+    "13": "TIM1_CH3",
+    "14": "TIM1_CH1N",
+    "15": "IR_OUT",
+    "3": "LED_DATA_B",
+    "4": "USART2_CTS",
+    "7": "COMP1_OUT",
+    "9": "USART2_TX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "ADC_IN0",
+    "COMP1_INM"
+   ]
+  },
+  "PA1": {
+   "af": {
+    "0": "SPI1_SCK",
+    "1": "USART1_RTS",
+    "10": "SPI1_MOSI",
+    "13": "TIM1_CH4",
+    "14": "TIM1_CH2N",
+    "15": "MCO",
+    "3": "LED_DATA_C",
+    "4": "USART2_RTS",
+    "7": "EVENTOUT",
+    "9": "USART2_RX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "ADC_IN1",
+    "COMP1_INP"
+   ]
+  },
+  "PA10": {
+   "af": {
+    "0": "SPI2_MOSI",
+    "1": "USART1_RX",
+    "10": "SPI1_NSS",
+    "12": "I2C_SCL",
+    "2": "TIM1_CH3",
+    "4": "USART2_RX",
+    "5": "TIM17_BKIN",
+    "6": "I2C_SDA",
+    "7": "EVENTOUT",
+    "8": "USART1_TX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "OSC32_IN"
+   ]
+  },
+  "PA11": {
+   "af": {
+    "0": "SPI1_MISO",
+    "1": "USART1_CTS",
+    "2": "TIM1_CH4",
+    "4": "USART2_CTS",
+    "5": "EVENTOUT",
+    "6": "I2C_SCL",
+    "7": "COMP1_OUT"
+   },
+   "af_source": "DS table"
+  },
+  "PA12": {
+   "af": {
+    "0": "SPI1_MOSI",
+    "1": "USART1_RTS",
+    "2": "TIM1_ETR",
+    "4": "USART2_RTS",
+    "5": "EVENTOUT",
+    "6": "I2C_SDA",
+    "7": "COMP2_OUT"
+   },
+   "af_source": "DS table"
+  },
+  "PA13": {
+   "af": {
+    "0": "SWDIO",
+    "1": "IR_OUT",
+    "10": "SPI1_MISO",
+    "13": "TIM1_CH2",
+    "15": "MCO",
+    "7": "EVENTOUT",
+    "8": "USART1_RX"
+   },
+   "af_source": "DS table"
+  },
+  "PA14": {
+   "af": {
+    "0": "SWCLK",
+    "1": "USART1_TX",
+    "15": "MCO",
+    "4": "USART2_TX",
+    "7": "EVENTOUT"
+   },
+   "af_source": "DS table"
+  },
+  "PA15": {
+   "af": {
+    "0": "SPI1_NSS",
+    "1": "USART1_RX",
+    "4": "USART2_RX",
+    "6": "LED_COM0",
+    "7": "EVENTOUT"
+   },
+   "af_source": "DS table"
+  },
+  "PA2": {
+   "af": {
+    "0": "SPI1_MOSI",
+    "1": "USART1_TX",
+    "10": "SPI1_SCK",
+    "12": "I2C_SDA",
+    "13": "TIM3_CH1",
+    "3": "LED_DATA_D",
+    "4": "USART2_TX",
+    "7": "COMP2_OUT"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "ADC_IN2",
+    "COMP2_INM"
+   ]
+  },
+  "PA3": {
+   "af": {
+    "0": "SPI2_MISO",
+    "1": "USART1_RX",
+    "10": "SPI1_MOSI",
+    "12": "I2C_SCL",
+    "13": "TIM1_CH1",
+    "3": "LED_DATA_E",
+    "4": "USART2_RX",
+    "7": "EVENTOUT"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "ADC_IN3",
+    "COMP2_INP"
+   ]
+  },
+  "PA4": {
+   "af": {
+    "0": "SPI1_NSS",
+    "1": "USART1_CK",
+    "13": "TIM3_CH3",
+    "15": "RTC_OUT",
+    "2": "SPI2_MOSI",
+    "3": "LED_DATA_F",
+    "4": "TIM14_CH1",
+    "5": "USART2_CK",
+    "7": "EVENTOUT",
+    "9": "USART2_TX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "ADC_IN4"
+   ]
+  },
+  "PA5": {
+   "af": {
+    "0": "SPI1_SCK",
+    "13": "TIM3_CH2",
+    "15": "MCO",
+    "3": "LED_DATA_G",
+    "5": "LPTIM1_ETR",
+    "7": "EVENTOUT",
+    "9": "USART2_RX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "ADC_IN5"
+   ]
+  },
+  "PA6": {
+   "af": {
+    "0": "SPI1_MISO",
+    "1": "TIM3_CH1",
+    "15": "RTC_OUT",
+    "2": "TIM1_BKIN",
+    "3": "LED_DATA_DP",
+    "5": "TIM16_CH1",
+    "7": "COMP1_OUT",
+    "8": "USART1_CK"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "ADC_IN6"
+   ]
+  },
+  "PA7": {
+   "af": {
+    "0": "SPI1_MOSI",
+    "1": "TIM3_CH2",
+    "10": "SPI1_MISO",
+    "12": "I2C_SDA",
+    "2": "TIM1_CH1N",
+    "4": "TIM14_CH1",
+    "5": "TIM17_CH1",
+    "6": "EVENTOUT",
+    "7": "COMP2_OUT",
+    "8": "USART1_TX",
+    "9": "USART2_TX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "ADC_IN7"
+   ]
+  },
+  "PA8": {
+   "af": {
+    "0": "SPI2_NSS",
+    "1": "USART1_CK",
+    "10": "SPI1_MOSI",
+    "12": "I2C_SCL",
+    "2": "TIM1_CH1",
+    "4": "USART2_CK",
+    "5": "MCO",
+    "7": "EVENTOUT",
+    "8": "USART1_RX",
+    "9": "USART2_RX"
+   },
+   "af_source": "DS table"
+  },
+  "PA9": {
+   "af": {
+    "0": "SPI2_MISO",
+    "1": "USART1_TX",
+    "10": "SPI1_SCK",
+    "12": "I2C_SDA",
+    "13": "TIM1_BKIN",
+    "2": "TIM1_CH2",
+    "4": "USART2_TX",
+    "5": "MCO",
+    "6": "I2C_SCL",
+    "7": "EVENTOUT",
+    "8": "USART1_RX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "OSC32_OUT"
+   ]
+  },
+  "PB0": {
+   "af": {
+    "0": "SPI1_NSS",
+    "1": "TIM3_CH3",
+    "2": "TIM1_CH2N",
+    "5": "EVENTOUT",
+    "7": "COMP1_OUT"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "ADC_IN8"
+   ]
+  },
+  "PB1": {
+   "af": {
+    "0": "TIM14_CH1",
+    "1": "TIM3_CH4",
+    "2": "TIM1_CH3N",
+    "7": "EVENTOUT"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "ADC_IN9",
+    "COMP1_INM"
+   ]
+  },
+  "PB2": {
+   "af": {
+    "0": "USART1_RX",
+    "1": "SPI2_SCK",
+    "3": "USART2_RX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "COMP1_INP"
+   ]
+  },
+  "PB3": {
+   "af": {
+    "0": "SPI1_SCK",
+    "1": "TIM1_CH2",
+    "3": "USART1_RTS",
+    "4": "USART2_RTS",
+    "6": "LED_COM1",
+    "7": "EVENTOUT"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "COMP2_INM"
+   ]
+  },
+  "PB4": {
+   "af": {
+    "0": "SPI1_MISO",
+    "1": "TIM3_CH1",
+    "3": "USART1_CTS",
+    "4": "USART2_CTS",
+    "5": "TIM17_BKIN",
+    "6": "LED_COM2",
+    "7": "EVENTOUT"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "COMP2_INP"
+   ]
+  },
+  "PB5": {
+   "af": {
+    "0": "SPI1_MOSI",
+    "1": "TIM3_CH2",
+    "2": "TIM16_BKIN",
+    "3": "USART1_CK",
+    "4": "USART2_CK",
+    "5": "LPTIM_IN1",
+    "6": "LED_COM3",
+    "7": "COMP1_OUT"
+   },
+   "af_source": "DS table"
+  },
+  "PB6": {
+   "af": {
+    "0": "USART1_TX",
+    "1": "TIM1_CH3",
+    "2": "TIM16_CH1N",
+    "3": "SPI2_MISO",
+    "4": "USART2_TX",
+    "5": "LPTIM_ETR",
+    "6": "I2C_SCL",
+    "7": "EVENTOUT"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "COMP2_INP"
+   ]
+  },
+  "PB7": {
+   "af": {
+    "0": "USART1_RX",
+    "1": "SPI2_MOSI",
+    "2": "TIM17_CH1N",
+    "4": "USART2_RX",
+    "6": "I2C_SDA",
+    "7": "EVENTOUT"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "COMP2_INM"
+   ]
+  },
+  "PB8": {
+   "af": {
+    "1": "SPI2_SCK",
+    "11": "SPI2_NSS",
+    "12": "I2C_SDA",
+    "13": "TIM17_CH1",
+    "15": "IR_OUT",
+    "2": "TIM16_CH1",
+    "3": "LED_DATA_A",
+    "4": "USART2_TX",
+    "6": "I2C_SCL",
+    "7": "EVENTOUT",
+    "8": "USART1_TX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "COMP1_INP"
+   ]
+  },
+  "PF0": {
+   "af": {
+    "12": "I2C_SDA",
+    "2": "TIM14_CH1",
+    "3": "SPI2_SCK",
+    "4": "USART2_RX",
+    "8": "USART1_RX",
+    "9": "USART2_TX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "OSC_IN"
+   ]
+  },
+  "PF1": {
+   "af": {
+    "10": "SPI1_NSS",
+    "12": "I2C_SCL",
+    "13": "TIM14_CH1",
+    "3": "SPI2_MISO",
+    "4": "USART2_TX",
+    "8": "USART1_TX",
+    "9": "USART2_RX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "OSC_OUT"
+   ]
+  },
+  "PF2": {
+   "af": {
+    "3": "SPI2_MOSI",
+    "4": "USART2_RX",
+    "6": "MCO"
+   },
+   "af_source": "DS table"
+  },
+  "PF3": {
+   "af": {
+    "0": "USART1_TX",
+    "10": "SPI1_NSS",
+    "13": "TIM3_CH3",
+    "15": "RTC_OUT",
+    "3": "SPI2_MISO",
+    "4": "USART2_TX"
+   },
+   "af_source": "DS table",
+   "analog": [
+    "COMP2_INP"
+   ]
+  },
+  "PF4": {
+   "af": {},
+   "af_source": "DS table"
+  }
+ },
+ "reset_values_from_rm": 22,
+ "schema": 1,
+ "signal_alias": {
+  "I2C_": "I2C1_",
+  "LPTIM_": "LPTIM1_"
+ },
+ "sources": [
+  {
+   "also": "Rev1.4_EN",
+   "doc": "PY32F030 Datasheet Rev2.2 (Chinese)",
+   "id": "DS"
+  },
+  {
+   "doc": "PY32F030 Reference Manual v1.2 (Chinese)",
+   "id": "RM"
+  },
+  {
+   "doc": "Puya.PY32F0xx_DFP 1.2.0 py32f030xx.svd (Puya)",
+   "id": "SVD"
+  }
+ ],
+ "swd": {
+  "SWCLK": "PA14",
+  "SWDIO": "PA13"
+ },
+ "temp_max": 85,
+ "temp_min": -40,
+ "vdd_max": 5.5,
+ "vdd_min": 1.7
+}

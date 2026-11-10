@@ -1,0 +1,182 @@
+{
+ "PA0": {
+  "0": "SPI_MOSI",
+  "1": null,
+  "2": "TIM1_CH1",
+  "3": null,
+  "4": null,
+  "5": null,
+  "6": null,
+  "7": null
+ },
+ "PA1": {
+  "0": "SPI_MISO",
+  "1": null,
+  "2": "TIM1_CH2",
+  "3": null,
+  "4": null,
+  "5": null,
+  "6": null,
+  "7": null
+ },
+ "PA2": {
+  "0": "SWC",
+  "1": "USART_RX",
+  "2": "TIM1_CH4",
+  "3": null,
+  "4": "CMP2_OUT",
+  "5": null,
+  "6": "I2C_SCL",
+  "7": null
+ },
+ "PA3": {
+  "0": null,
+  "1": "USART_TX",
+  "2": "TIM1_CH2",
+  "3": null,
+  "4": null,
+  "5": null,
+  "6": null,
+  "7": null
+ },
+ "PA4": {
+  "0": null,
+  "1": "USART_RX",
+  "2": "TIM1_CH3",
+  "3": null,
+  "4": null,
+  "5": "TIM14_CH1",
+  "6": null,
+  "7": null
+ },
+ "PA5": {
+  "0": null,
+  "1": "USART_CK",
+  "2": "TIM1_CH1",
+  "3": null,
+  "4": null,
+  "5": "TIM14_CH1",
+  "6": null,
+  "7": null
+ },
+ "PA6": {
+  "0": "SPI_NSS",
+  "1": "USART_TX",
+  "2": null,
+  "3": null,
+  "4": null,
+  "5": null,
+  "6": null,
+  "7": "EVENTOUT"
+ },
+ "PA7": {
+  "0": "SPI_MOSI",
+  "1": "USART_TX",
+  "2": "TIM1_CH4",
+  "3": "USART_RX",
+  "4": "MCO",
+  "5": null,
+  "6": null,
+  "7": null
+ },
+ "PB0": {
+  "0": "SPI_SCK",
+  "1": "USART_CK",
+  "2": "TIM1_CH2",
+  "3": "TIM1_CH3N",
+  "4": null,
+  "5": null,
+  "6": null,
+  "7": null
+ },
+ "PB1": {
+  "0": null,
+  "1": "USART_RTS",
+  "2": "TIM1_CH2N",
+  "3": "TIM1_CH4",
+  "4": "MCO",
+  "5": null,
+  "6": null,
+  "7": null
+ },
+ "PB2": {
+  "0": "SPI_SCK",
+  "1": "USART_CTS",
+  "2": "TIM1_CH1N",
+  "3": "TIM1_CH3",
+  "4": null,
+  "5": null,
+  "6": null,
+  "7": null
+ },
+ "PB3": {
+  "0": null,
+  "1": "USART_CK",
+  "2": "TIM1_ETR",
+  "3": null,
+  "4": "CMP1_OUT",
+  "5": null,
+  "6": "I2C_SCL",
+  "7": null
+ },
+ "PB4": {
+  "0": null,
+  "1": "USART_TX",
+  "2": "TIM1_BKIN",
+  "3": null,
+  "4": null,
+  "5": null,
+  "6": "I2C_SDA",
+  "7": null
+ },
+ "PB5": {
+  "0": "SPI_NSS",
+  "1": "USART_RX",
+  "2": "TIM1_CH3",
+  "3": null,
+  "4": null,
+  "5": "TIM14_CH1",
+  "6": null,
+  "7": null
+ },
+ "PB6": {
+  "0": "SWD",
+  "1": "USART_TX",
+  "2": "SPI_MISO",
+  "3": null,
+  "4": null,
+  "5": null,
+  "6": "I2C_SDA",
+  "7": null
+ },
+ "PB7": {
+  "0": "SPI_MOSI",
+  "1": null,
+  "2": null,
+  "3": null,
+  "4": null,
+  "5": "TIM14_CH1",
+  "6": null,
+  "7": null
+ },
+ "PC0": {
+  "0": "SWD",
+  "1": null,
+  "2": "TIM1_CH1N",
+  "3": null,
+  "4": null,
+  "5": null,
+  "6": null,
+  "7": "EVENTOUT"
+ },
+ "PC1": {
+  "0": "SPI_MISO",
+  "1": null,
+  "2": null,
+  "3": null,
+  "4": null,
+  "5": null,
+  "6": null,
+  "7": null
+ }
+}
